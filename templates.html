@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Templates — Vendoor Connect</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- NAVIGATION BAR -->
+    <nav>
+        <div class="logo">
+            <img src="logo.png" alt="Vendoor Connect Logo">
+        </div>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="templates.html">Templates</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- PAGE HEADER -->
+    <section class="page-header">
+        <h1>Browse Templates</h1>
+        <p>Find the perfect template for your business</p>
+    </section>
+
+    <!-- SEARCH BAR -->
+    <section class="search-section">
+        <input type="text" id="searchInput" placeholder="Search templates...">
+    </section>
+
+    <!-- FILTER BUTTONS -->
+    <section class="filters">
+        <button class="filter-btn active" onclick="filterTemplates('all')">All</button>
+        <button class="filter-btn" onclick="filterTemplates('business')">Business</button>
+        <button class="filter-btn" onclick="filterTemplates('portfolio')">Portfolio</button>
+        <button class="filter-btn" onclick="filterTemplates('church')">Church</button>
+        <button class="filter-btn" onclick="filterTemplates('ecommerce')">E-Commerce</button>
+        <button class="filter-btn" onclick="filterTemplates('wedding')">Wedding</button>
+    </section>
+
+    <!-- TEMPLATES GRID -->
+    <section class="templates-section">
+        <div class="template-grid" id="templateGrid">
+
+            <div class="template-card" data-category="business">
+                <img src="https://placehold.co/300x200" alt="Business Pro">
+                <h3>Business Pro</h3>
+                <p>Perfect for small businesses and startups</p>
+                <span>₦5,000</span>
+                <a href="single-template.html" class="btn-card">Buy Now</a>
+            </div>
+
+            <div class="template-card" data-category="portfolio">
+                <img src="https://placehold.co/300x200" alt="Portfolio">
+                <h3>Portfolio Template</h3>
+                <p>Showcase your work beautifully</p>
+                <span>₦3,500</span>
+                <a href="single-template.html" class="btn-card">Buy Now</a>
+            </div>
+
+            <div class="template-card" data-category="church">
+                <img src="https://placehold.co/300x200" alt="Church">
+                <h3>Church Website</h3>
+                <p>Modern design for churches and ministries</p>
+                <span>₦4,000</span>
+                <a href="single-template.html" class="btn-card">Buy Now</a>
+            </div>
+
+            <div class="template-card" data-category="ecommerce">
+                <img src="https://placehold.co/300x200" alt="Ecommerce">
+                <h3>E-Commerce Store</h3>
+                <p>Sell products online with ease</p>
+                <span>₦7,500</span>
+                <a href="single-template.html" class="btn-card">Buy Now</a>
+            </div>
+
+            <div class="template-card" data-category="wedding">
+                <img src="https://placehold.co/300x200" alt="Wedding">
+                <h3>Wedding Template</h3>
+                <p>Elegant design for your special day</p>
+                <span>₦4,500</span>
+                <a href="single-template.html" class="btn-card">Buy Now</a>
+            </div>
+
+            <div class="template-card" data-category="business">
+                <img src="https://placehold.co/300x200" alt="Restaurant">
+                <h3>Restaurant Template</h3>
+                <p>Beautiful design for restaurants and cafes</p>
+                <span>₦5,500</span>
+                <a href="single-template.html" class="btn-card">Buy Now</a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <img src="logo.png" alt="Vendoor Connect" class="footer-logo">
+        <p>Discover • Review • Connect</p>
+        <p>&copy; 2026 Vendoor Connect. All rights reserved.</p>
+    </footer>
+
+    <script src="main.js"></script>
+
+</body>
+</html>
