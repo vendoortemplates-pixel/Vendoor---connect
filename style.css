@@ -28,17 +28,34 @@ body {
     color: var(--cocoa);
 }
 
-nav {
-    background-color: var(--cocoa);
-    padding: 16px 40px;
+/* ===== SITE HEADER / MASTHEAD ===== */
+.site-header {
+    background-color: var(--ivory);
+    border-bottom: 2px solid var(--gold);
+}
+
+.brand-bar {
+    background-color: var(--ivory);
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: center;
+    padding: 34px 20px 14px;
+}
+
+.logo {
+    display: inline-block;
 }
 
 .logo img {
-    height: 110px;
+    height: 260px;
     object-fit: contain;
+}
+
+nav {
+    background-color: var(--ivory);
+    padding: 14px 40px 22px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 nav ul {
@@ -48,15 +65,16 @@ nav ul {
 }
 
 nav ul li a {
-    color: #ffffff;
+    color: var(--cocoa);
     text-decoration: none;
-    font-size: 15px;
-    font-weight: 500;
-    letter-spacing: 1px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
 }
 
 nav ul li a:hover {
-    color: var(--gold);
+    color: var(--terracotta);
 }
 
 /* ===== NAV DROPDOWN (Templates quick-shop) ===== */
@@ -1049,10 +1067,16 @@ footer {
 @media (max-width: 768px) {
 
     /* NAVIGATION */
+    .brand-bar {
+        padding: 20px 20px 8px;
+    }
+
+    .logo img {
+        height: 140px;
+    }
+
     nav {
-        flex-direction: column;
-        gap: 15px;
-        padding: 15px 20px;
+        padding: 14px 20px 20px;
         text-align: center;
     }
 
