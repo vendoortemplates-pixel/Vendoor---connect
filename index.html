@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vendoor Connect</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -15,57 +18,217 @@
         </div>
         <ul>
             <li><a href="index.html">Home</a></li>
-            <li><a href="templates.html">Templates</a></li>
+            <li class="has-dropdown">
+                <a href="templates.html">Templates</a>
+                <div class="dropdown-menu">
+                    <a href="templates.html" class="dropdown-item">Traditional Wedding</a>
+                    <a href="templates.html" class="dropdown-item">White Wedding</a>
+                    <a href="templates.html" class="dropdown-item">Bridal Shower</a>
+                    <a href="templates.html" class="dropdown-item">Engagement</a>
+                    <a href="templates.html" class="dropdown-item">Bachelorette</a>
+                    <a href="templates.html" class="dropdown-item">Honeymoon</a>
+                </div>
+            </li>
             <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
         </ul>
     </nav>
 
     <!-- HERO SECTION -->
     <section class="hero">
-        <h1>Find Premium Website Templates</h1>
-        <p>The number one marketplace for buying and selling website templates in Nigeria.</p>
+        <span class="hero-badge">New Planning Templates Just Dropped</span>
+        <h1>Every Celebration, Beautifully Planned</h1>
+        <p>Self-guided planning templates for couples, bridal showers, bachelorette celebrations, and traditional ceremonies across Nigeria.</p>
         <a href="templates.html" class="btn">Browse Templates</a>
     </section>
 
-    <!-- FEATURED TEMPLATES -->
-    <section class="featured">
-        <h2>Featured Templates</h2>
+    <!-- BEST SELLERS: HORIZONTAL SCROLL ROW -->
+    <section class="scroll-row-section">
+        <span class="section-eyebrow">Fan Favorites</span>
+        <div class="scroll-row-header">
+            <h2>Best Sellers</h2>
+            <a href="templates.html" class="scroll-row-link">Shop All →</a>
+        </div>
+        <div class="scroll-row">
 
-        <div class="template-grid">
-
-            <div class="template-card">
-                <img src="https://placehold.co/300x200" alt="Template 1">
-                <h3>Business Pro Template</h3>
-                <p>Perfect for small businesses</p>
+            <div class="scroll-card">
+                <img src="https://placehold.co/300x200" alt="Traditional Wedding Planner">
+                <h3>Traditional Wedding Planner</h3>
+                <p>Plan every detail of your traditional ceremony</p>
                 <span>₦5,000</span>
-                <a href="#" class="btn-card">Buy Now</a>
+                <a href="single-template.html" class="btn-card">Buy Now</a>
             </div>
 
-            <div class="template-card">
-                <img src="https://placehold.co/300x200" alt="Template 2">
-                <h3>Portfolio Template</h3>
-                <p>Showcase your work beautifully</p>
+            <div class="scroll-card">
+                <img src="https://placehold.co/300x200" alt="White Wedding Planner">
+                <h3>White Wedding Planner</h3>
+                <p>A complete planning template for your church or court wedding</p>
+                <span>₦7,500</span>
+                <a href="single-template.html" class="btn-card">Buy Now</a>
+            </div>
+
+            <div class="scroll-card">
+                <img src="https://placehold.co/300x200" alt="Bridal Shower Planner">
+                <h3>Bridal Shower Planner</h3>
+                <p>Everything you need to plan a beautiful bridal shower</p>
                 <span>₦3,500</span>
-                <a href="#" class="btn-card">Buy Now</a>
+                <a href="single-template.html" class="btn-card">Buy Now</a>
             </div>
 
-            <div class="template-card">
-                <img src="https://placehold.co/300x200" alt="Template 3">
-                <h3>Church Website Template</h3>
-                <p>Modern design for churches</p>
+            <div class="scroll-card">
+                <img src="https://placehold.co/300x200" alt="Bachelorette Planner">
+                <h3>Bachelorette Planner</h3>
+                <p>Organize the perfect bachelorette weekend</p>
+                <span>₦5,500</span>
+                <a href="single-template.html" class="btn-card">Buy Now</a>
+            </div>
+
+            <div class="scroll-card">
+                <img src="https://placehold.co/300x200" alt="Engagement Planner">
+                <h3>Engagement Planner</h3>
+                <p>Plan your introduction or knocking ceremony with ease</p>
+                <span>₦4,500</span>
+                <a href="single-template.html" class="btn-card">Buy Now</a>
+            </div>
+
+            <div class="scroll-card">
+                <img src="https://placehold.co/300x200" alt="Honeymoon Planner">
+                <h3>Honeymoon Planner</h3>
+                <p>Plan your dream honeymoon, from budget to itinerary</p>
                 <span>₦4,000</span>
-                <a href="#" class="btn-card">Buy Now</a>
+                <a href="single-template.html" class="btn-card">Buy Now</a>
             </div>
 
         </div>
     </section>
 
+    <!-- PROMO BANNER -->
+    <section class="promo-banner">
+        <div class="promo-content">
+            <span class="promo-eyebrow">Custom Work</span>
+            <h2>Need a Custom Plan?</h2>
+            <p>Can't find the perfect fit? We create bespoke planning templates tailored to your celebration.</p>
+            <a href="contact.html" class="btn-gold">Request a Custom Template</a>
+        </div>
+    </section>
+
+    <!-- SHOP BY CATEGORY -->
+    <section class="category-section">
+        <span class="section-eyebrow">Explore</span>
+        <h2>Shop by Category</h2>
+        <div class="category-grid">
+            <a href="templates.html" class="category-tile">
+                <h3>Traditional Wedding</h3>
+            </a>
+            <a href="templates.html" class="category-tile">
+                <h3>White Wedding</h3>
+            </a>
+            <a href="templates.html" class="category-tile">
+                <h3>Bridal Shower</h3>
+            </a>
+            <a href="templates.html" class="category-tile">
+                <h3>Engagement</h3>
+            </a>
+            <a href="templates.html" class="category-tile">
+                <h3>Bachelorette</h3>
+            </a>
+            <a href="templates.html" class="category-tile">
+                <h3>Honeymoon</h3>
+            </a>
+        </div>
+    </section>
+
+    <!-- STATS BAR -->
+    <!-- Placeholder stats — swap for real numbers once you have order history -->
+    <section class="stats-bar">
+        <div class="stat">
+            <h3>500+</h3>
+            <p>Templates Sold</p>
+        </div>
+        <div class="stat">
+            <h3>1,200+</h3>
+            <p>Happy Customers</p>
+        </div>
+        <div class="stat">
+            <h3>24/7</h3>
+            <p>Support Available</p>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <!-- Placeholder reviews — replace with real customer testimonials as they come in -->
+    <section class="testimonials-section">
+        <span class="section-eyebrow">Reviews</span>
+        <h2>What Our Customers Say</h2>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <p class="testimonial-quote">"The Traditional Wedding Planner kept us so organized, we didn't miss a single vendor payment or aso-ebi deadline."</p>
+                <p class="testimonial-author">Amaka &amp; Femi O.</p>
+            </div>
+            <div class="testimonial-card">
+                <p class="testimonial-quote">"Planning my bridal shower felt effortless with this template. My friends couldn't believe I pulled it off myself."</p>
+                <p class="testimonial-author">Ifeoma T.</p>
+            </div>
+            <div class="testimonial-card">
+                <p class="testimonial-quote">"As the groom, I never thought I'd be the one managing the checklist, but this planner made it so easy to stay on top of everything before our introduction."</p>
+                <p class="testimonial-author">Chidi E.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEWSLETTER SIGNUP -->
+    <!-- Not yet connected to an email service — hook this up to Mailchimp/ConvertKit etc. later -->
+    <section class="newsletter-section">
+        <span class="newsletter-eyebrow">The Inner Circle</span>
+        <h2>Join the Vendoor Circle</h2>
+        <p>Get 10% off your first order plus early access to new template drops.</p>
+        <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Newsletter signup coming soon!');">
+            <input type="email" placeholder="Enter your email" required>
+            <button type="submit" class="btn-gold">Subscribe</button>
+        </form>
+    </section>
+
     <!-- FOOTER -->
     <footer>
-        <img src="logo.png" alt="Vendoor Connect" class="footer-logo">
-        <p>Discover • Review • Connect</p>
-        <p>&copy; 2026 Vendoor Connect. All rights reserved.</p>
+        <div class="footer-grid">
+
+            <div class="footer-brand">
+                <img src="logo.png" alt="Vendoor Connect" class="footer-logo">
+                <p>Discover • Review • Connect</p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Shop</h4>
+                <ul>
+                    <li><a href="templates.html">All Templates</a></li>
+                    <li><a href="templates.html">Traditional Wedding</a></li>
+                    <li><a href="templates.html">Bridal Shower</a></li>
+                    <li><a href="templates.html">White Wedding</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Connect With Us</h4>
+                <ul>
+                    <li><a href="https://www.instagram.com/vendoortemplates" target="_blank" rel="noopener" class="social-link"><svg class="icon-instagram" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>Instagram</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <p class="footer-bottom">&copy; 2026 Vendoor Connect. All rights reserved.</p>
     </footer>
+
+    <script src="main.js"></script>
 
 </body>
 </html>

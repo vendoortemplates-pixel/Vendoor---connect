@@ -56,7 +56,7 @@ if (buyButton) {
                     {
                         display_name: "Template Name",
                         variable_name: "template_name",
-                        value: "Business Pro Template"
+                        value: "Traditional Wedding Planner"
                     }
                 ]
             },

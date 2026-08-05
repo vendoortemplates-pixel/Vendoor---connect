@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Templates — Vendoor Connect</title>
+    <title>Templates | Vendoor Connect</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -15,7 +18,17 @@
         </div>
         <ul>
             <li><a href="index.html">Home</a></li>
-            <li><a href="templates.html">Templates</a></li>
+            <li class="has-dropdown">
+                <a href="templates.html">Templates</a>
+                <div class="dropdown-menu">
+                    <a href="templates.html" class="dropdown-item">Traditional Wedding</a>
+                    <a href="templates.html" class="dropdown-item">White Wedding</a>
+                    <a href="templates.html" class="dropdown-item">Bridal Shower</a>
+                    <a href="templates.html" class="dropdown-item">Engagement</a>
+                    <a href="templates.html" class="dropdown-item">Bachelorette</a>
+                    <a href="templates.html" class="dropdown-item">Honeymoon</a>
+                </div>
+            </li>
             <li><a href="about.html">About</a></li>
             <li><a href="contact.html">Contact</a></li>
         </ul>
@@ -24,7 +37,7 @@
     <!-- PAGE HEADER -->
     <section class="page-header">
         <h1>Browse Templates</h1>
-        <p>Find the perfect template for your business</p>
+        <p>Self-guided planning templates for every celebration</p>
     </section>
 
     <!-- SEARCH BAR -->
@@ -35,62 +48,63 @@
     <!-- FILTER BUTTONS -->
     <section class="filters">
         <button class="filter-btn active" onclick="filterTemplates('all')">All</button>
-        <button class="filter-btn" onclick="filterTemplates('business')">Business</button>
-        <button class="filter-btn" onclick="filterTemplates('portfolio')">Portfolio</button>
-        <button class="filter-btn" onclick="filterTemplates('church')">Church</button>
-        <button class="filter-btn" onclick="filterTemplates('ecommerce')">E-Commerce</button>
-        <button class="filter-btn" onclick="filterTemplates('wedding')">Wedding</button>
+        <button class="filter-btn" onclick="filterTemplates('traditional')">Traditional Wedding</button>
+        <button class="filter-btn" onclick="filterTemplates('white-wedding')">White Wedding</button>
+        <button class="filter-btn" onclick="filterTemplates('bridal-shower')">Bridal Shower</button>
+        <button class="filter-btn" onclick="filterTemplates('engagement')">Engagement</button>
+        <button class="filter-btn" onclick="filterTemplates('bachelorette')">Bachelorette</button>
+        <button class="filter-btn" onclick="filterTemplates('honeymoon')">Honeymoon</button>
     </section>
 
     <!-- TEMPLATES GRID -->
     <section class="templates-section">
         <div class="template-grid" id="templateGrid">
 
-            <div class="template-card" data-category="business">
-                <img src="https://placehold.co/300x200" alt="Business Pro">
-                <h3>Business Pro</h3>
-                <p>Perfect for small businesses and startups</p>
+            <div class="template-card" data-category="traditional">
+                <img src="https://placehold.co/300x200" alt="Traditional Wedding Planner">
+                <h3>Traditional Wedding Planner</h3>
+                <p>Plan every detail of your traditional ceremony, from aso-ebi to vendor bookings</p>
                 <span>₦5,000</span>
                 <a href="single-template.html" class="btn-card">Buy Now</a>
             </div>
 
-            <div class="template-card" data-category="portfolio">
-                <img src="https://placehold.co/300x200" alt="Portfolio">
-                <h3>Portfolio Template</h3>
-                <p>Showcase your work beautifully</p>
-                <span>₦3,500</span>
-                <a href="single-template.html" class="btn-card">Buy Now</a>
-            </div>
-
-            <div class="template-card" data-category="church">
-                <img src="https://placehold.co/300x200" alt="Church">
-                <h3>Church Website</h3>
-                <p>Modern design for churches and ministries</p>
-                <span>₦4,000</span>
-                <a href="single-template.html" class="btn-card">Buy Now</a>
-            </div>
-
-            <div class="template-card" data-category="ecommerce">
-                <img src="https://placehold.co/300x200" alt="Ecommerce">
-                <h3>E-Commerce Store</h3>
-                <p>Sell products online with ease</p>
+            <div class="template-card" data-category="white-wedding">
+                <img src="https://placehold.co/300x200" alt="White Wedding Planner">
+                <h3>White Wedding Planner</h3>
+                <p>A complete self-guided planning template for your church or court wedding</p>
                 <span>₦7,500</span>
                 <a href="single-template.html" class="btn-card">Buy Now</a>
             </div>
 
-            <div class="template-card" data-category="wedding">
-                <img src="https://placehold.co/300x200" alt="Wedding">
-                <h3>Wedding Template</h3>
-                <p>Elegant design for your special day</p>
+            <div class="template-card" data-category="bridal-shower">
+                <img src="https://placehold.co/300x200" alt="Bridal Shower Planner">
+                <h3>Bridal Shower Planner</h3>
+                <p>Everything you need to plan a beautiful bridal shower</p>
+                <span>₦3,500</span>
+                <a href="single-template.html" class="btn-card">Buy Now</a>
+            </div>
+
+            <div class="template-card" data-category="bachelorette">
+                <img src="https://placehold.co/300x200" alt="Bachelorette Planner">
+                <h3>Bachelorette Planner</h3>
+                <p>Organize the perfect bachelorette weekend for the bride-to-be</p>
+                <span>₦5,500</span>
+                <a href="single-template.html" class="btn-card">Buy Now</a>
+            </div>
+
+            <div class="template-card" data-category="engagement">
+                <img src="https://placehold.co/300x200" alt="Engagement Planner">
+                <h3>Engagement &amp; Introduction Planner</h3>
+                <p>Plan your introduction or knocking ceremony with ease</p>
                 <span>₦4,500</span>
                 <a href="single-template.html" class="btn-card">Buy Now</a>
             </div>
 
-            <div class="template-card" data-category="business">
-                <img src="https://placehold.co/300x200" alt="Restaurant">
-                <h3>Restaurant Template</h3>
-                <p>Beautiful design for restaurants and cafes</p>
-                <span>₦5,500</span>
+            <div class="template-card" data-category="honeymoon">
+                <img src="https://placehold.co/300x200" alt="Honeymoon Planner">
+                <h3>Honeymoon Planner</h3>
+                <p>Plan your dream honeymoon, from budget to itinerary</p>
+                <span>₦4,000</span>
                 <a href="single-template.html" class="btn-card">Buy Now</a>
             </div>
 
