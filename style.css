@@ -140,6 +140,67 @@ nav ul li a:hover {
     color: var(--gold);
 }
 
+.drawer-submenu-toggle {
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 15px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0;
+    font-family: var(--font-body);
+}
+
+.drawer-submenu-toggle:hover {
+    color: var(--gold);
+}
+
+.drawer-caret {
+    font-size: 11px;
+    margin-left: 8px;
+    transition: transform 0.25s ease;
+}
+
+.drawer-has-submenu.open .drawer-caret {
+    transform: rotate(180deg);
+}
+
+.drawer-submenu {
+    list-style: none;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    padding-left: 14px;
+}
+
+.drawer-has-submenu.open .drawer-submenu {
+    max-height: 400px;
+}
+
+.mobile-drawer .drawer-submenu li {
+    margin-top: 16px;
+    margin-bottom: 0;
+}
+
+.mobile-drawer .drawer-submenu li a {
+    color: var(--text-on-dark-muted);
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    text-transform: none;
+    font-weight: 500;
+}
+
+.mobile-drawer .drawer-submenu li a:hover {
+    color: var(--gold);
+}
+
 .drawer-close {
     position: absolute;
     top: 24px;
@@ -203,6 +264,19 @@ nav ul li a:hover {
 
 .dropdown-item:hover {
     color: var(--terracotta);
+    background-color: var(--ivory);
+}
+
+.dropdown-item-custom {
+    border-top: 1px solid var(--border-light);
+    margin-top: 4px;
+    padding-top: 14px;
+    color: var(--terracotta);
+    font-weight: 600;
+}
+
+.dropdown-item-custom:hover {
+    color: var(--cocoa);
     background-color: var(--ivory);
 }
 

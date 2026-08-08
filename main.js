@@ -30,6 +30,13 @@ if (mobileDrawer) {
     mobileDrawer.querySelectorAll('a').forEach(function (link) {
         link.addEventListener('click', closeDrawer);
     });
+
+    mobileDrawer.querySelectorAll('.drawer-submenu-toggle').forEach(function (toggleBtn) {
+        toggleBtn.addEventListener('click', function () {
+            const parent = toggleBtn.closest('.drawer-has-submenu');
+            if (parent) parent.classList.toggle('open');
+        });
+    });
 }
 
 // ===== FILTER TEMPLATES BY CATEGORY =====
