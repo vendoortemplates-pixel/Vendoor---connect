@@ -1301,6 +1301,73 @@ footer {
     margin-bottom: 36px;
 }
 
+/* ===== HOW IT WORKS / PROCESS STEPS ===== */
+.process-section {
+    padding: 80px 40px;
+    text-align: center;
+    background-color: var(--white);
+}
+
+.process-section h2 {
+    font-family: var(--font-heading);
+    font-size: 34px;
+    font-weight: 600;
+    color: var(--cocoa);
+    margin-bottom: 44px;
+}
+
+.process-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 40px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.process-step {
+    text-align: left;
+}
+
+.process-number {
+    font-family: var(--font-heading);
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--gold);
+    margin-bottom: 12px;
+    display: block;
+}
+
+.process-step h3 {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--cocoa);
+    margin-bottom: 8px;
+}
+
+.process-step p {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+.form-note {
+    font-size: 14px;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 24px;
+}
+
+.form-note a {
+    color: var(--terracotta);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.form-note a:hover {
+    color: var(--cocoa);
+}
+
 /* ===== RELATED TEMPLATES ===== */
 .related {
     padding: 70px 80px;
@@ -1565,6 +1632,15 @@ footer {
     }
 
     .review-form-block h2 {
+        font-size: 24px;
+    }
+
+    /* HOW IT WORKS / PROCESS STEPS */
+    .process-section {
+        padding: 40px 20px;
+    }
+
+    .process-section h2 {
         font-size: 24px;
     }
 }
