@@ -31,7 +31,10 @@ body {
 /* ===== SITE HEADER / MASTHEAD ===== */
 .site-header {
     background-color: var(--ivory);
-    border-bottom: 2px solid var(--gold);
+    border-bottom: 3px solid var(--gold);
+    box-shadow: 0 6px 20px rgba(91,70,54,0.10);
+    position: relative;
+    z-index: 10;
 }
 
 .brand-bar {
@@ -75,6 +78,93 @@ nav ul li a {
 
 nav ul li a:hover {
     color: var(--terracotta);
+}
+
+/* ===== MOBILE MENU TOGGLE + DRAWER ===== */
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 30px;
+    height: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.menu-toggle span {
+    display: block;
+    height: 2px;
+    width: 100%;
+    background-color: var(--cocoa);
+}
+
+.mobile-drawer {
+    position: fixed;
+    top: 0;
+    left: -300px;
+    width: 280px;
+    max-width: 80vw;
+    height: 100%;
+    background-color: var(--cocoa);
+    z-index: 300;
+    padding: 80px 30px 30px;
+    transition: left 0.3s ease;
+    overflow-y: auto;
+}
+
+.mobile-drawer.open {
+    left: 0;
+}
+
+.mobile-drawer ul {
+    list-style: none;
+}
+
+.mobile-drawer ul li {
+    margin-bottom: 22px;
+}
+
+.mobile-drawer ul li a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 15px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.mobile-drawer ul li a:hover {
+    color: var(--gold);
+}
+
+.drawer-close {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 30px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.drawer-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.45);
+    z-index: 250;
+}
+
+.drawer-overlay.open {
+    display: block;
 }
 
 /* ===== NAV DROPDOWN (Templates quick-shop) ===== */
@@ -817,6 +907,29 @@ footer {
     margin-bottom: 25px;
 }
 
+.buyer-email-input {
+    display: block;
+    width: 100%;
+    padding: 14px 18px;
+    border-radius: 2px;
+    border: 1px solid var(--border-light);
+    background-color: var(--white);
+    color: var(--cocoa);
+    font-size: 15px;
+    font-family: var(--font-body);
+    outline: none;
+    margin-bottom: 15px;
+    transition: border-color 0.3s;
+}
+
+.buyer-email-input::placeholder {
+    color: var(--text-muted);
+}
+
+.buyer-email-input:focus {
+    border-color: var(--terracotta);
+}
+
 .btn-buy {
     display: block;
     width: 100%;
@@ -1002,6 +1115,41 @@ footer {
     resize: vertical;
 }
 
+.contact-form select {
+    padding: 14px 18px;
+    border-radius: 2px;
+    border: 1px solid var(--border-light);
+    background-color: var(--white);
+    color: var(--cocoa);
+    font-size: 15px;
+    font-family: var(--font-body);
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.contact-form select:focus {
+    border-color: var(--terracotta);
+}
+
+/* ===== STACKED REVIEW / TESTIMONIAL FORMS ===== */
+.review-form-block {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 70px 20px;
+}
+
+.review-form-block + .review-form-block {
+    border-top: 1px solid var(--border-light);
+}
+
+.review-form-block h2 {
+    font-family: var(--font-heading);
+    font-size: 30px;
+    font-weight: 600;
+    color: var(--cocoa);
+    margin-bottom: 24px;
+}
+
 .contact-form button {
     align-self: flex-start;
 }
@@ -1049,6 +1197,36 @@ footer {
     border-color: var(--terracotta);
 }
 
+/* ===== THANK YOU / ORDER CONFIRMATION ===== */
+.confirmation-section {
+    text-align: center;
+    padding: 120px 20px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.confirmation-section h1 {
+    font-family: var(--font-heading);
+    font-size: 38px;
+    font-weight: 600;
+    color: var(--cocoa);
+    margin-bottom: 18px;
+}
+
+.confirmation-message {
+    font-size: 16px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+.confirmation-ref {
+    font-size: 13px;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    margin-bottom: 36px;
+}
+
 /* ===== RELATED TEMPLATES ===== */
 .related {
     padding: 70px 80px;
@@ -1077,13 +1255,15 @@ footer {
 
     nav {
         padding: 14px 20px 20px;
-        text-align: center;
+        justify-content: flex-start;
+    }
+
+    .menu-toggle {
+        display: flex;
     }
 
     nav ul {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 15px;
+        display: none;
     }
 
     /* Dropdown is a hover-only enhancement — hide on touch/mobile widths */
@@ -1290,6 +1470,24 @@ footer {
 
     .contact-form-wrap h2,
     .contact-info-wrap h2 {
+        font-size: 24px;
+    }
+
+    /* THANK YOU / ORDER CONFIRMATION */
+    .confirmation-section {
+        padding: 60px 20px;
+    }
+
+    .confirmation-section h1 {
+        font-size: 26px;
+    }
+
+    /* STACKED REVIEW / TESTIMONIAL FORMS */
+    .review-form-block {
+        padding: 40px 20px;
+    }
+
+    .review-form-block h2 {
         font-size: 24px;
     }
 }

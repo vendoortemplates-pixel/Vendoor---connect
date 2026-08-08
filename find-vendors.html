@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Traditional Wedding Planner | Vendoor Connect</title>
+    <title>Find Vendors | Vendoor Connect</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
@@ -65,82 +65,101 @@
     </div>
     <div class="drawer-overlay" id="drawerOverlay"></div>
 
-    <!-- TEMPLATE DETAIL SECTION -->
-    <section class="template-detail">
-
-        <!-- LEFT — Preview Image -->
-        <div class="template-preview">
-            <img src="https://placehold.co/600x400" alt="Traditional Wedding Planner">
-        </div>
-
-        <!-- RIGHT — Template Info -->
-        <div class="template-info">
-            <span class="template-badge">Traditional Wedding</span>
-            <h1>Traditional Wedding Planner</h1>
-            <p class="template-description">
-                A self-guided planning template for your traditional wedding
-                ceremony, built around real Nigerian wedding traditions, from
-                aso-ebi coordination to vendor bookings. No event planner required.
-            </p>
-
-            <!-- FEATURES LIST -->
-            <ul class="features-list">
-                <li>Printable and digital-friendly</li>
-                <li>Step-by-step planning checklist</li>
-                <li>Budget tracker included</li>
-                <li>Vendor contact organizer</li>
-                <li>Free support for 30 days</li>
-                <li>Instant download after payment</li>
-            </ul>
-
-            <!-- PRICE -->
-            <div class="template-price">₦5,000</div>
-
-            <!-- EMAIL FOR RECEIPT -->
-            <input type="email" id="buyerEmail" class="buyer-email-input" placeholder="Your email address">
-
-            <!-- BUY BUTTON -->
-            <button class="btn-buy" id="buyButton" data-amount="500000" data-name="Traditional Wedding Planner">
-                Buy Now for ₦5,000
-            </button>
-
-            <!-- PREVIEW BUTTON -->
-            <a href="#" class="btn-preview">Live Preview</a>
-
-        </div>
-
+    <!-- PAGE HEADER -->
+    <section class="page-header">
+        <h1>Find Vendors You Can Trust</h1>
+        <p>We are building Nigeria's most trusted vendor directory. Browse by category and be the first to know when profiles launch near you.</p>
     </section>
 
-    <!-- RELATED TEMPLATES -->
-    <section class="related">
-        <h2>You May Also Like</h2>
-        <div class="template-grid">
-
-            <div class="template-card">
-                <img src="https://placehold.co/300x200" alt="Bridal Shower Planner">
-                <h3>Bridal Shower Planner</h3>
-                <p>Everything you need to plan a beautiful bridal shower</p>
-                <span>₦3,500</span>
-                <a href="#" class="btn-card">Buy Now</a>
-            </div>
-
-            <div class="template-card">
-                <img src="https://placehold.co/300x200" alt="Bachelorette Planner">
-                <h3>Bachelorette Planner</h3>
-                <p>Organize the perfect bachelorette weekend for the bride-to-be</p>
-                <span>₦5,500</span>
-                <a href="#" class="btn-card">Buy Now</a>
-            </div>
-
-            <div class="template-card">
-                <img src="https://placehold.co/300x200" alt="White Wedding Planner">
-                <h3>White Wedding Planner</h3>
-                <p>A complete planning template for your church or court wedding</p>
-                <span>₦7,500</span>
-                <a href="#" class="btn-card">Buy Now</a>
-            </div>
-
+    <!-- VENDOR CATEGORIES -->
+    <section class="category-section">
+        <span class="section-eyebrow">Browse By Category</span>
+        <h2>What Are You Looking For?</h2>
+        <div class="category-grid">
+            <a href="#get-notified" class="category-tile">
+                <h3>Photographers &amp; Videographers</h3>
+            </a>
+            <a href="#get-notified" class="category-tile">
+                <h3>Caterers</h3>
+            </a>
+            <a href="#get-notified" class="category-tile">
+                <h3>Decorators &amp; Florists</h3>
+            </a>
+            <a href="#get-notified" class="category-tile">
+                <h3>MCs &amp; Entertainers</h3>
+            </a>
+            <a href="#get-notified" class="category-tile">
+                <h3>Makeup Artists &amp; Hair</h3>
+            </a>
+            <a href="#get-notified" class="category-tile">
+                <h3>Venues &amp; Event Centers</h3>
+            </a>
+            <a href="#get-notified" class="category-tile">
+                <h3>Aso-ebi &amp; Fashion</h3>
+            </a>
+            <a href="#get-notified" class="category-tile">
+                <h3>Cakes &amp; Confectionery</h3>
+            </a>
         </div>
+    </section>
+
+    <!-- GET NOTIFIED / LIST YOUR BUSINESS -->
+    <section class="contact-section" id="get-notified">
+
+        <!-- LEFT — Couples & Planners -->
+        <div class="contact-form-wrap">
+            <span class="section-eyebrow">For Couples &amp; Planners</span>
+            <h2>Get Notified When Vendors Launch</h2>
+            <form class="contact-form" name="vendor-interest" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+                <input type="hidden" name="form-name" value="vendor-interest">
+                <p class="form-hidden">
+                    <label>Don't fill this out if you're human: <input name="bot-field"></label>
+                </p>
+
+                <input type="text" name="name" placeholder="Your name" required>
+                <input type="email" name="email" placeholder="Your email" required>
+                <select name="category">
+                    <option value="">Which category interests you most?</option>
+                    <option value="photography">Photographers &amp; Videographers</option>
+                    <option value="catering">Caterers</option>
+                    <option value="decor">Decorators &amp; Florists</option>
+                    <option value="mc">MCs &amp; Entertainers</option>
+                    <option value="makeup">Makeup Artists &amp; Hair</option>
+                    <option value="venue">Venues &amp; Event Centers</option>
+                    <option value="fashion">Aso-ebi &amp; Fashion</option>
+                    <option value="cakes">Cakes &amp; Confectionery</option>
+                </select>
+                <button type="submit" class="btn">Notify Me</button>
+            </form>
+        </div>
+
+        <!-- RIGHT — Vendors -->
+        <div class="contact-form-wrap">
+            <span class="section-eyebrow">For Vendors</span>
+            <h2>List Your Business With Us</h2>
+            <form class="contact-form" name="vendor-listing" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+                <input type="hidden" name="form-name" value="vendor-listing">
+                <p class="form-hidden">
+                    <label>Don't fill this out if you're human: <input name="bot-field"></label>
+                </p>
+
+                <input type="text" name="business-name" placeholder="Your business name" required>
+                <input type="email" name="email" placeholder="Your email" required>
+                <select name="category" required>
+                    <option value="">Your category</option>
+                    <option value="photography">Photographers &amp; Videographers</option>
+                    <option value="catering">Caterers</option>
+                    <option value="decor">Decorators &amp; Florists</option>
+                    <option value="mc">MCs &amp; Entertainers</option>
+                    <option value="makeup">Makeup Artists &amp; Hair</option>
+                    <option value="venue">Venues &amp; Event Centers</option>
+                    <option value="fashion">Aso-ebi &amp; Fashion</option>
+                    <option value="cakes">Cakes &amp; Confectionery</option>
+                </select>
+                <button type="submit" class="btn">Join the Waitlist</button>
+            </form>
+        </div>
+
     </section>
 
     <!-- FOOTER -->
@@ -185,8 +204,7 @@
         <p class="footer-bottom">&copy; 2026 Vendoor Connect. All rights reserved.</p>
     </footer>
 
-    <script src="https://js.paystack.co/v1/inline.js"></script>
-<script src="main.js"></script>
+    <script src="main.js"></script>
 
 </body>
 </html>

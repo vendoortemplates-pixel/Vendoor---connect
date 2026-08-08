@@ -19,6 +19,11 @@
             </a>
         </div>
         <nav>
+            <button class="menu-toggle" id="menuToggle" aria-label="Open menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
             <ul>
                 <li><a href="index.html">Home</a></li>
                 <li class="has-dropdown">
@@ -32,11 +37,33 @@
                         <a href="templates.html" class="dropdown-item">Honeymoon</a>
                     </div>
                 </li>
+                <li><a href="find-vendors.html">Find Vendors</a></li>
+                <li><a href="reviews.html">Reviews</a></li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="contact.html">Contact</a></li>
             </ul>
         </nav>
     </header>
+
+    <!-- MOBILE NAV DRAWER -->
+    <div class="mobile-drawer" id="mobileDrawer">
+        <button class="drawer-close" id="drawerClose" aria-label="Close menu">&times;</button>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="templates.html">Templates</a></li>
+            <li><a href="templates.html">Traditional Wedding</a></li>
+            <li><a href="templates.html">White Wedding</a></li>
+            <li><a href="templates.html">Bridal Shower</a></li>
+            <li><a href="templates.html">Engagement</a></li>
+            <li><a href="templates.html">Bachelorette</a></li>
+            <li><a href="templates.html">Honeymoon</a></li>
+            <li><a href="find-vendors.html">Find Vendors</a></li>
+            <li><a href="reviews.html">Reviews</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </div>
+    <div class="drawer-overlay" id="drawerOverlay"></div>
 
     <!-- PAGE HEADER -->
     <section class="page-header">
@@ -117,9 +144,44 @@
 
     <!-- FOOTER -->
     <footer>
-        <img src="logo.png" alt="Vendoor Connect" class="footer-logo">
-        <p>Discover • Review • Connect</p>
-        <p>&copy; 2026 Vendoor Connect. All rights reserved.</p>
+        <div class="footer-grid">
+
+            <div class="footer-brand">
+                <img src="logo.png" alt="Vendoor Connect" class="footer-logo">
+                <p>Discover • Review • Connect</p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Shop</h4>
+                <ul>
+                    <li><a href="templates.html">All Templates</a></li>
+                    <li><a href="templates.html">Traditional Wedding</a></li>
+                    <li><a href="templates.html">Bridal Shower</a></li>
+                    <li><a href="templates.html">White Wedding</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="find-vendors.html">Find Vendors</a></li>
+                    <li><a href="reviews.html">Reviews</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Connect With Us</h4>
+                <ul>
+                    <li><a href="https://www.instagram.com/vendoortemplates" target="_blank" rel="noopener" class="social-link"><svg class="icon-instagram" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>Instagram</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <p class="footer-bottom">&copy; 2026 Vendoor Connect. All rights reserved.</p>
     </footer>
 
     <script src="main.js"></script>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Traditional Wedding Planner | Vendoor Connect</title>
+    <title>Reviews | Vendoor Connect</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
@@ -65,81 +65,91 @@
     </div>
     <div class="drawer-overlay" id="drawerOverlay"></div>
 
-    <!-- TEMPLATE DETAIL SECTION -->
-    <section class="template-detail">
-
-        <!-- LEFT — Preview Image -->
-        <div class="template-preview">
-            <img src="https://placehold.co/600x400" alt="Traditional Wedding Planner">
-        </div>
-
-        <!-- RIGHT — Template Info -->
-        <div class="template-info">
-            <span class="template-badge">Traditional Wedding</span>
-            <h1>Traditional Wedding Planner</h1>
-            <p class="template-description">
-                A self-guided planning template for your traditional wedding
-                ceremony, built around real Nigerian wedding traditions, from
-                aso-ebi coordination to vendor bookings. No event planner required.
-            </p>
-
-            <!-- FEATURES LIST -->
-            <ul class="features-list">
-                <li>Printable and digital-friendly</li>
-                <li>Step-by-step planning checklist</li>
-                <li>Budget tracker included</li>
-                <li>Vendor contact organizer</li>
-                <li>Free support for 30 days</li>
-                <li>Instant download after payment</li>
-            </ul>
-
-            <!-- PRICE -->
-            <div class="template-price">₦5,000</div>
-
-            <!-- EMAIL FOR RECEIPT -->
-            <input type="email" id="buyerEmail" class="buyer-email-input" placeholder="Your email address">
-
-            <!-- BUY BUTTON -->
-            <button class="btn-buy" id="buyButton" data-amount="500000" data-name="Traditional Wedding Planner">
-                Buy Now for ₦5,000
-            </button>
-
-            <!-- PREVIEW BUTTON -->
-            <a href="#" class="btn-preview">Live Preview</a>
-
-        </div>
-
+    <!-- PAGE HEADER -->
+    <section class="page-header">
+        <h1>Real Stories From Real Celebrations</h1>
+        <p>Worked with a vendor recently, or want to tell us how Vendoor Connect helped with your planning? We would love to hear from you.</p>
     </section>
 
-    <!-- RELATED TEMPLATES -->
-    <section class="related">
-        <h2>You May Also Like</h2>
-        <div class="template-grid">
+    <!-- REVIEW A VENDOR -->
+    <div class="review-form-block">
+        <span class="section-eyebrow">Vendor Reviews</span>
+        <h2>Help Other Couples Choose With Confidence</h2>
+        <form class="contact-form" name="vendor-review" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+            <input type="hidden" name="form-name" value="vendor-review">
+            <p class="form-hidden">
+                <label>Don't fill this out if you're human: <input name="bot-field"></label>
+            </p>
 
-            <div class="template-card">
-                <img src="https://placehold.co/300x200" alt="Bridal Shower Planner">
-                <h3>Bridal Shower Planner</h3>
-                <p>Everything you need to plan a beautiful bridal shower</p>
-                <span>₦3,500</span>
-                <a href="#" class="btn-card">Buy Now</a>
+            <input type="text" name="vendor-name" placeholder="Vendor name" required>
+            <select name="vendor-category" required>
+                <option value="">Vendor category</option>
+                <option value="photography">Photographers &amp; Videographers</option>
+                <option value="catering">Caterers</option>
+                <option value="decor">Decorators &amp; Florists</option>
+                <option value="mc">MCs &amp; Entertainers</option>
+                <option value="makeup">Makeup Artists &amp; Hair</option>
+                <option value="venue">Venues &amp; Event Centers</option>
+                <option value="fashion">Aso-ebi &amp; Fashion</option>
+                <option value="cakes">Cakes &amp; Confectionery</option>
+                <option value="other">Other</option>
+            </select>
+            <input type="text" name="name" placeholder="Your name" required>
+            <select name="rating" required>
+                <option value="">Your rating</option>
+                <option value="5">5 out of 5, excellent</option>
+                <option value="4">4 out of 5, very good</option>
+                <option value="3">3 out of 5, good</option>
+                <option value="2">2 out of 5, fair</option>
+                <option value="1">1 out of 5, poor</option>
+            </select>
+            <textarea name="review" placeholder="Tell us about your experience with this vendor" required></textarea>
+            <button type="submit" class="btn">Submit Review</button>
+        </form>
+    </div>
+
+    <!-- SHARE YOUR STORY -->
+    <div class="review-form-block">
+        <span class="section-eyebrow">Your Experience</span>
+        <h2>Tell Us How Vendoor Connect Helped You</h2>
+        <form class="contact-form" name="testimonial" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+            <input type="hidden" name="form-name" value="testimonial">
+            <p class="form-hidden">
+                <label>Don't fill this out if you're human: <input name="bot-field"></label>
+            </p>
+
+            <input type="text" name="name" placeholder="Your name" required>
+            <select name="role">
+                <option value="">I am a</option>
+                <option value="bride">Bride</option>
+                <option value="groom">Groom</option>
+                <option value="couple">Couple</option>
+                <option value="bridal-party">Bridal Party</option>
+                <option value="vendor">Vendor</option>
+                <option value="other">Other</option>
+            </select>
+            <textarea name="story" placeholder="Tell us your story" required></textarea>
+            <button type="submit" class="btn">Share Your Story</button>
+        </form>
+    </div>
+
+    <!-- CURATED TESTIMONIALS -->
+    <section class="testimonials-section">
+        <span class="section-eyebrow">What People Are Saying</span>
+        <h2>From Couples Who Planned With Us</h2>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <p class="testimonial-quote">"The Traditional Wedding Planner kept us so organized, we didn't miss a single vendor payment or aso-ebi deadline."</p>
+                <p class="testimonial-author">Amaka &amp; Femi O.</p>
             </div>
-
-            <div class="template-card">
-                <img src="https://placehold.co/300x200" alt="Bachelorette Planner">
-                <h3>Bachelorette Planner</h3>
-                <p>Organize the perfect bachelorette weekend for the bride-to-be</p>
-                <span>₦5,500</span>
-                <a href="#" class="btn-card">Buy Now</a>
+            <div class="testimonial-card">
+                <p class="testimonial-quote">"Planning my bridal shower felt effortless with this template. My friends couldn't believe I pulled it off myself."</p>
+                <p class="testimonial-author">Ifeoma T.</p>
             </div>
-
-            <div class="template-card">
-                <img src="https://placehold.co/300x200" alt="White Wedding Planner">
-                <h3>White Wedding Planner</h3>
-                <p>A complete planning template for your church or court wedding</p>
-                <span>₦7,500</span>
-                <a href="#" class="btn-card">Buy Now</a>
+            <div class="testimonial-card">
+                <p class="testimonial-quote">"As the groom, I never thought I'd be the one managing the checklist, but this planner made it so easy to stay on top of everything before our introduction."</p>
+                <p class="testimonial-author">Chidi E.</p>
             </div>
-
         </div>
     </section>
 
@@ -185,8 +195,7 @@
         <p class="footer-bottom">&copy; 2026 Vendoor Connect. All rights reserved.</p>
     </footer>
 
-    <script src="https://js.paystack.co/v1/inline.js"></script>
-<script src="main.js"></script>
+    <script src="main.js"></script>
 
 </body>
 </html>

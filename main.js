@@ -1,3 +1,37 @@
+// ===== MOBILE NAV DRAWER =====
+const menuToggle = document.getElementById('menuToggle');
+const mobileDrawer = document.getElementById('mobileDrawer');
+const drawerOverlay = document.getElementById('drawerOverlay');
+const drawerClose = document.getElementById('drawerClose');
+
+function openDrawer() {
+    if (mobileDrawer) mobileDrawer.classList.add('open');
+    if (drawerOverlay) drawerOverlay.classList.add('open');
+}
+
+function closeDrawer() {
+    if (mobileDrawer) mobileDrawer.classList.remove('open');
+    if (drawerOverlay) drawerOverlay.classList.remove('open');
+}
+
+if (menuToggle) {
+    menuToggle.addEventListener('click', openDrawer);
+}
+
+if (drawerClose) {
+    drawerClose.addEventListener('click', closeDrawer);
+}
+
+if (drawerOverlay) {
+    drawerOverlay.addEventListener('click', closeDrawer);
+}
+
+if (mobileDrawer) {
+    mobileDrawer.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', closeDrawer);
+    });
+}
+
 // ===== FILTER TEMPLATES BY CATEGORY =====
 function filterTemplates(category) {
 
@@ -40,31 +74,46 @@ if (searchInput) {
     });
 }
 // ===== PAYSTACK PAYMENT =====
+// To scale to more templates, give each buy button its own
+// data-amount (in kobo) and data-name attributes, this script
+// reads them automatically. No other JS changes needed.
 const buyButton = document.getElementById('buyButton');
 
 if (buyButton) {
     buyButton.addEventListener('click', function() {
 
+        const emailInput = document.getElementById('buyerEmail');
+        const email = emailInput ? emailInput.value.trim() : '';
+
+        if (!email || !email.includes('@') || !email.includes('.')) {
+            if (emailInput) emailInput.focus();
+            alert('Please enter a valid email address before checking out.');
+            return;
+        }
+
+        const amount = parseInt(buyButton.dataset.amount, 10) || 500000;
+        const templateName = buyButton.dataset.name || 'Vendoor Connect Template';
+
         var handler = PaystackPop.setup({
             key: 'pk_test_4d437e9c1cf459fca585716974a5eb5e4247cb1e',
-            email: prompt('Please enter your email address:'),
-            amount: 500000,
+            email: email,
+            amount: amount,
             currency: 'NGN',
-            ref: 'vendooor_' + Math.floor(Math.random() * 1000000000),
+            ref: 'vendoor_' + Math.floor(Math.random() * 1000000000),
             metadata: {
                 custom_fields: [
                     {
                         display_name: "Template Name",
                         variable_name: "template_name",
-                        value: "Traditional Wedding Planner"
+                        value: templateName
                     }
                 ]
             },
             callback: function(response) {
-                alert('Payment successful! 🎉 Your download will begin shortly. Reference: ' + response.reference);
+                window.location.href = 'thank-you.html?ref=' + encodeURIComponent(response.reference) + '&template=' + encodeURIComponent(templateName);
             },
             onClose: function() {
-                alert('Payment cancelled. Come back when you are ready!');
+                alert('Payment cancelled. Come back when you are ready.');
             }
         });
 
