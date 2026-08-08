@@ -1254,12 +1254,15 @@ footer {
     }
 
     nav {
-        padding: 14px 20px 20px;
-        justify-content: flex-start;
+        padding: 0;
     }
 
     .menu-toggle {
         display: flex;
+        position: absolute;
+        top: 28px;
+        right: 20px;
+        z-index: 20;
     }
 
     nav ul {
