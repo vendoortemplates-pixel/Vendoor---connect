@@ -84,15 +84,12 @@
     <!-- REVIEW A VENDOR -->
     <div class="review-form-block">
         <span class="section-eyebrow">Vendor Reviews</span>
-        <h2>Help Other Couples Choose With Confidence</h2>
-        <form class="contact-form" name="vendor-review" method="POST" data-netlify="true" netlify-honeypot="bot-field">
-            <input type="hidden" name="form-name" value="vendor-review">
-            <p class="form-hidden">
-                <label>Don't fill this out if you're human: <input name="bot-field"></label>
-            </p>
-
-            <input type="text" name="vendor-name" placeholder="Vendor name" required>
-            <select name="vendor-category" required>
+        <h2>Help Other Clients Choose With Confidence</h2>
+        <p class="error-msg" id="vendorReviewError" style="display:none; background-color:#FBEAE3; border:1px solid var(--terracotta); color:var(--terracotta-dark); font-size:13px; padding:10px 14px; border-radius:2px; margin-bottom:16px;"></p>
+        <p class="form-success" id="vendorReviewSuccess" style="display:none; background-color:#EFF6EC; border:1px solid #7A9B6E; color:#3E5A34; font-size:13px; padding:10px 14px; border-radius:2px; margin-bottom:16px;">Thank you! Your review has been posted below.</p>
+        <form class="contact-form" id="vendorReviewForm">
+            <input type="text" id="reviewVendorName" placeholder="Vendor name" required>
+            <select id="reviewVendorCategory" required>
                 <option value="">Vendor category</option>
                 <option value="photography">Photographers &amp; Videographers</option>
                 <option value="catering">Caterers</option>
@@ -102,10 +99,11 @@
                 <option value="venue">Venues &amp; Event Centers</option>
                 <option value="fashion">Aso-ebi &amp; Fashion</option>
                 <option value="cakes">Cakes &amp; Confectionery</option>
+                <option value="planning">Event Planners</option>
                 <option value="other">Other</option>
             </select>
-            <input type="text" name="name" placeholder="Your name" required>
-            <select name="rating" required>
+            <input type="text" id="reviewerName" placeholder="Your name" required>
+            <select id="reviewRating" required>
                 <option value="">Your rating</option>
                 <option value="5">5 out of 5, excellent</option>
                 <option value="4">4 out of 5, very good</option>
@@ -113,10 +111,26 @@
                 <option value="2">2 out of 5, fair</option>
                 <option value="1">1 out of 5, poor</option>
             </select>
-            <textarea name="review" placeholder="Tell us about your experience with this vendor" required></textarea>
-            <button type="submit" class="btn">Submit Review</button>
+            <textarea id="reviewText" placeholder="Tell us about your experience with this vendor" required></textarea>
+            <button type="submit" class="btn" id="submitReviewBtn">Submit Review</button>
         </form>
     </div>
+
+    <!-- VENDOR REVIEWS DISPLAY -->
+    <section class="testimonials-section" id="vendorReviewsSection">
+        <span class="section-eyebrow">From Our Community</span>
+        <h2>Verified Vendor Reviews</h2>
+        <p class="loading-note" id="verifiedReviewsLoading" style="text-align:center; color:var(--text-muted); font-size:14px;">Loading reviews...</p>
+        <div class="testimonials-grid" id="verifiedReviewsGrid"></div>
+        <p id="noVerifiedReviews" style="display:none; text-align:center; color:var(--text-muted); font-size:14px;">No verified vendor reviews yet, be the first to leave one above.</p>
+    </section>
+
+    <section class="testimonials-section" id="communityMentionsSection" style="display:none;">
+        <span class="section-eyebrow">Not Yet Listed</span>
+        <h2>Community Mentions</h2>
+        <p style="text-align:center; color:var(--text-muted); font-size:14px; max-width:520px; margin:-20px auto 30px;">Reviews for vendors who haven't joined Vendoor Connect yet. Know one of them? Send them to our <a href="find-vendors.html#get-notified" style="color:var(--terracotta); font-weight:600;">Vendor Community</a> page.</p>
+        <div class="testimonials-grid" id="communityMentionsGrid"></div>
+    </section>
 
     <!-- SHARE YOUR STORY -->
     <div class="review-form-block">
@@ -206,6 +220,108 @@
     </footer>
 
     <script src="main.js"></script>
+
+    <script>
+    (function () {
+        function escapeHtml(str) {
+            var div = document.createElement('div');
+            div.textContent = str || '';
+            return div.innerHTML;
+        }
+        function stars(rating) {
+            var n = parseInt(rating, 10) || 0;
+            return '★★★★★'.slice(0, n) + '☆☆☆☆☆'.slice(0, 5 - n);
+        }
+
+        // ----- SUBMIT A VENDOR REVIEW -----
+        var form = document.getElementById('vendorReviewForm');
+        var errorMsg = document.getElementById('vendorReviewError');
+        var successMsg = document.getElementById('vendorReviewSuccess');
+        var submitBtn = document.getElementById('submitReviewBtn');
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            errorMsg.style.display = 'none';
+            successMsg.style.display = 'none';
+            submitBtn.disabled = true;
+
+            var payload = {
+                vendorName: document.getElementById('reviewVendorName').value.trim(),
+                vendorCategory: document.getElementById('reviewVendorCategory').value,
+                reviewerName: document.getElementById('reviewerName').value.trim(),
+                rating: document.getElementById('reviewRating').value,
+                reviewText: document.getElementById('reviewText').value.trim()
+            };
+
+            fetch('/.netlify/functions/submit-review', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+                .then(function (res) { return res.json().then(function (json) { return { ok: res.ok, json: json }; }); })
+                .then(function (result) {
+                    submitBtn.disabled = false;
+                    if (!result.ok) throw new Error(result.json.error || 'Something went wrong.');
+                    successMsg.style.display = 'block';
+                    form.reset();
+                    loadReviews();
+                })
+                .catch(function (err) {
+                    submitBtn.disabled = false;
+                    errorMsg.textContent = err.message;
+                    errorMsg.style.display = 'block';
+                });
+        });
+
+        // ----- LOAD + DISPLAY REVIEWS -----
+        function loadReviews() {
+            var verifiedLoading = document.getElementById('verifiedReviewsLoading');
+            var verifiedGrid = document.getElementById('verifiedReviewsGrid');
+            var noVerified = document.getElementById('noVerifiedReviews');
+            var communitySection = document.getElementById('communityMentionsSection');
+            var communityGrid = document.getElementById('communityMentionsGrid');
+
+            fetch('/.netlify/functions/get-reviews')
+                .then(function (res) { return res.json(); })
+                .then(function (json) {
+                    verifiedLoading.style.display = 'none';
+                    var reviews = json.reviews || [];
+                    var verified = reviews.filter(function (r) { return r.vendor_id; });
+                    var community = reviews.filter(function (r) { return !r.vendor_id; });
+
+                    if (verified.length === 0) {
+                        noVerified.style.display = 'block';
+                        verifiedGrid.innerHTML = '';
+                    } else {
+                        noVerified.style.display = 'none';
+                        verifiedGrid.innerHTML = verified.map(function (r) {
+                            return '<div class="testimonial-card">' +
+                                '<p class="testimonial-quote">' + stars(r.rating) + '<br>"' + escapeHtml(r.review_text) + '"</p>' +
+                                '<p class="testimonial-author">' + escapeHtml(r.reviewer_name) + ' on <a href="vendor-profile.html?id=' + r.vendor_id + '" style="color:var(--terracotta); font-weight:600; text-decoration:none;">' + escapeHtml(r.vendor_name) + '</a></p>' +
+                            '</div>';
+                        }).join('');
+                    }
+
+                    if (community.length === 0) {
+                        communitySection.style.display = 'none';
+                    } else {
+                        communitySection.style.display = 'block';
+                        communityGrid.innerHTML = community.map(function (r) {
+                            return '<div class="testimonial-card">' +
+                                '<p class="testimonial-quote">' + stars(r.rating) + '<br>"' + escapeHtml(r.review_text) + '"</p>' +
+                                '<p class="testimonial-author">' + escapeHtml(r.reviewer_name) + ' on ' + escapeHtml(r.vendor_name) + '</p>' +
+                            '</div>';
+                        }).join('');
+                    }
+                })
+                .catch(function () {
+                    verifiedLoading.textContent = 'Could not load reviews right now.';
+                });
+        }
+
+        loadReviews();
+    })();
+    </script>
 
 </body>
 </html>
