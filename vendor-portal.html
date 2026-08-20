@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vendor Portal | Vendoor Connect</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+/* ===== VENDOR PORTAL — extends your existing style.css tokens/classes ===== */
+.dev-note {
+    background-color: var(--cocoa-dark);
+    color: var(--text-on-dark-muted);
+    font-size: 13px;
+    text-align: center;
+    padding: 10px 16px;
+    line-height: 1.5;
+}
+.dev-note strong { color: var(--gold); }
+
+.login-section {
+    display: flex;
+    justify-content: center;
+    padding: 80px 40px 100px;
+    background-color: var(--white);
+}
+.login-form-wrap {
+    max-width: 440px;
+    width: 100%;
+    background-color: var(--ivory);
+    border: 1px solid var(--border-light);
+    border-radius: 4px;
+    padding: 48px 44px;
+}
+.login-form-wrap .section-eyebrow { text-align: center; display: block; }
+.login-form-wrap h2 {
+    font-family: var(--font-heading);
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--cocoa);
+    text-align: center;
+    margin-bottom: 8px;
+}
+.login-form-wrap .form-sub {
+    font-size: 14px;
+    color: var(--text-muted);
+    text-align: center;
+    margin-bottom: 32px;
+}
+.login-form { display: flex; flex-direction: column; gap: 16px; }
+.login-form input {
+    padding: 14px 18px;
+    border-radius: 2px;
+    border: 1px solid var(--border-light);
+    background-color: var(--white);
+    color: var(--cocoa);
+    font-size: 15px;
+    font-family: var(--font-body);
+    outline: none;
+    transition: border-color 0.3s;
+    width: 100%;
+}
+.login-form input::placeholder { color: var(--text-muted); }
+.login-form input:focus { border-color: var(--terracotta); }
+
+.error-msg {
+    display: none;
+    background-color: #FBEAE3;
+    border: 1px solid var(--terracotta);
+    color: var(--terracotta-dark);
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: 2px;
+}
+.error-msg.show { display: block; }
+
+.mode-toggle {
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 20px;
+}
+.mode-toggle a { color: var(--terracotta); text-decoration: none; font-weight: 600; }
+.mode-toggle a:hover { color: var(--cocoa); }
+
+/* ===== DASHBOARD ===== */
+.dashboard-section { background-color: var(--white); padding: 60px 40px 100px; }
+.dashboard-inner { max-width: 1000px; margin: 0 auto; }
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 40px;
+}
+.dashboard-header h2 {
+    font-family: var(--font-heading);
+    font-size: 30px;
+    font-weight: 600;
+    color: var(--cocoa);
+}
+.dashboard-header-actions { display: flex; gap: 12px; align-items: center; }
+.btn-small {
+    background-color: var(--terracotta);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 2px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.btn-small:hover { background-color: var(--cocoa); }
+.logout-link { color: var(--text-muted); font-size: 13px; text-decoration: none; font-weight: 600; }
+.logout-link:hover { color: var(--terracotta); }
+
+.empty-state { text-align: left; padding: 40px 0; border-top: 2px solid var(--gold); }
+.empty-state h3 { font-family: var(--font-heading); font-size: 20px; color: var(--cocoa); margin-bottom: 8px; }
+.empty-state p { font-size: 14px; color: var(--text-muted); }
+
+.listings-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px; }
+.listing-card {
+    background-color: var(--white);
+    border: 1px solid var(--border-light);
+    border-radius: 4px;
+    overflow: hidden;
+    text-align: left;
+    transition: transform 0.3s, border-color 0.3s;
+}
+.listing-card:hover { transform: translateY(-4px); border-color: var(--gold); }
+.listing-photo { width: 100%; height: 150px; object-fit: cover; display: block; background-color: var(--ivory); }
+.listing-photo-placeholder {
+    width: 100%; height: 150px; background-color: var(--ivory);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted); font-family: var(--font-heading); font-size: 13px; letter-spacing: 0.5px;
+}
+.listing-body { padding: 18px; }
+.listing-category {
+    display: block; color: var(--terracotta); font-size: 11px; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px;
+}
+.listing-body h3 { font-family: var(--font-heading); font-size: 18px; font-weight: 600; color: var(--cocoa); margin-bottom: 4px; }
+.listing-city { font-size: 13px; color: var(--text-muted); margin-bottom: 10px; }
+.listing-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px; }
+.listing-price { display: block; font-size: 18px; font-weight: 600; color: var(--terracotta); margin-bottom: 14px; }
+.listing-actions { display: flex; gap: 10px; }
+.listing-actions button {
+    flex: 1; padding: 9px; font-size: 12px; font-weight: 600; letter-spacing: 0.5px;
+    border-radius: 2px; cursor: pointer; transition: all 0.25s;
+}
+.btn-edit { background-color: var(--white); color: var(--cocoa); border: 1px solid var(--cocoa); }
+.btn-edit:hover { background-color: var(--cocoa); color: white; }
+.btn-delete { background-color: var(--white); color: var(--terracotta-dark); border: 1px solid var(--terracotta); }
+.btn-delete:hover { background-color: var(--terracotta); color: white; }
+.btn-delete.confirming { background-color: var(--terracotta-dark); color: white; border-color: var(--terracotta-dark); }
+
+.listing-form-overlay {
+    display: none; margin-top: 40px; background-color: var(--ivory);
+    border: 1px solid var(--border-light); border-radius: 4px; padding: 40px;
+}
+.listing-form-overlay.show { display: block; }
+.listing-form-overlay h3 { font-family: var(--font-heading); font-size: 24px; font-weight: 600; color: var(--cocoa); margin-bottom: 24px; }
+.listing-form { display: flex; flex-direction: column; gap: 16px; }
+.listing-form input, .listing-form select, .listing-form textarea {
+    padding: 14px 18px; border-radius: 2px; border: 1px solid var(--border-light);
+    background-color: var(--white); color: var(--cocoa); font-size: 15px;
+    font-family: var(--font-body); outline: none; transition: border-color 0.3s; width: 100%;
+}
+.listing-form textarea { resize: vertical; min-height: 90px; }
+.listing-form input:focus, .listing-form select:focus, .listing-form textarea:focus { border-color: var(--terracotta); }
+.form-row { display: flex; gap: 16px; flex-wrap: wrap; }
+.form-row > * { flex: 1; min-width: 200px; }
+.field-label {
+    font-size: 12px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 10px; display: block;
+}
+.photo-field-wrap { display: flex; flex-direction: column; }
+.photo-preview-row { display: flex; align-items: center; gap: 16px; }
+.photo-preview-thumb { width: 64px; height: 64px; border-radius: 2px; object-fit: cover; border: 1px solid var(--border-light); display: none; }
+.form-btn-row { display: flex; gap: 12px; margin-top: 8px; }
+.form-btn-row .btn-preview { flex: 1; width: auto; }
+.form-btn-row .btn { flex: 2; margin-top: 0; }
+
+.loading-note { text-align: center; font-size: 13px; color: var(--text-muted); padding: 20px 0; }
+
+@media (max-width: 640px) {
+    .login-form-wrap { padding: 36px 26px; }
+    .login-section { padding: 40px 20px 60px; }
+    .dashboard-section { padding: 40px 20px 60px; }
+    .listing-form-overlay { padding: 24px; }
+}
+</style>
+</head>
+<body>
+
+<div class="dev-note"><strong>Vendor Portal:</strong> real accounts via Netlify Identity, listings saved to your Netlify Database. Deploy this along with the netlify/ folder for it to work live.</div>
+
+<!-- ===== LOGIN / SIGNUP VIEW ===== -->
+<div id="loginView">
+    <section class="page-header">
+        <h1 id="authHeading">Vendor Login</h1>
+        <p id="authSubheading">Access your Vendoor Connect dashboard to manage your listing.</p>
+    </section>
+
+    <section class="login-section">
+        <div class="login-form-wrap">
+            <span class="section-eyebrow">Welcome</span>
+            <h2 id="authFormTitle">Log In to Your Account</h2>
+            <p class="form-sub" id="authFormSub">Enter your details below to continue.</p>
+
+            <p class="error-msg" id="authError"></p>
+
+            <form class="login-form" id="authForm">
+                <input type="email" id="authEmail" placeholder="Your email" required>
+                <input type="password" id="authPassword" placeholder="Password (min. 6 characters)" required minlength="6">
+                <button type="submit" class="btn" id="authSubmitBtn">Log In</button>
+            </form>
+
+            <p class="mode-toggle" id="modeToggle">
+                New here? <a href="#" id="switchToSignup">Create a vendor account</a>
+            </p>
+        </div>
+    </section>
+</div>
+
+<!-- ===== DASHBOARD VIEW ===== -->
+<div id="dashboardView" style="display:none;">
+    <section class="page-header">
+        <h1>Vendor Dashboard</h1>
+        <p>Manage your Vendoor Connect listing.</p>
+    </section>
+
+    <section class="dashboard-section">
+        <div class="dashboard-inner">
+            <div class="dashboard-header">
+                <h2>Your Listings</h2>
+                <div class="dashboard-header-actions">
+                    <button class="btn-small" id="newListingBtn">+ Create Listing</button>
+                    <a href="#" class="logout-link" id="logoutLink">Log Out</a>
+                </div>
+            </div>
+
+            <p class="loading-note" id="loadingNote">Loading your listings...</p>
+            <div id="emptyState" class="empty-state" style="display:none;">
+                <h3>You haven't created a listing yet</h3>
+                <p>Click "+ Create Listing" above to add your business and see how it will appear to clients.</p>
+            </div>
+
+            <div id="listingsGrid" class="listings-grid"></div>
+
+            <div class="listing-form-overlay" id="listingFormOverlay">
+                <h3 id="listingFormTitle">Create Listing</h3>
+                <p class="error-msg" id="listingFormError"></p>
+                <form class="listing-form" id="listingForm">
+                    <input type="text" id="fBusinessName" placeholder="Business name" required>
+
+                    <div class="form-row">
+                        <select id="fCategory" required>
+                            <option value="">Category</option>
+                            <option value="photography">Photographers &amp; Videographers</option>
+                            <option value="catering">Caterers</option>
+                            <option value="decor">Decorators &amp; Florists</option>
+                            <option value="mc">MCs &amp; Entertainers</option>
+                            <option value="makeup">Makeup Artists &amp; Hair</option>
+                            <option value="venue">Venues &amp; Event Centers</option>
+                            <option value="fashion">Aso-ebi &amp; Fashion</option>
+                            <option value="cakes">Cakes &amp; Confectionery</option>
+                            <option value="planning">Event Planners</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <input type="text" id="fCity" placeholder="City / service area" required>
+                    </div>
+
+                    <div class="form-row">
+                        <input type="number" id="fPrice" placeholder="Starting price (₦)" min="0" required>
+                        <input type="text" id="fPortfolio" placeholder="Instagram or portfolio link" required>
+                    </div>
+
+                    <textarea id="fDescription" placeholder="Short description of your services" required></textarea>
+
+                    <div class="photo-field-wrap">
+                        <span class="field-label">Business photo (optional)</span>
+                        <div class="photo-preview-row">
+                            <input type="file" id="fPhoto" accept="image/*">
+                            <img id="photoPreviewThumb" class="photo-preview-thumb" alt="Preview">
+                        </div>
+                    </div>
+
+                    <div class="form-btn-row">
+                        <button type="button" class="btn-preview" id="cancelListingBtn">Cancel</button>
+                        <button type="submit" class="btn" id="saveListingBtn">Save Listing</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script>
+(function () {
+    var identity = window.netlifyIdentity;
+
+    var CATEGORY_LABELS = {
+        photography: 'Photographers & Videographers',
+        catering: 'Caterers',
+        decor: 'Decorators & Florists',
+        mc: 'MCs & Entertainers',
+        makeup: 'Makeup Artists & Hair',
+        venue: 'Venues & Event Centers',
+        fashion: 'Aso-ebi & Fashion',
+        cakes: 'Cakes & Confectionery',
+        planning: 'Event Planners',
+        other: 'Other'
+    };
+
+    var loginView = document.getElementById('loginView');
+    var dashboardView = document.getElementById('dashboardView');
+    var authForm = document.getElementById('authForm');
+    var authError = document.getElementById('authError');
+    var authHeading = document.getElementById('authHeading');
+    var authSubheading = document.getElementById('authSubheading');
+    var authFormTitle = document.getElementById('authFormTitle');
+    var authFormSub = document.getElementById('authFormSub');
+    var authSubmitBtn = document.getElementById('authSubmitBtn');
+    var modeToggle = document.getElementById('modeToggle');
+    var switchToSignup = document.getElementById('switchToSignup');
+    var logoutLink = document.getElementById('logoutLink');
+    var newListingBtn = document.getElementById('newListingBtn');
+    var cancelListingBtn = document.getElementById('cancelListingBtn');
+    var listingForm = document.getElementById('listingForm');
+    var listingFormError = document.getElementById('listingFormError');
+    var listingFormOverlay = document.getElementById('listingFormOverlay');
+    var listingFormTitle = document.getElementById('listingFormTitle');
+    var listingsGrid = document.getElementById('listingsGrid');
+    var emptyState = document.getElementById('emptyState');
+    var loadingNote = document.getElementById('loadingNote');
+    var photoInput = document.getElementById('fPhoto');
+    var photoPreviewThumb = document.getElementById('photoPreviewThumb');
+
+    var authMode = 'login'; // or 'signup'
+    var editingId = null;
+    var pendingPhotoDataUrl = null;
+
+    function setAuthMode(mode) {
+        authMode = mode;
+        authError.classList.remove('show');
+        if (mode === 'signup') {
+            authFormTitle.textContent = 'Create Your Vendor Account';
+            authFormSub.textContent = 'Sign up to start listing your business.';
+            authSubmitBtn.textContent = 'Sign Up';
+            modeToggle.innerHTML = 'Already have an account? <a href="#" id="switchToLogin">Log in</a>';
+            document.getElementById('switchToLogin').addEventListener('click', function (e) {
+                e.preventDefault();
+                setAuthMode('login');
+            });
+        } else {
+            authFormTitle.textContent = 'Log In to Your Account';
+            authFormSub.textContent = 'Enter your details below to continue.';
+            authSubmitBtn.textContent = 'Log In';
+            modeToggle.innerHTML = 'New here? <a href="#" id="switchToSignupInner">Create a vendor account</a>';
+            document.getElementById('switchToSignupInner').addEventListener('click', function (e) {
+                e.preventDefault();
+                setAuthMode('signup');
+            });
+        }
+    }
+    switchToSignup.addEventListener('click', function (e) {
+        e.preventDefault();
+        setAuthMode('signup');
+    });
+
+    authForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var email = document.getElementById('authEmail').value.trim();
+        var password = document.getElementById('authPassword').value;
+        authError.classList.remove('show');
+        authSubmitBtn.disabled = true;
+
+        var action = authMode === 'signup' ? identity.signup(email, password) : identity.login(email, password, true);
+
+        action.then(function () {
+            authSubmitBtn.disabled = false;
+        }).catch(function (err) {
+            authSubmitBtn.disabled = false;
+            authError.textContent = (err && err.message) ? err.message : 'Something went wrong. Please try again.';
+            authError.classList.add('show');
+        });
+    });
+
+    logoutLink.addEventListener('click', function (e) {
+        e.preventDefault();
+        identity.logout();
+    });
+
+    function showDashboard() {
+        loginView.style.display = 'none';
+        dashboardView.style.display = 'block';
+        loadListings();
+    }
+    function showLogin() {
+        dashboardView.style.display = 'none';
+        loginView.style.display = 'block';
+        authForm.reset();
+        setAuthMode('login');
+    }
+
+    // ----- AUTHENTICATED API HELPER -----
+    function apiCall(path, options) {
+        options = options || {};
+        var user = identity.currentUser();
+        if (!user) return Promise.reject(new Error('Not logged in.'));
+        return user.jwt().then(function (token) {
+            var headers = Object.assign({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, options.headers || {});
+            return fetch('/.netlify/functions/' + path, Object.assign({}, options, { headers: headers }));
+        });
+    }
+
+    // ----- LISTING FORM OPEN/CLOSE -----
+    function resetListingForm() {
+        listingForm.reset();
+        editingId = null;
+        pendingPhotoDataUrl = null;
+        photoPreviewThumb.style.display = 'none';
+        photoPreviewThumb.src = '';
+        listingFormTitle.textContent = 'Create Listing';
+        listingFormError.classList.remove('show');
+    }
+
+    newListingBtn.addEventListener('click', function () {
+        resetListingForm();
+        listingFormOverlay.classList.add('show');
+        listingFormOverlay.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    cancelListingBtn.addEventListener('click', function () {
+        listingFormOverlay.classList.remove('show');
+        resetListingForm();
+    });
+
+    // ----- PHOTO UPLOAD (resized client-side, sent as a data URL) -----
+    photoInput.addEventListener('change', function () {
+        var file = photoInput.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            var img = new Image();
+            img.onload = function () {
+                var maxW = 480;
+                var scale = Math.min(1, maxW / img.width);
+                var canvas = document.createElement('canvas');
+                canvas.width = img.width * scale;
+                canvas.height = img.height * scale;
+                var ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                pendingPhotoDataUrl = canvas.toDataURL('image/jpeg', 0.72);
+                photoPreviewThumb.src = pendingPhotoDataUrl;
+                photoPreviewThumb.style.display = 'block';
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+
+    // ----- SAVE (CREATE OR UPDATE) -----
+    listingForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        listingFormError.classList.remove('show');
+
+        var payload = {
+            businessName: document.getElementById('fBusinessName').value.trim(),
+            category: document.getElementById('fCategory').value,
+            city: document.getElementById('fCity').value.trim(),
+            price: document.getElementById('fPrice').value,
+            portfolio: document.getElementById('fPortfolio').value.trim(),
+            description: document.getElementById('fDescription').value.trim(),
+            photoDataUrl: pendingPhotoDataUrl
+        };
+
+        var path = editingId ? 'update-listing' : 'create-listing';
+        if (editingId) payload.id = editingId;
+
+        apiCall(path, { method: 'POST', body: JSON.stringify(payload) })
+            .then(function (res) { return res.json().then(function (json) { return { ok: res.ok, json: json }; }); })
+            .then(function (result) {
+                if (!result.ok) throw new Error(result.json.error || 'Something went wrong.');
+                listingFormOverlay.classList.remove('show');
+                resetListingForm();
+                loadListings();
+            })
+            .catch(function (err) {
+                listingFormError.textContent = err.message;
+                listingFormError.classList.add('show');
+            });
+    });
+
+    // ----- LOAD + RENDER -----
+    function formatPrice(price) {
+        var n = parseFloat(price);
+        if (isNaN(n)) return '';
+        return '₦' + n.toLocaleString('en-NG');
+    }
+
+    function loadListings() {
+        loadingNote.style.display = 'block';
+        emptyState.style.display = 'none';
+        listingsGrid.style.display = 'none';
+        listingsGrid.innerHTML = '';
+
+        apiCall('my-listings', { method: 'GET' })
+            .then(function (res) { return res.json(); })
+            .then(function (json) {
+                loadingNote.style.display = 'none';
+                renderListings(json.listings || []);
+            })
+            .catch(function () {
+                loadingNote.textContent = 'Could not load your listings. Please refresh and try again.';
+            });
+    }
+
+    function renderListings(listings) {
+        listingsGrid.innerHTML = '';
+
+        if (listings.length === 0) {
+            emptyState.style.display = 'block';
+            listingsGrid.style.display = 'none';
+            return;
+        }
+        emptyState.style.display = 'none';
+        listingsGrid.style.display = 'grid';
+
+        listings.forEach(function (listing) {
+            var card = document.createElement('div');
+            card.className = 'listing-card';
+
+            var photoHtml = listing.photo_data_url
+                ? '<img class="listing-photo" src="' + listing.photo_data_url + '" alt="' + escapeHtml(listing.business_name) + '">'
+                : '<div class="listing-photo-placeholder">No photo uploaded</div>';
+
+            card.innerHTML =
+                photoHtml +
+                '<div class="listing-body">' +
+                    '<span class="listing-category">' + (CATEGORY_LABELS[listing.category] || listing.category) + '</span>' +
+                    '<h3>' + escapeHtml(listing.business_name) + '</h3>' +
+                    '<p class="listing-city">' + escapeHtml(listing.city) + '</p>' +
+                    '<p class="listing-desc">' + escapeHtml(listing.description) + '</p>' +
+                    '<span class="listing-price">Starting at ' + formatPrice(listing.price) + '</span>' +
+                    '<div class="listing-actions">' +
+                        '<button class="btn-edit" data-id="' + listing.id + '">Edit</button>' +
+                        '<button class="btn-delete" data-id="' + listing.id + '">Delete</button>' +
+                    '</div>' +
+                '</div>';
+
+            listingsGrid.appendChild(card);
+        });
+
+        listingsGrid.querySelectorAll('.btn-edit').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var listing = listings.find(function (l) { return String(l.id) === btn.dataset.id; });
+                if (!listing) return;
+                editingId = listing.id;
+                document.getElementById('fBusinessName').value = listing.business_name;
+                document.getElementById('fCategory').value = listing.category;
+                document.getElementById('fCity').value = listing.city;
+                document.getElementById('fPrice').value = listing.price;
+                document.getElementById('fPortfolio').value = listing.portfolio;
+                document.getElementById('fDescription').value = listing.description;
+                pendingPhotoDataUrl = null;
+                if (listing.photo_data_url) {
+                    photoPreviewThumb.src = listing.photo_data_url;
+                    photoPreviewThumb.style.display = 'block';
+                } else {
+                    photoPreviewThumb.style.display = 'none';
+                }
+                listingFormTitle.textContent = 'Edit Listing';
+                listingFormOverlay.classList.add('show');
+                listingFormOverlay.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        listingsGrid.querySelectorAll('.btn-delete').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                if (btn.classList.contains('confirming')) {
+                    apiCall('delete-listing?id=' + encodeURIComponent(btn.dataset.id), { method: 'DELETE' })
+                        .then(function () { loadListings(); });
+                } else {
+                    btn.classList.add('confirming');
+                    btn.textContent = 'Confirm Delete?';
+                    setTimeout(function () {
+                        btn.classList.remove('confirming');
+                        btn.textContent = 'Delete';
+                    }, 3000);
+                }
+            });
+        });
+    }
+
+    function escapeHtml(str) {
+        var div = document.createElement('div');
+        div.textContent = str || '';
+        return div.innerHTML;
+    }
+
+    // ----- INIT -----
+    identity.on('init', function (user) {
+        identity.handleAuthCallback();
+        if (user) { showDashboard(); } else { showLogin(); }
+    });
+    identity.on('login', function () { showDashboard(); });
+    identity.on('logout', function () { showLogin(); });
+    identity.init();
+})();
+</script>
+
+</body>
+</html>
