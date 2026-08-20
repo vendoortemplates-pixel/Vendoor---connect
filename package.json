@@ -2,8 +2,8 @@
   "name": "vendoor-connect-website",
   "version": "1.0.0",
   "private": true,
-  "description": "Vendoor Connect website — vendor portal backend (Netlify Functions + Netlify Database).",
+  "description": "Vendoor Connect website - vendor portal backend (Netlify Functions + Netlify Database).",
   "dependencies": {
-    "@netlify/database": "latest"
+    "@netlify/database": "^2.0.0"
   }
 }

@@ -2,6 +2,15 @@
 // Requires the frontend to send the Identity JWT as:  Authorization: Bearer <token>
 const { getDatabase } = require('@netlify/database');
 
+// @netlify/database (waddler driver) resolves a query to a PLAIN ARRAY of rows.
+// Some other Postgres drivers return { rows: [...] } instead. This handles both
+// so the code cannot break again if the driver shape changes.
+function rowsOf(result) {
+  if (Array.isArray(result)) return result;
+  if (result && Array.isArray(result.rows)) return result.rows;
+  return [];
+}
+
 exports.handler = async (event, context) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: JSON.stringify({ error: 'Method Not Allowed' }) };
@@ -34,7 +43,7 @@ exports.handler = async (event, context) => {
         (${user.sub}, ${user.email}, ${businessName}, ${category}, ${city}, ${price}, ${description}, ${portfolio}, ${photoDataUrl || null})
       RETURNING *
     `;
-    return { statusCode: 200, body: JSON.stringify({ listing: result.rows[0] }) };
+    return { statusCode: 200, body: JSON.stringify({ listing: rowsOf(result)[0] }) };
   } catch (err) {
     console.error('create-listing error:', err);
     return { statusCode: 500, body: JSON.stringify({ error: 'Something went wrong saving your listing.' }) };

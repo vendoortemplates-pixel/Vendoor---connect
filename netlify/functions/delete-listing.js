@@ -1,6 +1,15 @@
 // Deletes a listing, but only if it belongs to the currently logged-in vendor.
 const { getDatabase } = require('@netlify/database');
 
+// @netlify/database (waddler driver) resolves a query to a PLAIN ARRAY of rows.
+// Some other Postgres drivers return { rows: [...] } instead. This handles both
+// so the code cannot break again if the driver shape changes.
+function rowsOf(result) {
+  if (Array.isArray(result)) return result;
+  if (result && Array.isArray(result.rows)) return result.rows;
+  return [];
+}
+
 exports.handler = async (event, context) => {
   const user = context.clientContext && context.clientContext.user;
   if (!user) {
@@ -16,10 +25,11 @@ exports.handler = async (event, context) => {
     const db = getDatabase();
 
     const existing = await db.sql`SELECT vendor_id FROM listings WHERE id = ${id}`;
-    if (existing.rows.length === 0) {
+    const existingRows = rowsOf(existing);
+    if (existingRows.length === 0) {
       return { statusCode: 404, body: JSON.stringify({ error: 'Listing not found.' }) };
     }
-    if (existing.rows[0].vendor_id !== user.sub) {
+    if (existingRows[0].vendor_id !== user.sub) {
       return { statusCode: 403, body: JSON.stringify({ error: 'You do not own this listing.' }) };
     }
 

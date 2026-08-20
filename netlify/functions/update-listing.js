@@ -1,6 +1,15 @@
 // Updates a listing, but only if it belongs to the currently logged-in vendor.
 const { getDatabase } = require('@netlify/database');
 
+// @netlify/database (waddler driver) resolves a query to a PLAIN ARRAY of rows.
+// Some other Postgres drivers return { rows: [...] } instead. This handles both
+// so the code cannot break again if the driver shape changes.
+function rowsOf(result) {
+  if (Array.isArray(result)) return result;
+  if (result && Array.isArray(result.rows)) return result.rows;
+  return [];
+}
+
 exports.handler = async (event, context) => {
   if (event.httpMethod !== 'POST' && event.httpMethod !== 'PUT') {
     return { statusCode: 405, body: JSON.stringify({ error: 'Method Not Allowed' }) };
@@ -27,16 +36,17 @@ exports.handler = async (event, context) => {
     const db = getDatabase();
 
     const existing = await db.sql`SELECT vendor_id, photo_data_url FROM listings WHERE id = ${id}`;
-    if (existing.rows.length === 0) {
+    const existingRows = rowsOf(existing);
+    if (existingRows.length === 0) {
       return { statusCode: 404, body: JSON.stringify({ error: 'Listing not found.' }) };
     }
-    if (existing.rows[0].vendor_id !== user.sub) {
+    if (existingRows[0].vendor_id !== user.sub) {
       return { statusCode: 403, body: JSON.stringify({ error: 'You do not own this listing.' }) };
     }
 
     const finalPhoto = photoDataUrl !== undefined && photoDataUrl !== null
       ? photoDataUrl
-      : existing.rows[0].photo_data_url;
+      : existingRows[0].photo_data_url;
 
     const result = await db.sql`
       UPDATE listings
@@ -52,7 +62,7 @@ exports.handler = async (event, context) => {
       RETURNING *
     `;
 
-    return { statusCode: 200, body: JSON.stringify({ listing: result.rows[0] }) };
+    return { statusCode: 200, body: JSON.stringify({ listing: rowsOf(result)[0] }) };
   } catch (err) {
     console.error('update-listing error:', err);
     return { statusCode: 500, body: JSON.stringify({ error: 'Something went wrong updating your listing.' }) };

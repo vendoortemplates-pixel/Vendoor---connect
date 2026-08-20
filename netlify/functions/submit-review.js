@@ -3,6 +3,15 @@
 // the review gets linked to that vendor's real profile automatically.
 const { getDatabase } = require('@netlify/database');
 
+// @netlify/database (waddler driver) resolves a query to a PLAIN ARRAY of rows.
+// Some other Postgres drivers return { rows: [...] } instead. This handles both
+// so the code cannot break again if the driver shape changes.
+function rowsOf(result) {
+  if (Array.isArray(result)) return result;
+  if (result && Array.isArray(result.rows)) return result.rows;
+  return [];
+}
+
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: JSON.stringify({ error: 'Method Not Allowed' }) };
@@ -32,7 +41,8 @@ exports.handler = async (event) => {
     const match = await db.sql`
       SELECT id FROM listings WHERE LOWER(TRIM(business_name)) = LOWER(${vendorName}) LIMIT 1
     `;
-    const vendorId = match.rows.length > 0 ? match.rows[0].id : null;
+    const matchRows = rowsOf(match);
+    const vendorId = matchRows.length > 0 ? matchRows[0].id : null;
 
     const result = await db.sql`
       INSERT INTO reviews (vendor_name, vendor_category, vendor_id, reviewer_name, rating, review_text)
@@ -40,7 +50,7 @@ exports.handler = async (event) => {
       RETURNING *
     `;
 
-    return { statusCode: 200, body: JSON.stringify({ review: result.rows[0], matched: !!vendorId }) };
+    return { statusCode: 200, body: JSON.stringify({ review: rowsOf(result)[0], matched: !!vendorId }) };
   } catch (err) {
     console.error('submit-review error:', err);
     return { statusCode: 500, body: JSON.stringify({ error: 'Something went wrong submitting your review.' }) };
