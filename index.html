@@ -284,5 +284,30 @@
     })();
     </script>
 
+    <!-- VENDOR EMAIL CONFIRMATION HANDOFF
+         Netlify's default confirmation email links back to the site root
+         with a #confirmation_token in the URL, not to vendor-portal.html.
+         Only load the auth library on the rare visit that actually carries
+         one, confirm it, then hand off to the vendor dashboard. -->
+    <script>
+    (function () {
+        if (window.location.hash.indexOf('confirmation_token=') === -1) return;
+        var params = new URLSearchParams(window.location.hash.substring(1));
+        var token = params.get('confirmation_token');
+        if (!token) return;
+
+        import('https://cdn.jsdelivr.net/npm/gotrue-js@0.9.29/+esm').then(function (mod) {
+            var GoTrue = mod.default;
+            var identity = new GoTrue({ APIUrl: window.location.origin + '/.netlify/identity', setCookie: false });
+            return identity.confirm(token, true);
+        }).then(function () {
+            window.location.replace('vendor-portal.html');
+        }).catch(function (err) {
+            console.error('Email confirmation failed:', err);
+            alert('We could not confirm your vendor account automatically' + (err && err.message ? (' (' + err.message + ')') : '') + '. Please try logging in on the vendor page, or sign up again if the link expired.');
+        });
+    })();
+    </script>
+
 </body>
 </html>

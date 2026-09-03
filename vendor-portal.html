@@ -286,10 +286,30 @@
     </section>
 </div>
 
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-<script>
-(function () {
-    var identity = window.netlifyIdentity;
+<script type="module">
+// Uses gotrue-js directly (NOT netlify-identity-widget, which only exposes
+// a hosted-modal open()/close() API and has no signup(email, password) or
+// login(email, password) methods for a custom-branded form like this one).
+// Loaded as an ES module bundle from jsDelivr since gotrue-js does not
+// publish its own browser/UMD build.
+(async function () {
+    var GoTrue;
+    try {
+        var mod = await import('https://cdn.jsdelivr.net/npm/gotrue-js@0.9.29/+esm');
+        GoTrue = mod.default;
+    } catch (err) {
+        console.error('Failed to load the sign-in library:', err);
+        var loginSection = document.querySelector('.login-section');
+        if (loginSection) {
+            loginSection.innerHTML = '<div class="login-form-wrap"><p class="error-msg show">Vendor sign-in could not load. Please refresh the page, or try again in a few minutes.</p></div>';
+        }
+        return;
+    }
+
+    var identity = new GoTrue({
+        APIUrl: window.location.origin + '/.netlify/identity',
+        setCookie: false
+    });
 
     var CATEGORY_LABELS = {
         photography: 'Photographers & Videographers',
@@ -303,17 +323,6 @@
         planning: 'Event Planners',
         other: 'Other'
     };
-
-    // If the Identity widget script itself failed to load (blocked, offline,
-    // slow network), `netlifyIdentity` won't exist at all. Fail loudly and
-    // visibly instead of silently doing nothing when the form is submitted.
-    if (!identity) {
-        var loginSection = document.querySelector('.login-section');
-        if (loginSection) {
-            loginSection.innerHTML = '<div class="login-form-wrap"><p class="error-msg show">Vendor sign-in could not load. Please refresh the page, or try again in a few minutes.</p></div>';
-        }
-        return;
-    }
 
     var loginView = document.getElementById('loginView');
     var dashboardView = document.getElementById('dashboardView');
@@ -398,16 +407,15 @@
             authSubmitBtn.textContent = authMode === 'signup' ? 'Sign Up' : 'Log In';
 
             // A successful signup does NOT log the user in right away — Identity
-            // requires email confirmation first, and identity.on('login') only
-            // fires once that's done. Without this message the form looked like
-            // it did nothing at all.
+            // requires email confirmation first. Without this message the form
+            // looked like it did nothing at all.
             if (authMode === 'signup') {
                 authForm.reset();
                 authSuccess.textContent = 'Almost there! We sent a confirmation link to ' + email + '. Click it, then come back here and log in.';
                 authSuccess.classList.add('show');
+            } else {
+                showDashboard();
             }
-            // For login, identity.on('login') (registered below) handles moving
-            // to the dashboard once Netlify confirms the session.
         }).catch(function (err) {
             authSubmitBtn.disabled = false;
             authSubmitBtn.textContent = authMode === 'signup' ? 'Sign Up' : 'Log In';
@@ -418,7 +426,12 @@
 
     logoutLink.addEventListener('click', function (e) {
         e.preventDefault();
-        identity.logout();
+        var user = identity.currentUser();
+        if (user) {
+            user.logout().then(showLogin).catch(showLogin);
+        } else {
+            showLogin();
+        }
     });
 
     function showDashboard() {
@@ -635,13 +648,16 @@
     }
 
     // ----- INIT -----
-    identity.on('init', function (user) {
-        identity.handleAuthCallback();
-        if (user) { showDashboard(); } else { showLogin(); }
-    });
-    identity.on('login', function () { showDashboard(); });
-    identity.on('logout', function () { showLogin(); });
-    identity.init();
+    // gotrue-js persists the session in localStorage itself, so a page that
+    // already has a confirmed, logged-in vendor (e.g. arriving here right
+    // after index.html confirmed their email) picks it up immediately —
+    // no event system needed, just check once on load.
+    var existingUser = identity.currentUser();
+    if (existingUser) {
+        showDashboard();
+    } else {
+        showLogin();
+    }
 })();
 </script>
 
