@@ -262,10 +262,11 @@
             var communityGrid = document.getElementById('communityMentionsGrid');
 
             fetch('/.netlify/functions/get-reviews')
-                .then(function (res) { return res.json(); })
-                .then(function (json) {
+                .then(function (res) { return res.json().then(function (json) { return { ok: res.ok, json: json }; }); })
+                .then(function (result) {
+                    if (!result.ok) throw new Error(result.json.error || 'Something went wrong.');
                     verifiedLoading.style.display = 'none';
-                    var reviews = json.reviews || [];
+                    var reviews = result.json.reviews || [];
                     var verified = reviews.filter(function (r) { return r.vendor_id; });
                     var community = reviews.filter(function (r) { return !r.vendor_id; });
 
@@ -295,7 +296,9 @@
                     }
                 })
                 .catch(function () {
-                    verifiedLoading.textContent = 'Could not load reviews right now.';
+                    noVerified.style.display = 'none';
+                    verifiedLoading.style.display = 'block';
+                    verifiedLoading.textContent = 'Reviews can\'t be loaded right now — this is a temporary issue on our end. Please try again shortly.';
                 });
         }
 

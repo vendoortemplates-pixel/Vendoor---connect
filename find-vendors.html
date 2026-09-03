@@ -326,13 +326,17 @@
             var url = '/.netlify/functions/list-listings' + (qp.length ? '?' + qp.join('&') : '');
 
             fetch(url)
-                .then(function (res) { return res.json(); })
-                .then(function (json) {
+                .then(function (res) { return res.json().then(function (json) { return { ok: res.ok, json: json }; }); })
+                .then(function (result) {
+                    if (!result.ok) throw new Error(result.json.error || 'Something went wrong.');
                     loading.style.display = 'none';
-                    renderListings(json.listings || []);
+                    renderListings(result.json.listings || []);
                 })
                 .catch(function () {
-                    loading.textContent = 'Could not load vendors right now. Please try again shortly.';
+                    grid.style.display = 'none';
+                    empty.style.display = 'none';
+                    loading.style.display = 'block';
+                    loading.textContent = 'Vendors can\'t be loaded right now — this is a temporary issue on our end, not an empty directory. Please try again shortly.';
                 });
         }
 

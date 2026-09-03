@@ -483,13 +483,18 @@
         listingsGrid.innerHTML = '';
 
         apiCall('my-listings', { method: 'GET' })
-            .then(function (res) { return res.json(); })
-            .then(function (json) {
+            .then(function (res) { return res.json().then(function (json) { return { ok: res.ok, json: json }; }); })
+            .then(function (result) {
+                if (!result.ok) throw new Error(result.json.error || 'Something went wrong.');
                 loadingNote.style.display = 'none';
-                renderListings(json.listings || []);
+                renderListings(result.json.listings || []);
             })
-            .catch(function () {
-                loadingNote.textContent = 'Could not load your listings. Please refresh and try again.';
+            .catch(function (err) {
+                emptyState.style.display = 'none';
+                loadingNote.style.display = 'block';
+                loadingNote.textContent = (err && err.message && err.message !== 'Not logged in.')
+                    ? 'Could not load your listings — this is a temporary issue on our end. Please refresh and try again.'
+                    : 'Could not load your listings. Please refresh and try again.';
             });
     }
 
