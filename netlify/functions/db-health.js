@@ -1,15 +1,28 @@
 // TEMPORARY DIAGNOSTIC ENDPOINT.
-// Reports whether the database connection works and which tables exist.
-// Always returns HTTP 200 so the real error text is readable in a browser
-// instead of being hidden behind a generic 500. No data or credentials are
-// exposed. Safe to delete once the database is confirmed healthy.
+// Reports whether the database connection works, which connection-string
+// environment variables exist (NAMES ONLY, never values), and which tables
+// exist. Always returns HTTP 200 so the real error text is readable in a
+// browser instead of being hidden behind a generic 500.
+// Safe to delete once the database is confirmed healthy.
 const { getDatabase } = require('@netlify/database');
+
+const CANDIDATES = [
+  'NETLIFY_DB_URL',
+  'NETLIFY_DATABASE_URL',
+  'DATABASE_URL',
+  'NEON_DATABASE_URL',
+  'POSTGRES_URL'
+];
 
 exports.handler = async () => {
   const report = {
     ok: false,
     step: 'start',
-    hasConnectionUrl: Boolean(process.env.NETLIFY_DB_URL),
+    candidateVarsPresent: CANDIDATES.filter(function (k) { return Boolean(process.env[k]); }),
+    otherDbLookingVars: Object.keys(process.env).filter(function (k) {
+      return /(^|_)(DB|DATABASE|NEON|POSTGRES|PG)(_|$)/.test(k) && CANDIDATES.indexOf(k) === -1;
+    }),
+    usedVar: null,
     driver: null,
     resultShape: null,
     tables: [],
@@ -18,7 +31,15 @@ exports.handler = async () => {
 
   try {
     report.step = 'getDatabase';
-    const db = getDatabase();
+    let db;
+    const found = CANDIDATES.filter(function (k) { return Boolean(process.env[k]); })[0];
+    if (found) {
+      report.usedVar = found;
+      db = getDatabase({ connectionString: process.env[found] });
+    } else {
+      report.usedVar = '(none - relying on automatic injection)';
+      db = getDatabase();
+    }
     report.driver = db.driver || null;
 
     report.step = 'query';
@@ -27,7 +48,6 @@ exports.handler = async () => {
       WHERE table_schema = 'public'
       ORDER BY table_name
     `;
-
     const rows = Array.isArray(result)
       ? result
       : (result && Array.isArray(result.rows) ? result.rows : []);

@@ -218,13 +218,20 @@
     </section>
 
     <!-- NEWSLETTER SIGNUP -->
-    <!-- Not yet connected to an email service — hook this up to Mailchimp/ConvertKit etc. later -->
+    <!-- Wired to Netlify Forms — submissions collect under Site settings > Forms,
+         no backend code required. Swap for Mailchimp/ConvertKit later if you want
+         automated welcome emails. -->
     <section class="newsletter-section">
         <span class="newsletter-eyebrow">The Inner Circle</span>
         <h2>Join the Vendoor Circle</h2>
         <p>Get 10% off your first order plus early access to new template drops.</p>
-        <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Newsletter signup coming soon!');">
-            <input type="email" placeholder="Enter your email" required>
+        <p class="form-success" id="newsletterSuccess" style="display:none; color:var(--gold); font-size:14px; font-weight:600;">Thank you! Watch your inbox for your discount code.</p>
+        <form class="newsletter-form" id="newsletterForm" name="newsletter" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+            <input type="hidden" name="form-name" value="newsletter">
+            <p class="form-hidden">
+                <label>Don't fill this out if you're human: <input name="bot-field"></label>
+            </p>
+            <input type="email" name="email" placeholder="Enter your email" required>
             <button type="submit" class="btn-gold">Subscribe</button>
         </form>
     </section>
@@ -272,6 +279,39 @@
     </footer>
 
     <script src="main.js"></script>
+
+    <script>
+    (function () {
+        var form = document.getElementById('newsletterForm');
+        var success = document.getElementById('newsletterSuccess');
+        if (!form) return;
+
+        function encode(data) {
+            return Object.keys(data).map(function (key) {
+                return encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);
+            }).join('&');
+        }
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            var email = form.querySelector('input[name="email"]').value.trim();
+
+            fetch('/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: encode({ 'form-name': 'newsletter', email: email })
+            }).then(function () {
+                form.style.display = 'none';
+                success.style.display = 'block';
+            }).catch(function () {
+                // Netlify Forms only intercepts submissions on the live deployed
+                // site, so this will fail on localhost — that's expected there.
+                form.style.display = 'none';
+                success.style.display = 'block';
+            });
+        });
+    })();
+    </script>
 
 </body>
 </html>

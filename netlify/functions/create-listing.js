@@ -2,6 +2,19 @@
 // Requires the frontend to send the Identity JWT as:  Authorization: Bearer <token>
 const { getDatabase } = require('@netlify/database');
 
+// Netlify only auto-injects the database connection string for v2-style
+// functions. These are Lambda-style (exports.handler), so we look the
+// connection string up ourselves and pass it in explicitly. Falls back to
+// the default behaviour if none of these are set.
+function getDb() {
+  var url = process.env.NETLIFY_DB_URL
+    || process.env.NETLIFY_DATABASE_URL
+    || process.env.DATABASE_URL
+    || process.env.NEON_DATABASE_URL
+    || process.env.POSTGRES_URL;
+  return url ? getDatabase({ connectionString: url }) : getDatabase();
+}
+
 // @netlify/database (waddler driver) resolves a query to a PLAIN ARRAY of rows.
 // Some other Postgres drivers return { rows: [...] } instead. This handles both
 // so the code cannot break again if the driver shape changes.
@@ -35,7 +48,7 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    const db = getDatabase();
+    const db = getDb();
     const result = await db.sql`
       INSERT INTO listings
         (vendor_id, vendor_email, business_name, category, city, price, description, portfolio, photo_data_url)

@@ -78,7 +78,7 @@
     <!-- PAGE HEADER -->
     <section class="page-header">
         <h1>Find Vendors You Can Trust</h1>
-        <p>We are building Nigeria's most trusted vendor directory. Browse by category and be the first to know when profiles launch near you.</p>
+        <p>Browse real vendors who've joined Vendoor Connect, or get notified as our directory grows city by city.</p>
     </section>
 
     <!-- VENDOR CATEGORIES -->
@@ -86,30 +86,63 @@
         <span class="section-eyebrow">Browse By Category</span>
         <h2>What Are You Looking For?</h2>
         <div class="category-grid">
-            <a href="#get-notified" class="category-tile">
+            <a href="#directory" class="category-tile" onclick="jumpToCategory('photography')">
                 <h3>Photographers &amp; Videographers</h3>
             </a>
-            <a href="#get-notified" class="category-tile">
+            <a href="#directory" class="category-tile" onclick="jumpToCategory('catering')">
                 <h3>Caterers</h3>
             </a>
-            <a href="#get-notified" class="category-tile">
+            <a href="#directory" class="category-tile" onclick="jumpToCategory('decor')">
                 <h3>Decorators &amp; Florists</h3>
             </a>
-            <a href="#get-notified" class="category-tile">
+            <a href="#directory" class="category-tile" onclick="jumpToCategory('mc')">
                 <h3>MCs &amp; Entertainers</h3>
             </a>
-            <a href="#get-notified" class="category-tile">
+            <a href="#directory" class="category-tile" onclick="jumpToCategory('makeup')">
                 <h3>Makeup Artists &amp; Hair</h3>
             </a>
-            <a href="#get-notified" class="category-tile">
+            <a href="#directory" class="category-tile" onclick="jumpToCategory('venue')">
                 <h3>Venues &amp; Event Centers</h3>
             </a>
-            <a href="#get-notified" class="category-tile">
+            <a href="#directory" class="category-tile" onclick="jumpToCategory('fashion')">
                 <h3>Aso-ebi &amp; Fashion</h3>
             </a>
-            <a href="#get-notified" class="category-tile">
+            <a href="#directory" class="category-tile" onclick="jumpToCategory('cakes')">
                 <h3>Cakes &amp; Confectionery</h3>
             </a>
+        </div>
+    </section>
+
+    <!-- LIVE VENDOR DIRECTORY -->
+    <section class="page-header" id="directory" style="padding: 50px 20px 40px;">
+        <h1 style="font-size: 30px;">The Vendor Directory</h1>
+        <p>Search and filter vendors who've joined Vendoor Connect.</p>
+    </section>
+
+    <section class="search-section">
+        <input type="text" id="directorySearch" placeholder="Search vendors by name or service...">
+    </section>
+
+    <section class="filters" id="directoryFilters">
+        <button class="filter-btn active" data-category="">All</button>
+        <button class="filter-btn" data-category="photography">Photography</button>
+        <button class="filter-btn" data-category="catering">Catering</button>
+        <button class="filter-btn" data-category="decor">Decor &amp; Florals</button>
+        <button class="filter-btn" data-category="mc">MCs &amp; Entertainers</button>
+        <button class="filter-btn" data-category="makeup">Makeup &amp; Hair</button>
+        <button class="filter-btn" data-category="venue">Venues</button>
+        <button class="filter-btn" data-category="fashion">Aso-ebi &amp; Fashion</button>
+        <button class="filter-btn" data-category="cakes">Cakes</button>
+        <button class="filter-btn" data-category="planning">Event Planners</button>
+    </section>
+
+    <section class="directory-section">
+        <p class="directory-loading" id="directoryLoading">Loading vendors...</p>
+        <div class="listings-grid" id="directoryGrid"></div>
+        <div class="directory-empty" id="directoryEmpty" style="display:none;">
+            <h3>No vendors listed here yet</h3>
+            <p>Vendoor Connect is growing its directory city by city and category by category. Get notified the moment a vendor joins, or tell a vendor you love about us below.</p>
+            <a href="#get-notified" class="btn">Get Notified</a>
         </div>
     </section>
 
@@ -119,7 +152,7 @@
         <!-- LEFT — Couples & Planners -->
         <div class="contact-form-wrap">
             <span class="section-eyebrow">For Couples &amp; Planners</span>
-            <h2>Get Notified When Vendors Launch</h2>
+            <h2>Get Notified When New Vendors Join</h2>
             <form class="contact-form" name="vendor-interest" method="POST" data-netlify="true" netlify-honeypot="bot-field">
                 <input type="hidden" name="form-name" value="vendor-interest">
                 <p class="form-hidden">
@@ -147,6 +180,7 @@
         <div class="contact-form-wrap">
             <span class="section-eyebrow">For Vendors</span>
             <h2>List Your Business With Us</h2>
+            <p style="font-size: 14px; color: var(--text-muted); margin-top: -14px; margin-bottom: 4px;">Already ready to create your listing? <a href="vendor-portal.html" style="color: var(--terracotta); font-weight: 600; text-decoration: none;">Go to the Vendor Portal</a> to sign up and list your business directly.</p>
             <form class="contact-form" name="vendor-listing" method="POST" data-netlify="true" netlify-honeypot="bot-field">
                 <input type="hidden" name="form-name" value="vendor-listing">
                 <p class="form-hidden">
@@ -215,6 +249,115 @@
     </footer>
 
     <script src="main.js"></script>
+
+    <script>
+    (function () {
+        var CATEGORY_LABELS = {
+            photography: 'Photographers & Videographers',
+            catering: 'Caterers',
+            decor: 'Decorators & Florists',
+            mc: 'MCs & Entertainers',
+            makeup: 'Makeup Artists & Hair',
+            venue: 'Venues & Event Centers',
+            fashion: 'Aso-ebi & Fashion',
+            cakes: 'Cakes & Confectionery',
+            planning: 'Event Planners',
+            other: 'Other'
+        };
+
+        var grid = document.getElementById('directoryGrid');
+        var loading = document.getElementById('directoryLoading');
+        var empty = document.getElementById('directoryEmpty');
+        var searchInput = document.getElementById('directorySearch');
+        var filterButtons = document.querySelectorAll('#directoryFilters .filter-btn');
+
+        var currentCategory = '';
+        var searchTimer = null;
+
+        function escapeHtml(str) {
+            var div = document.createElement('div');
+            div.textContent = str || '';
+            return div.innerHTML;
+        }
+
+        function formatPrice(price) {
+            var n = parseFloat(price);
+            if (isNaN(n)) return '';
+            return '₦' + n.toLocaleString('en-NG');
+        }
+
+        function renderListings(listings) {
+            if (listings.length === 0) {
+                grid.style.display = 'none';
+                grid.innerHTML = '';
+                empty.style.display = 'block';
+                return;
+            }
+            empty.style.display = 'none';
+            grid.style.display = 'grid';
+            grid.innerHTML = listings.map(function (l) {
+                var photoHtml = l.photo_data_url
+                    ? '<img class="listing-photo" src="' + l.photo_data_url + '" alt="' + escapeHtml(l.business_name) + '">'
+                    : '<div class="listing-photo-placeholder">No photo uploaded</div>';
+                return '<div class="listing-card">' +
+                    photoHtml +
+                    '<div class="listing-body">' +
+                        '<span class="listing-category">' + (CATEGORY_LABELS[l.category] || l.category) + '</span>' +
+                        '<h3>' + escapeHtml(l.business_name) + '</h3>' +
+                        '<p class="listing-city">' + escapeHtml(l.city) + '</p>' +
+                        '<p class="listing-desc">' + escapeHtml(l.description) + '</p>' +
+                        '<span class="listing-price">Starting at ' + formatPrice(l.price) + '</span>' +
+                        '<a href="vendor-profile.html?id=' + l.id + '" class="btn-card">View Profile</a>' +
+                    '</div>' +
+                '</div>';
+            }).join('');
+        }
+
+        function loadDirectory() {
+            loading.style.display = 'block';
+            loading.textContent = 'Loading vendors...';
+            grid.style.display = 'none';
+            empty.style.display = 'none';
+
+            var qp = [];
+            if (currentCategory) qp.push('category=' + encodeURIComponent(currentCategory));
+            var q = searchInput.value.trim();
+            if (q) qp.push('q=' + encodeURIComponent(q));
+            var url = '/.netlify/functions/list-listings' + (qp.length ? '?' + qp.join('&') : '');
+
+            fetch(url)
+                .then(function (res) { return res.json(); })
+                .then(function (json) {
+                    loading.style.display = 'none';
+                    renderListings(json.listings || []);
+                })
+                .catch(function () {
+                    loading.textContent = 'Could not load vendors right now. Please try again shortly.';
+                });
+        }
+
+        filterButtons.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                filterButtons.forEach(function (b) { b.classList.remove('active'); });
+                btn.classList.add('active');
+                currentCategory = btn.dataset.category;
+                loadDirectory();
+            });
+        });
+
+        searchInput.addEventListener('input', function () {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(loadDirectory, 350);
+        });
+
+        window.jumpToCategory = function (category) {
+            var btn = document.querySelector('#directoryFilters .filter-btn[data-category="' + category + '"]');
+            if (btn) btn.click();
+        };
+
+        loadDirectory();
+    })();
+    </script>
 
 </body>
 </html>
