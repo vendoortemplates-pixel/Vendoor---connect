@@ -77,12 +77,14 @@
 
     <!-- ORDER CONFIRMATION -->
     <section class="confirmation-section">
-        <span class="section-eyebrow">Order Received</span>
-        <h1>Thank You For Your Purchase</h1>
+        <span class="section-eyebrow" id="confirmationEyebrow">Order Received</span>
+        <h1 id="confirmationHeading">Thank You For Your Purchase</h1>
         <p class="confirmation-message" id="confirmationMessage">
             We have received your order and will send your planning template to your email within 24 hours.
         </p>
         <p class="confirmation-ref" id="confirmationRef"></p>
+        <a href="#" class="btn-gold" id="downloadButton" style="display:none; margin-bottom: 16px;">Download Your Template</a>
+        <br>
         <a href="templates.html" class="btn">Continue Browsing</a>
     </section>
 
@@ -129,18 +131,64 @@
     </footer>
 
     <script>
+    (function () {
         var params = new URLSearchParams(window.location.search);
         var ref = params.get('ref');
         var template = params.get('template');
 
+        var messageEl = document.getElementById('confirmationMessage');
+        var refEl = document.getElementById('confirmationRef');
+        var downloadBtn = document.getElementById('downloadButton');
+
         if (template) {
-            document.getElementById('confirmationMessage').textContent =
-                'We have received your order for the ' + template + ' and will send it to your email within 24 hours.';
+            messageEl.textContent = 'We have received your order for the ' + template + ' and will send it to your email within 24 hours.';
+        }
+        if (ref) {
+            refEl.textContent = 'Order reference: ' + ref;
         }
 
-        if (ref) {
-            document.getElementById('confirmationRef').textContent = 'Order reference: ' + ref;
-        }
+        // No reference in the URL at all (someone just navigated here directly) —
+        // nothing to verify, leave the generic message as-is.
+        if (!ref) return;
+
+        // Verify the payment server-side against Paystack, then only offer an
+        // instant download if verification succeeded AND a finished file
+        // actually exists for that template yet. Either way, the honest
+        // fallback message above stays visible unless we can confidently
+        // improve on it.
+        Promise.all([
+            fetch('/.netlify/functions/verify-payment?reference=' + encodeURIComponent(ref))
+                .then(function (res) { return res.json().then(function (json) { return { ok: res.ok, json: json }; }); })
+                .catch(function () { return { ok: false, json: null }; }),
+            fetch('/deliverables/manifest.json')
+                .then(function (res) { return res.ok ? res.json() : null; })
+                .catch(function () { return null; })
+        ]).then(function (results) {
+            var verify = results[0];
+            var manifest = results[1];
+
+            if (!verify.ok || !verify.json || !verify.json.ok) {
+                // Could not verify (not necessarily a failed payment — could be a
+                // webhook delay, or verification isn't configured yet). Keep the
+                // existing "24 hours" message rather than alarming the buyer.
+                return;
+            }
+
+            messageEl.textContent = 'Payment confirmed! Thank you for your order' + (template ? ' — the ' + template : '') + '.';
+
+            var slug = verify.json.productSlug;
+            var filename = manifest && slug ? manifest[slug] : null;
+
+            if (filename) {
+                downloadBtn.href = '/deliverables/' + encodeURIComponent(filename);
+                downloadBtn.setAttribute('download', '');
+                downloadBtn.style.display = 'inline-block';
+                messageEl.textContent += ' Your download is ready below.';
+            } else {
+                messageEl.textContent += ' We will send it to your email within 24 hours.';
+            }
+        });
+    })();
     </script>
 
     <script src="main.js"></script>

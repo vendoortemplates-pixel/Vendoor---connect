@@ -100,6 +100,7 @@ if (buyButton) {
 
         const amount = parseInt(buyButton.dataset.amount, 10) || 500000;
         const templateName = buyButton.dataset.name || 'Vendoor Connect Template';
+        const productSlug = buyButton.dataset.slug || '';
 
         var handler = PaystackPop.setup({
             key: 'pk_test_4d437e9c1cf459fca585716974a5eb5e4247cb1e',
@@ -113,6 +114,11 @@ if (buyButton) {
                         display_name: "Template Name",
                         variable_name: "template_name",
                         value: templateName
+                    },
+                    {
+                        display_name: "Product Slug",
+                        variable_name: "product_slug",
+                        value: productSlug
                     }
                 ]
             },

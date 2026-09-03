@@ -117,6 +117,23 @@
 
     </section>
 
+    <!-- LIVE PREVIEW MODAL -->
+    <div class="preview-modal-overlay" id="previewModalOverlay">
+        <div class="preview-modal">
+            <button class="preview-modal-close" id="previewModalClose" aria-label="Close preview">&times;</button>
+            <div class="preview-modal-image-wrap">
+                <img id="previewModalImage" src="" alt="">
+            </div>
+            <div class="preview-modal-body">
+                <span class="preview-modal-badge" id="previewModalBadge"></span>
+                <h2 id="previewModalName"></h2>
+                <p id="previewModalDescription"></p>
+                <p class="preview-modal-note">Full sample pages are being finalized — this preview will update with actual interior pages soon. Every purchase includes free support for 30 days if anything needs adjusting.</p>
+                <a href="#" class="btn-buy" id="previewModalBuy">Close Preview &amp; Buy</a>
+            </div>
+        </div>
+    </div>
+
     <!-- RELATED TEMPLATES -->
     <section class="related">
         <h2>You May Also Like</h2>
@@ -237,14 +254,43 @@
         var buyButton = document.getElementById('buyButton');
         buyButton.dataset.amount = String(product.price * 100);
         buyButton.dataset.name = product.name;
+        buyButton.dataset.slug = slug;
         document.getElementById('buyButtonLabel').textContent = 'Buy Now for ' + formatPrice(product.price);
 
-        // No live preview asset exists yet for any template — disable rather
-        // than link to a dead page.
+        // ----- LIVE PREVIEW MODAL -----
         var previewLink = document.getElementById('previewLink');
+        var previewOverlay = document.getElementById('previewModalOverlay');
+        var previewClose = document.getElementById('previewModalClose');
+
+        function openPreview() {
+            document.getElementById('previewModalImage').src = product.image;
+            document.getElementById('previewModalImage').alt = product.name;
+            document.getElementById('previewModalBadge').textContent = product.badge;
+            document.getElementById('previewModalName').textContent = product.name;
+            document.getElementById('previewModalDescription').textContent = product.description;
+            var modalBuy = document.getElementById('previewModalBuy');
+            modalBuy.onclick = function (e) {
+                e.preventDefault();
+                closePreview();
+                buyButton.click();
+            };
+            previewOverlay.classList.add('open');
+        }
+
+        function closePreview() {
+            previewOverlay.classList.remove('open');
+        }
+
         previewLink.addEventListener('click', function (e) {
             e.preventDefault();
-            alert('A live preview for this template is coming soon.');
+            openPreview();
+        });
+        previewClose.addEventListener('click', closePreview);
+        previewOverlay.addEventListener('click', function (e) {
+            if (e.target === previewOverlay) closePreview();
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closePreview();
         });
 
         // ----- RELATED TEMPLATES: the other 3 templates, in catalog order -----

@@ -1,0 +1,9 @@
+{
+  "_readme": "Maps each template's product slug to its deliverable filename in this folder. Leave a slug's value as null until the real finished file is ready — thank-you.html falls back to the honest 'you'll receive it by email' message for any slug that is still null. To go live with a template: 1) drop the finished PDF into this deliverables folder, 2) set that slug's value below to the exact filename (e.g. \"traditional-wedding-planner.pdf\"), 3) commit and push. No code changes needed.",
+  "traditional": null,
+  "white-wedding": null,
+  "bridal-shower": null,
+  "bachelorette": null,
+  "engagement": null,
+  "honeymoon": null
+}
