@@ -63,8 +63,22 @@
     font-size: 13px;
     padding: 10px 14px;
     border-radius: 2px;
+    margin-bottom: 16px;
 }
 .error-msg.show { display: block; }
+
+.success-msg {
+    display: none;
+    background-color: #F6F1E6;
+    border: 1px solid var(--gold);
+    color: var(--cocoa);
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: 2px;
+    margin-bottom: 16px;
+    line-height: 1.5;
+}
+.success-msg.show { display: block; }
 
 .mode-toggle {
     text-align: center;
@@ -184,6 +198,7 @@
             <p class="form-sub" id="authFormSub">Enter your details below to continue.</p>
 
             <p class="error-msg" id="authError"></p>
+            <p class="success-msg" id="authSuccess"></p>
 
             <form class="login-form" id="authForm">
                 <input type="email" id="authEmail" placeholder="Your email" required>
@@ -289,10 +304,22 @@
         other: 'Other'
     };
 
+    // If the Identity widget script itself failed to load (blocked, offline,
+    // slow network), `netlifyIdentity` won't exist at all. Fail loudly and
+    // visibly instead of silently doing nothing when the form is submitted.
+    if (!identity) {
+        var loginSection = document.querySelector('.login-section');
+        if (loginSection) {
+            loginSection.innerHTML = '<div class="login-form-wrap"><p class="error-msg show">Vendor sign-in could not load. Please refresh the page, or try again in a few minutes.</p></div>';
+        }
+        return;
+    }
+
     var loginView = document.getElementById('loginView');
     var dashboardView = document.getElementById('dashboardView');
     var authForm = document.getElementById('authForm');
     var authError = document.getElementById('authError');
+    var authSuccess = document.getElementById('authSuccess');
     var authHeading = document.getElementById('authHeading');
     var authSubheading = document.getElementById('authSubheading');
     var authFormTitle = document.getElementById('authFormTitle');
@@ -320,6 +347,7 @@
     function setAuthMode(mode) {
         authMode = mode;
         authError.classList.remove('show');
+        authSuccess.classList.remove('show');
         if (mode === 'signup') {
             authFormTitle.textContent = 'Create Your Vendor Account';
             authFormSub.textContent = 'Sign up to start listing your business.';
@@ -350,14 +378,39 @@
         var email = document.getElementById('authEmail').value.trim();
         var password = document.getElementById('authPassword').value;
         authError.classList.remove('show');
+        authSuccess.classList.remove('show');
         authSubmitBtn.disabled = true;
+        authSubmitBtn.textContent = authMode === 'signup' ? 'Signing Up…' : 'Logging In…';
 
-        var action = authMode === 'signup' ? identity.signup(email, password) : identity.login(email, password, true);
+        var action;
+        try {
+            action = authMode === 'signup' ? identity.signup(email, password) : identity.login(email, password, true);
+        } catch (err) {
+            authSubmitBtn.disabled = false;
+            authSubmitBtn.textContent = authMode === 'signup' ? 'Sign Up' : 'Log In';
+            authError.textContent = (err && err.message) ? err.message : 'Something went wrong. Please try again.';
+            authError.classList.add('show');
+            return;
+        }
 
         action.then(function () {
             authSubmitBtn.disabled = false;
+            authSubmitBtn.textContent = authMode === 'signup' ? 'Sign Up' : 'Log In';
+
+            // A successful signup does NOT log the user in right away — Identity
+            // requires email confirmation first, and identity.on('login') only
+            // fires once that's done. Without this message the form looked like
+            // it did nothing at all.
+            if (authMode === 'signup') {
+                authForm.reset();
+                authSuccess.textContent = 'Almost there! We sent a confirmation link to ' + email + '. Click it, then come back here and log in.';
+                authSuccess.classList.add('show');
+            }
+            // For login, identity.on('login') (registered below) handles moving
+            // to the dashboard once Netlify confirms the session.
         }).catch(function (err) {
             authSubmitBtn.disabled = false;
+            authSubmitBtn.textContent = authMode === 'signup' ? 'Sign Up' : 'Log In';
             authError.textContent = (err && err.message) ? err.message : 'Something went wrong. Please try again.';
             authError.classList.add('show');
         });
