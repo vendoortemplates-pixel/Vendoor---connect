@@ -22,6 +22,13 @@
         price: 5000,
         short: 'Plan your Igbo traditional wedding, from the list to igba nkwu',
         description: 'A self-guided planner for your Igbo traditional wedding (igba nkwu): knocking and family visits, the bride price list, wine carrying, attire and coral beads, vendors, budget and the day-of programme, all in one place. No event planner required.'
+      },
+      'welcome-party': {
+        badge: 'Welcome Party',
+        name: 'Welcome Party Planner',
+        price: 5000,
+        short: 'Plan the welcome party that kicks off your wedding weekend',
+        description: 'A self-guided planner for your pre-wedding welcome party: guest list and invitations, venue and decor, food and drinks, music, the couple\'s entrance and the evening\'s run of show, all in one beautiful place.'
       }
     }
   };

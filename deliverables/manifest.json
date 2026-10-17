@@ -1,5 +1,6 @@
 {
   "_readme": "Maps each template's product slug to its finished file in this folder. To start selling a template with instant download: 1) drop the finished PDF in this deliverables folder (keep it under 4MB, compress it in Canva or Smallpdf if needed), 2) set that slug's value below to the exact filename, e.g. \"yoruba-wedding-planner.pdf\", 3) commit and push. Files here are private: buyers can only download them through a verified payment link. While a value is null, buyers see 'we'll email it within 24 hours' and the order appears on your admin page so you can email it yourself.",
   "yoruba-wedding": null,
-  "igbo-wedding": null
+  "igbo-wedding": null,
+  "welcome-party": null
 }
