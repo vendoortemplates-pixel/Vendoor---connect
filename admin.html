@@ -255,13 +255,24 @@
 
     function renderOrders(d) {
         var rows = d.orders || [];
-        if (!rows.length) { $('panel').innerHTML = '<p class="admin-empty">No paid orders yet. Every payment Paystack confirms will be listed here.</p>'; return; }
-        $('panel').innerHTML = '<div class="table-scroll"><table class="admin-table"><thead><tr><th>Date</th><th>Template</th><th>Buyer</th><th>Amount</th><th>Downloads</th><th>Reference</th></tr></thead><tbody>' +
+        if (!rows.length) { $('panel').innerHTML = '<p class="admin-empty">No paid orders yet. Every payment Paystack confirms will be listed here, and buyers are emailed automatically.</p>'; return; }
+        $('panel').innerHTML = '<div class="table-scroll"><table class="admin-table"><thead><tr><th>Date</th><th>Template</th><th>Buyer</th><th>Amount</th><th>Downloads</th><th>Email</th><th>Reference</th><th></th></tr></thead><tbody>' +
             rows.map(function (o) {
                 return '<tr><td>' + VC.date(o.paid_at || o.created_at) + '</td><td>' + esc(o.template_name || o.product_slug) + '</td>' +
                     '<td><a href="mailto:' + esc(o.email) + '?subject=' + encodeURIComponent('Your ' + (o.template_name || 'Vendoor Connect') + ' template') + '">' + esc(o.email) + '</a></td>' +
-                    '<td>' + VC.naira(o.amount_kobo / 100) + '</td><td>' + o.download_count + '</td><td>' + esc(o.reference) + '</td></tr>';
+                    '<td>' + VC.naira(o.amount_kobo / 100) + '</td><td>' + o.download_count + '</td>' +
+                    '<td>' + (o.email_sent_at ? (o.email_had_file ? 'Sent with download' : 'Sent, file to follow') : 'Not sent') + '</td>' +
+                    '<td>' + esc(o.reference) + '</td>' +
+                    '<td class="mod-actions"><button data-ref="' + esc(o.reference) + '">' + (o.email_sent_at ? 'Resend email' : 'Send email') + '</button></td></tr>';
             }).join('') + '</tbody></table></div>';
+        $('panel').querySelectorAll('button[data-ref]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                btn.disabled = true; btn.textContent = 'Sending…';
+                api('admin', { method: 'POST', body: JSON.stringify({ action: 'resend-email', reference: btn.dataset.ref }) })
+                    .then(function (r) { btn.textContent = r.hasFile ? 'Sent with download' : 'Sent'; })
+                    .catch(function (e) { btn.disabled = false; btn.textContent = 'Try again'; showError(e.message); });
+            });
+        });
     }
 
     function renderListings(d) {

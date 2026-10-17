@@ -10,6 +10,12 @@
 [functions.verify-payment]
   included_files = ["deliverables/**"]
 
+[functions.paystack-webhook]
+  included_files = ["deliverables/**"]
+
+[functions.admin]
+  included_files = ["deliverables/**"]
+
 # Keep purchased files and server code from being fetched directly.
 [[redirects]]
   from = "/deliverables/*"

@@ -3,6 +3,7 @@
 const { json, clean } = require('../lib/common');
 const { verifyAndRecord } = require('../lib/paystack');
 const { fileFor } = require('../lib/deliverables');
+const { sendOrderEmail } = require('../lib/email');
 
 exports.handler = async (event) => {
   const reference = clean((event.queryStringParameters || {}).reference, 120);
@@ -11,7 +12,11 @@ exports.handler = async (event) => {
     const r = await verifyAndRecord(reference);
     if (!r.ok) return json(200, { ok: false, code: r.code, error: r.error });
     const file = fileFor(r.order.product_slug);
+    // Backup for the webhook: send the confirmation email if it hasn't gone yet.
+    let emailed = false;
+    try { const e = await sendOrderEmail(r.order, false); emailed = !!(e && e.ok); } catch (e) { console.error('verify-payment email error:', e); }
     return json(200, {
+      emailed: emailed,
       ok: true,
       reference: r.order.reference,
       productSlug: r.order.product_slug,

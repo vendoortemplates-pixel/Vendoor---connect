@@ -177,12 +177,13 @@
                 eyebrow.textContent = 'Payment confirmed';
                 heading.textContent = 'Thank you for your purchase';
                 var tName = data.templateName || name;
+                var mailNote = data.emailed ? ' We\'ve also emailed this to you; check your spam folder if you don\'t see it.' : '';
                 if (data.downloadUrl) {
-                    messageEl.textContent = 'Your ' + tName + ' is ready. Download it below. Your link also works later from this page if you bookmark it.';
+                    messageEl.textContent = 'Your ' + tName + ' is ready. Download it below.' + mailNote;
                     downloadBtn.href = data.downloadUrl;
                     downloadBtn.style.display = 'inline-block';
                 } else {
-                    messageEl.textContent = 'Your payment for the ' + tName + ' is confirmed. We will email your template within 24 hours.';
+                    messageEl.textContent = 'Your payment for the ' + tName + ' is confirmed. We will email your template within 24 hours.' + (data.emailed ? ' A confirmation email is already on its way to you.' : '');
                 }
             })
             .catch(fallback);

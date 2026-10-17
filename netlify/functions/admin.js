@@ -3,7 +3,9 @@
 //   GET  ?view=summary | reviews&status=pending|approved|rejected | orders | listings
 //   POST { action: 'approve'|'reject'|'delete', reviewId }
 //   POST { action: 'hide'|'show', listingId }
+//   POST { action: 'resend-email', reference }
 const { getDb, rowsOf, json, parseBody, currentUser, isAdmin } = require('../lib/common');
+const { sendOrderEmail } = require('../lib/email');
 
 exports.handler = async (event, context) => {
   const user = currentUser(context);
@@ -40,7 +42,7 @@ exports.handler = async (event, context) => {
       if (view === 'orders') {
         const rows = rowsOf(await db.sql`
           SELECT id, reference, product_slug, template_name, email, amount_kobo, currency, paid_at,
-                 download_count, created_at
+                 download_count, email_sent_at, email_had_file, created_at
           FROM orders ORDER BY created_at DESC LIMIT 500
         `);
         return json(200, { orders: rows });
@@ -69,6 +71,13 @@ exports.handler = async (event, context) => {
       if (reviewId && data.action === 'delete') {
         await db.sql`DELETE FROM reviews WHERE id = ${reviewId}`;
         return json(200, { ok: true });
+      }
+      if (data.action === 'resend-email' && data.reference) {
+        const o = rowsOf(await db.sql`SELECT * FROM orders WHERE reference = ${String(data.reference)}`)[0];
+        if (!o) return json(404, { error: 'Order not found.' });
+        const r = await sendOrderEmail(o, true);
+        if (!r.ok) return json(500, { error: r.error || 'Email could not be sent.' });
+        return json(200, { ok: true, hasFile: r.hasFile });
       }
       if (listingId && (data.action === 'hide' || data.action === 'show')) {
         const status = data.action === 'hide' ? 'hidden' : 'active';
