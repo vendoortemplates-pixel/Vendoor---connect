@@ -465,7 +465,7 @@
     var GoTrue;
     try {
         var mod = await import('https://cdn.jsdelivr.net/npm/gotrue-js@0.9.29/+esm');
-        GoTrue = mod.default;
+        GoTrue = (mod.default && mod.default.default) ? mod.default.default : mod.default;
     } catch (err) {
         var loginSection = document.querySelector('.login-section');
         if (loginSection) loginSection.innerHTML = '<div class="login-form-wrap"><p class="error-msg show">Vendor sign-in could not load. Refresh the page, or try again in a few minutes.</p></div>';

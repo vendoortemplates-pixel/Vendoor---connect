@@ -378,7 +378,8 @@
         document.body.insertBefore(banner, document.body.firstChild);
 
         import('https://cdn.jsdelivr.net/npm/gotrue-js@0.9.29/+esm').then(function (mod) {
-            var identity = new mod.default({ APIUrl: window.location.origin + '/.netlify/identity', setCookie: false });
+            var GoTrueCls = (mod.default && mod.default.default) ? mod.default.default : mod.default;
+            var identity = new GoTrueCls({ APIUrl: window.location.origin + '/.netlify/identity', setCookie: false });
             return kind === 'confirm' ? identity.confirm(token, true) : identity.recover(token, true);
         }).then(function () {
             window.location.replace(kind === 'confirm' ? 'vendor-portal.html' : 'vendor-portal.html?reset=1');
