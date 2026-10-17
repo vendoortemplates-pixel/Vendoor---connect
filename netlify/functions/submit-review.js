@@ -1,71 +1,82 @@
-// Public endpoint (no login required) — anyone can submit a review of a
-// vendor. If the vendor name matches an existing listing (case-insensitive),
-// the review gets linked to that vendor's real profile automatically.
-const { getDatabase } = require('@netlify/database');
+// Public: submit a vendor review. Every review starts as "pending" and only
+// appears on the site after the admin approves it in admin.html.
+// Spam protection: hidden honeypot field, length limits, max 5 reviews per
+// visitor per day, and one review per email per vendor.
+const { getDb, rowsOf, json, parseBody, clean, ipHash, CATEGORIES } = require('../lib/common');
 
-// Netlify only auto-injects the database connection string for v2-style
-// functions. These are Lambda-style (exports.handler), so we look the
-// connection string up ourselves and pass it in explicitly. Falls back to
-// the default behaviour if none of these are set.
-function getDb() {
-  var url = process.env.NETLIFY_DB_URL
-    || process.env.NETLIFY_DATABASE_URL
-    || process.env.DATABASE_URL
-    || process.env.NEON_DATABASE_URL
-    || process.env.POSTGRES_URL;
-  return url ? getDatabase({ connectionString: url }) : getDatabase();
-}
-
-// @netlify/database (waddler driver) resolves a query to a PLAIN ARRAY of rows.
-// Some other Postgres drivers return { rows: [...] } instead. This handles both
-// so the code cannot break again if the driver shape changes.
-function rowsOf(result) {
-  if (Array.isArray(result)) return result;
-  if (result && Array.isArray(result.rows)) return result.rows;
-  return [];
-}
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 exports.handler = async (event) => {
-  if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: JSON.stringify({ error: 'Method Not Allowed' }) };
+  if (event.httpMethod !== 'POST') return json(405, { error: 'Method Not Allowed' });
+  const data = parseBody(event);
+  if (!data) return json(400, { error: 'Invalid request.' });
+
+  // Bots fill every field; humans never see this one.
+  if (data.website) return json(200, { ok: true, status: 'pending' });
+
+  const vendorIdIn = parseInt(data.vendorId, 10) || null;
+  let vendorName = clean(data.vendorName, 120);
+  let vendorCategory = CATEGORIES.indexOf(data.vendorCategory) !== -1 ? data.vendorCategory : null;
+  const reviewerName = clean(data.reviewerName, 80);
+  const reviewerEmail = clean(data.reviewerEmail, 160).toLowerCase();
+  const eventType = clean(data.eventType, 60) || null;
+  const rating = parseInt(data.rating, 10);
+  const reviewText = clean(data.reviewText, 2000);
+
+  if ((!vendorName && !vendorIdIn) || !reviewerName || !reviewText || !(rating >= 1 && rating <= 5)) {
+    return json(400, { error: 'Please fill in the vendor, your name, a star rating and your review.' });
   }
-
-  let data;
-  try {
-    data = JSON.parse(event.body || '{}');
-  } catch (e) {
-    return { statusCode: 400, body: JSON.stringify({ error: 'Invalid request body.' }) };
+  if (!EMAIL_RE.test(reviewerEmail)) {
+    return json(400, { error: 'Please enter a valid email address. It is never shown publicly.' });
   }
-
-  var vendorName = (data.vendorName || '').trim();
-  var vendorCategory = data.vendorCategory || null;
-  var reviewerName = (data.reviewerName || '').trim();
-  var rating = parseInt(data.rating, 10);
-  var reviewText = (data.reviewText || '').trim();
-
-  if (!vendorName || !reviewerName || !reviewText || !rating || rating < 1 || rating > 5) {
-    return { statusCode: 400, body: JSON.stringify({ error: 'Missing or invalid fields.' }) };
+  if (reviewText.length < 20) {
+    return json(400, { error: 'Please write a little more about your experience (at least 20 characters).' });
   }
 
   try {
     const db = getDb();
+    const ip = ipHash(event);
 
-    // Try to match this review to a real listing by business name (case-insensitive, trimmed).
-    const match = await db.sql`
-      SELECT id FROM listings WHERE LOWER(TRIM(business_name)) = LOWER(${vendorName}) LIMIT 1
+    const recent = rowsOf(await db.sql`
+      SELECT COUNT(*)::int AS n FROM reviews WHERE ip_hash = ${ip} AND created_at > NOW() - INTERVAL '1 day'
+    `);
+    if (recent.length && Number(recent[0].n) >= 5) {
+      return json(429, { error: 'You have submitted several reviews today. Please try again tomorrow.' });
+    }
+
+    // Link to a real listing: by id (from a vendor's profile page) or by exact name.
+    let vendorId = null;
+    if (vendorIdIn) {
+      const m = rowsOf(await db.sql`SELECT id, business_name, category FROM listings WHERE id = ${vendorIdIn}`);
+      if (m.length) { vendorId = m[0].id; vendorName = m[0].business_name; vendorCategory = m[0].category; }
+    }
+    if (!vendorId && vendorName) {
+      const m = rowsOf(await db.sql`
+        SELECT id, category FROM listings WHERE LOWER(TRIM(business_name)) = LOWER(${vendorName}) LIMIT 1
+      `);
+      if (m.length) { vendorId = m[0].id; vendorCategory = vendorCategory || m[0].category; }
+    }
+    if (!vendorName) return json(400, { error: 'Please enter the vendor name.' });
+
+    const dupe = rowsOf(await db.sql`
+      SELECT id FROM reviews
+      WHERE reviewer_email = ${reviewerEmail} AND LOWER(TRIM(vendor_name)) = LOWER(${vendorName})
+        AND status <> 'rejected'
+      LIMIT 1
+    `);
+    if (dupe.length) {
+      return json(409, { error: 'You have already reviewed this vendor. Thank you!' });
+    }
+
+    await db.sql`
+      INSERT INTO reviews (vendor_name, vendor_category, vendor_id, reviewer_name, reviewer_email,
+                           rating, review_text, event_type, ip_hash, status)
+      VALUES (${vendorName}, ${vendorCategory}, ${vendorId}, ${reviewerName}, ${reviewerEmail},
+              ${rating}, ${reviewText}, ${eventType}, ${ip}, 'pending')
     `;
-    const matchRows = rowsOf(match);
-    const vendorId = matchRows.length > 0 ? matchRows[0].id : null;
-
-    const result = await db.sql`
-      INSERT INTO reviews (vendor_name, vendor_category, vendor_id, reviewer_name, rating, review_text)
-      VALUES (${vendorName}, ${vendorCategory}, ${vendorId}, ${reviewerName}, ${rating}, ${reviewText})
-      RETURNING *
-    `;
-
-    return { statusCode: 200, body: JSON.stringify({ review: rowsOf(result)[0], matched: !!vendorId }) };
+    return json(200, { ok: true, status: 'pending', matched: !!vendorId });
   } catch (err) {
     console.error('submit-review error:', err);
-    return { statusCode: 500, body: JSON.stringify({ error: 'Something went wrong submitting your review.' }) };
+    return json(500, { error: 'Something went wrong submitting your review. Please try again.' });
   }
 };

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin | Vendoor Connect</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.admin-wrap { max-width: 1080px; margin: 0 auto; padding: 40px 24px 100px; }
+.admin-login { max-width: 420px; margin: 60px auto; background: var(--white); border: 1px solid var(--border-light); padding: 40px; }
+.admin-login h1 { font-family: var(--font-heading); font-size: 26px; color: var(--cocoa); margin-bottom: 8px; }
+.admin-login p { font-size: 14px; color: var(--text-muted); margin-bottom: 22px; line-height: 1.5; }
+.admin-login input { width: 100%; padding: 13px 16px; border: 1px solid var(--border-light); margin-bottom: 12px; font-size: 15px; color: var(--cocoa); }
+.admin-top { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 12px; margin-bottom: 28px; }
+.admin-top h1 { font-family: var(--font-heading); font-size: 32px; color: var(--cocoa); }
+.admin-top span { font-size: 13px; color: var(--text-muted); }
+.admin-top a { color: var(--terracotta); font-weight: 600; font-size: 13px; margin-left: 12px; text-decoration: none; }
+.summary { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--border-light); background: var(--white); margin-bottom: 36px; }
+.summary div { padding: 20px 22px; border-right: 1px solid var(--border-light); }
+.summary div:last-child { border-right: none; }
+.summary b { display: block; font-family: var(--font-heading); font-size: 28px; color: var(--cocoa); }
+.summary span { font-size: 13px; color: var(--text-muted); }
+.summary .attn b { color: var(--terracotta); }
+.admin-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border-light); margin-bottom: 24px; flex-wrap: wrap; }
+.admin-tabs button { background: none; border: none; border-bottom: 2px solid transparent; padding: 12px 16px; font-size: 14px; font-weight: 600; color: var(--text-muted); cursor: pointer; margin-bottom: -1px; }
+.admin-tabs button[aria-selected="true"] { color: var(--cocoa); border-bottom-color: var(--gold); }
+.mod-card { background: var(--white); border: 1px solid var(--border-light); padding: 22px 24px; margin-bottom: 14px; }
+.mod-card .top { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
+.mod-card h3 { font-family: var(--font-heading); font-size: 18px; color: var(--cocoa); }
+.mod-card h3 small { font-family: var(--font-body); font-size: 12px; font-weight: 600; color: var(--text-muted); margin-left: 8px; }
+.mod-card .meta { font-size: 13px; color: var(--text-muted); margin-bottom: 10px; }
+.mod-card .text { font-size: 15px; line-height: 1.6; color: var(--cocoa); white-space: pre-wrap; margin-bottom: 16px; }
+.mod-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.mod-actions button { padding: 9px 18px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--cocoa); background: var(--white); color: var(--cocoa); }
+.mod-actions .approve { background: var(--cocoa); color: #fff; }
+.mod-actions .approve:hover { background: var(--cocoa-dark); }
+.mod-actions .reject:hover, .mod-actions .del:hover { background: var(--terracotta); border-color: var(--terracotta); color: #fff; }
+.admin-table { width: 100%; border-collapse: collapse; background: var(--white); border: 1px solid var(--border-light); font-size: 14px; }
+.admin-table th { text-align: left; font-size: 12px; color: var(--text-muted); font-weight: 600; padding: 12px 14px; border-bottom: 1px solid var(--border-light); }
+.admin-table td { padding: 12px 14px; border-bottom: 1px solid var(--border-light); color: var(--cocoa); vertical-align: top; }
+.admin-table td a { color: var(--terracotta); }
+.table-scroll { overflow-x: auto; }
+.admin-empty { padding: 40px 0; color: var(--text-muted); font-size: 15px; }
+.status-pill { font-size: 12px; font-weight: 600; padding: 3px 9px; background: var(--ivory); border: 1px solid var(--border-light); }
+@media (max-width: 700px) { .summary { grid-template-columns: repeat(2, 1fr); } .summary div:nth-child(2) { border-right: none; } .summary div:nth-child(-n+2) { border-bottom: 1px solid var(--border-light); } }
+</style>
+</head>
+<body>
+    <!-- SITE HEADER -->
+    <header class="site-header">
+        <div class="brand-bar">
+            <a href="index.html" class="logo">
+                <img src="logo-wordmark.png" alt="Vendoor Connect Logo">
+            </a>
+        </div>
+        <nav>
+            <button class="menu-toggle" id="menuToggle" aria-label="Open menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li class="has-dropdown">
+                    <a href="templates.html">Templates</a>
+                    <div class="dropdown-menu">
+                        <a href="templates.html?cat=traditional" class="dropdown-item">Traditional Wedding</a>
+                        <a href="templates.html?cat=white-wedding" class="dropdown-item">White Wedding</a>
+                        <a href="templates.html?cat=bridal-shower" class="dropdown-item">Bridal Shower</a>
+                        <a href="templates.html?cat=engagement" class="dropdown-item">Engagement</a>
+                        <a href="templates.html?cat=bachelorette" class="dropdown-item">Bachelorette</a>
+                        <a href="templates.html?cat=honeymoon" class="dropdown-item">Honeymoon</a>
+                        <a href="custom-template.html" class="dropdown-item dropdown-item-custom">Custom Templates</a>
+                    </div>
+                </li>
+                <li><a href="find-vendors.html">Find Vendors</a></li>
+                <li><a href="reviews.html">Reviews</a></li>
+                <li><a href="vendor-portal.html">For Vendors</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- MOBILE NAV DRAWER -->
+    <div class="mobile-drawer" id="mobileDrawer">
+        <button class="drawer-close" id="drawerClose" aria-label="Close menu">&times;</button>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li class="drawer-has-submenu">
+                <button class="drawer-submenu-toggle" type="button">
+                    Templates
+                    <span class="drawer-caret">&#9662;</span>
+                </button>
+                <ul class="drawer-submenu">
+                    <li><a href="templates.html">All Templates</a></li>
+                    <li><a href="templates.html?cat=traditional">Traditional Wedding</a></li>
+                    <li><a href="templates.html?cat=white-wedding">White Wedding</a></li>
+                    <li><a href="templates.html?cat=bridal-shower">Bridal Shower</a></li>
+                    <li><a href="templates.html?cat=engagement">Engagement</a></li>
+                    <li><a href="templates.html?cat=bachelorette">Bachelorette</a></li>
+                    <li><a href="templates.html?cat=honeymoon">Honeymoon</a></li>
+                    <li><a href="custom-template.html">Custom Templates</a></li>
+                </ul>
+            </li>
+            <li><a href="find-vendors.html">Find Vendors</a></li>
+            <li><a href="reviews.html">Reviews</a></li>
+            <li><a href="vendor-portal.html">For Vendors</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </div>
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+<main class="admin-wrap">
+    <div class="admin-login" id="loginBox" hidden>
+        <h1>Admin login</h1>
+        <p>For the Vendoor Connect owner account only.</p>
+        <p class="error-msg" id="loginError" role="alert"></p>
+        <form id="loginForm">
+            <label class="sr-only" for="email">Email</label>
+            <input type="email" id="email" placeholder="Email" autocomplete="email" required>
+            <label class="sr-only" for="password">Password</label>
+            <input type="password" id="password" placeholder="Password" autocomplete="current-password" required>
+            <button class="btn btn-block" type="submit">Log in</button>
+        </form>
+    </div>
+
+    <div id="app" hidden>
+        <div class="admin-top">
+            <h1>Admin</h1>
+            <div><span id="who"></span><a href="#" id="logout">Log out</a></div>
+        </div>
+        <div class="summary" id="summary">
+            <div class="attn"><b id="sPending">–</b><span>Reviews to approve</span></div>
+            <div><b id="sApproved">–</b><span>Published reviews</span></div>
+            <div><b id="sListings">–</b><span>Vendor listings</span></div>
+            <div><b id="sRevenue">–</b><span id="sOrders">Orders</span></div>
+        </div>
+        <div class="admin-tabs" role="tablist">
+            <button role="tab" data-view="pending" aria-selected="true">Waiting for approval</button>
+            <button role="tab" data-view="approved" aria-selected="false">Published</button>
+            <button role="tab" data-view="rejected" aria-selected="false">Rejected</button>
+            <button role="tab" data-view="orders" aria-selected="false">Orders</button>
+            <button role="tab" data-view="listings" aria-selected="false">Vendors</button>
+        </div>
+        <p class="error-msg" id="appError" role="alert"></p>
+        <div id="panel"></div>
+    </div>
+</main>
+
+<script src="main.js"></script>
+<script src="vc.js"></script>
+<script type="module">
+(async function () {
+    var $ = function (id) { return document.getElementById(id); };
+    var esc = VC.esc;
+    var mod = await import('https://cdn.jsdelivr.net/npm/gotrue-js@0.9.29/+esm');
+    var identity = new mod.default({ APIUrl: location.origin + '/.netlify/identity', setCookie: false });
+    var view = 'pending';
+
+    function api(path, opts) {
+        opts = opts || {};
+        var u = identity.currentUser();
+        if (!u) return Promise.reject(new Error('Please log in.'));
+        return u.jwt().then(function (t) {
+            return VC.getJSON('/.netlify/functions/' + path, Object.assign({}, opts, { headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + t } }));
+        });
+    }
+    function showError(msg) { $('appError').textContent = msg || ''; $('appError').classList.toggle('show', !!msg); }
+
+    function showLogin(msg) {
+        $('app').hidden = true; $('loginBox').hidden = false;
+        if (msg) { $('loginError').textContent = msg; $('loginError').classList.add('show'); }
+    }
+    function start() {
+        var u = identity.currentUser();
+        if (!u) return showLogin();
+        api('admin?view=summary').then(function (d) {
+            $('loginBox').hidden = true; $('app').hidden = false;
+            $('who').textContent = u.email;
+            var s = d.summary;
+            $('sPending').textContent = s.pending_reviews;
+            $('sApproved').textContent = s.approved_reviews;
+            $('sListings').textContent = s.listings;
+            $('sRevenue').textContent = VC.naira(s.revenue_kobo / 100);
+            $('sOrders').textContent = s.orders + (s.orders === 1 ? ' order' : ' orders') + ' paid';
+            load();
+        }).catch(function (err) {
+            if (err.status === 403) { identity.currentUser().logout(); showLogin('This account does not have admin access. Log in with the owner email.'); }
+            else showLogin(err.message);
+        });
+    }
+
+    $('loginForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        $('loginError').classList.remove('show');
+        identity.login($('email').value.trim(), $('password').value, true).then(start).catch(function () {
+            showLogin('That email and password don\'t match. If you haven\'t made the owner account yet, sign up on the vendor page with the owner email first.');
+        });
+    });
+    $('logout').addEventListener('click', function (e) { e.preventDefault(); identity.currentUser().logout().then(function () { showLogin(); }); });
+
+    document.querySelectorAll('.admin-tabs button').forEach(function (b) {
+        b.addEventListener('click', function () {
+            document.querySelectorAll('.admin-tabs button').forEach(function (x) { x.setAttribute('aria-selected', x === b ? 'true' : 'false'); });
+            view = b.dataset.view; load();
+        });
+    });
+
+    function load() {
+        showError('');
+        $('panel').innerHTML = '<p class="admin-empty">Loading…</p>';
+        if (view === 'orders') return api('admin?view=orders').then(renderOrders).catch(function (e) { showError(e.message); });
+        if (view === 'listings') return api('admin?view=listings').then(renderListings).catch(function (e) { showError(e.message); });
+        api('admin?view=reviews&status=' + view).then(renderReviews).catch(function (e) { showError(e.message); });
+    }
+
+    function renderReviews(d) {
+        var rows = d.reviews || [];
+        if (!rows.length) {
+            $('panel').innerHTML = '<p class="admin-empty">' + (view === 'pending' ? 'All caught up. New reviews will appear here for you to approve.' : 'Nothing here yet.') + '</p>';
+            return;
+        }
+        $('panel').innerHTML = rows.map(function (r) {
+            var vendor = r.vendor_id ? '<a href="vendor-profile.html?id=' + r.vendor_id + '" target="_blank">' + esc(r.vendor_name) + '</a>' : esc(r.vendor_name);
+            var buttons = view === 'pending'
+                ? '<button class="approve" data-act="approve">Approve and publish</button><button class="reject" data-act="reject">Reject</button>'
+                : view === 'approved'
+                    ? '<button class="reject" data-act="reject">Unpublish</button>'
+                    : '<button data-act="approve">Approve and publish</button><button class="del" data-act="delete">Delete forever</button>';
+            return '<div class="mod-card" data-id="' + r.id + '"><div class="top"><h3>' + vendor + '<small>' + (r.vendor_id ? 'Listed vendor' : 'Not listed') + '</small></h3>' + VC.stars(r.rating) + '</div>' +
+                '<p class="meta">' + [esc(r.reviewer_name), '<a href="mailto:' + esc(r.reviewer_email) + '">' + esc(r.reviewer_email || '') + '</a>', esc(VC.CATEGORY_LABELS[r.vendor_category] || ''), esc(r.event_type || ''), VC.date(r.created_at)].filter(Boolean).join(', ') + '</p>' +
+                '<p class="text">' + esc(r.review_text) + '</p>' +
+                '<div class="mod-actions">' + buttons + '</div></div>';
+        }).join('');
+        $('panel').querySelectorAll('.mod-actions button').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var card = btn.closest('.mod-card');
+                var act = btn.dataset.act;
+                if (act === 'delete' && !btn.classList.contains('sure')) { btn.classList.add('sure'); btn.textContent = 'Click again to delete'; return; }
+                card.style.opacity = '.5';
+                api('admin', { method: 'POST', body: JSON.stringify({ action: act, reviewId: card.dataset.id }) })
+                    .then(function () { card.remove(); refreshCounts(); if (!$('panel').children.length) load(); })
+                    .catch(function (e) { card.style.opacity = '1'; showError(e.message); });
+            });
+        });
+    }
+    function refreshCounts() {
+        api('admin?view=summary').then(function (d) { $('sPending').textContent = d.summary.pending_reviews; $('sApproved').textContent = d.summary.approved_reviews; });
+    }
+
+    function renderOrders(d) {
+        var rows = d.orders || [];
+        if (!rows.length) { $('panel').innerHTML = '<p class="admin-empty">No paid orders yet. Every payment Paystack confirms will be listed here.</p>'; return; }
+        $('panel').innerHTML = '<div class="table-scroll"><table class="admin-table"><thead><tr><th>Date</th><th>Template</th><th>Buyer</th><th>Amount</th><th>Downloads</th><th>Reference</th></tr></thead><tbody>' +
+            rows.map(function (o) {
+                return '<tr><td>' + VC.date(o.paid_at || o.created_at) + '</td><td>' + esc(o.template_name || o.product_slug) + '</td>' +
+                    '<td><a href="mailto:' + esc(o.email) + '?subject=' + encodeURIComponent('Your ' + (o.template_name || 'Vendoor Connect') + ' template') + '">' + esc(o.email) + '</a></td>' +
+                    '<td>' + VC.naira(o.amount_kobo / 100) + '</td><td>' + o.download_count + '</td><td>' + esc(o.reference) + '</td></tr>';
+            }).join('') + '</tbody></table></div>';
+    }
+
+    function renderListings(d) {
+        var rows = d.listings || [];
+        if (!rows.length) { $('panel').innerHTML = '<p class="admin-empty">No vendors have listed yet.</p>'; return; }
+        $('panel').innerHTML = '<div class="table-scroll"><table class="admin-table"><thead><tr><th>Business</th><th>Category</th><th>City</th><th>Account email</th><th>Status</th><th></th></tr></thead><tbody>' +
+            rows.map(function (l) {
+                var hidden = l.status === 'hidden';
+                return '<tr data-id="' + l.id + '"><td><a href="vendor-profile.html?id=' + l.id + '" target="_blank">' + esc(l.business_name) + '</a></td><td>' + esc(VC.CATEGORY_LABELS[l.category] || l.category) + '</td><td>' + esc(l.city) + '</td>' +
+                    '<td>' + esc(l.vendor_email) + '</td><td><span class="status-pill">' + (hidden ? 'Hidden' : 'Live') + '</span></td>' +
+                    '<td class="mod-actions"><button data-act="' + (hidden ? 'show' : 'hide') + '">' + (hidden ? 'Show in directory' : 'Hide from directory') + '</button></td></tr>';
+            }).join('') + '</tbody></table></div>';
+        $('panel').querySelectorAll('button[data-act]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                api('admin', { method: 'POST', body: JSON.stringify({ action: btn.dataset.act, listingId: btn.closest('tr').dataset.id }) }).then(load).catch(function (e) { showError(e.message); });
+            });
+        });
+    }
+
+    start();
+})();
+</script>
+</body>
+</html>

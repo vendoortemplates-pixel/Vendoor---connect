@@ -76,17 +76,18 @@
                 <li class="has-dropdown">
                     <a href="templates.html">Templates</a>
                     <div class="dropdown-menu">
-                        <a href="templates.html" class="dropdown-item">Traditional Wedding</a>
-                        <a href="templates.html" class="dropdown-item">White Wedding</a>
-                        <a href="templates.html" class="dropdown-item">Bridal Shower</a>
-                        <a href="templates.html" class="dropdown-item">Engagement</a>
-                        <a href="templates.html" class="dropdown-item">Bachelorette</a>
-                        <a href="templates.html" class="dropdown-item">Honeymoon</a>
+                        <a href="templates.html?cat=traditional" class="dropdown-item">Traditional Wedding</a>
+                        <a href="templates.html?cat=white-wedding" class="dropdown-item">White Wedding</a>
+                        <a href="templates.html?cat=bridal-shower" class="dropdown-item">Bridal Shower</a>
+                        <a href="templates.html?cat=engagement" class="dropdown-item">Engagement</a>
+                        <a href="templates.html?cat=bachelorette" class="dropdown-item">Bachelorette</a>
+                        <a href="templates.html?cat=honeymoon" class="dropdown-item">Honeymoon</a>
                         <a href="custom-template.html" class="dropdown-item dropdown-item-custom">Custom Templates</a>
                     </div>
                 </li>
                 <li><a href="find-vendors.html">Find Vendors</a></li>
                 <li><a href="reviews.html">Reviews</a></li>
+                <li><a href="vendor-portal.html">For Vendors</a></li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="contact.html">Contact</a></li>
             </ul>
@@ -105,17 +106,18 @@
                 </button>
                 <ul class="drawer-submenu">
                     <li><a href="templates.html">All Templates</a></li>
-                    <li><a href="templates.html">Traditional Wedding</a></li>
-                    <li><a href="templates.html">White Wedding</a></li>
-                    <li><a href="templates.html">Bridal Shower</a></li>
-                    <li><a href="templates.html">Engagement</a></li>
-                    <li><a href="templates.html">Bachelorette</a></li>
-                    <li><a href="templates.html">Honeymoon</a></li>
+                    <li><a href="templates.html?cat=traditional">Traditional Wedding</a></li>
+                    <li><a href="templates.html?cat=white-wedding">White Wedding</a></li>
+                    <li><a href="templates.html?cat=bridal-shower">Bridal Shower</a></li>
+                    <li><a href="templates.html?cat=engagement">Engagement</a></li>
+                    <li><a href="templates.html?cat=bachelorette">Bachelorette</a></li>
+                    <li><a href="templates.html?cat=honeymoon">Honeymoon</a></li>
                     <li><a href="custom-template.html">Custom Templates</a></li>
                 </ul>
             </li>
             <li><a href="find-vendors.html">Find Vendors</a></li>
             <li><a href="reviews.html">Reviews</a></li>
+            <li><a href="vendor-portal.html">For Vendors</a></li>
             <li><a href="about.html">About</a></li>
             <li><a href="contact.html">Contact</a></li>
         </ul>
@@ -123,7 +125,7 @@
     <div class="drawer-overlay" id="drawerOverlay"></div>
 
     <div id="profileContent">
-        <p class="loading-note">Loading vendor profile...</p>
+        <p class="loading-note">Loading vendor profile…</p>
     </div>
 
     <!-- FOOTER -->
@@ -137,9 +139,9 @@
                 <h4>Shop</h4>
                 <ul>
                     <li><a href="templates.html">All Templates</a></li>
-                    <li><a href="templates.html">Traditional Wedding</a></li>
-                    <li><a href="templates.html">Bridal Shower</a></li>
-                    <li><a href="templates.html">White Wedding</a></li>
+                    <li><a href="templates.html?cat=traditional">Traditional Wedding</a></li>
+                    <li><a href="templates.html?cat=bridal-shower">Bridal Shower</a></li>
+                    <li><a href="templates.html?cat=white-wedding">White Wedding</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -148,6 +150,7 @@
                     <li><a href="index.html">Home</a></li>
                     <li><a href="find-vendors.html">Find Vendors</a></li>
                     <li><a href="reviews.html">Reviews</a></li>
+                    <li><a href="vendor-portal.html">Vendor Login</a></li>
                     <li><a href="about.html">About</a></li>
                     <li><a href="contact.html">Contact</a></li>
                 </ul>
@@ -163,94 +166,70 @@
     </footer>
 
     <script src="main.js"></script>
+    <script src="vc.js"></script>
     <script>
     (function () {
-        var CATEGORY_LABELS = {
-            photography: 'Photographers & Videographers',
-            catering: 'Caterers',
-            decor: 'Decorators & Florists',
-            mc: 'MCs & Entertainers',
-            makeup: 'Makeup Artists & Hair',
-            venue: 'Venues & Event Centers',
-            fashion: 'Aso-ebi & Fashion',
-            cakes: 'Cakes & Confectionery',
-            planning: 'Event Planners',
-            other: 'Other'
-        };
-
-        var params = new URLSearchParams(window.location.search);
-        var id = params.get('id');
+        var esc = VC.esc;
+        var id = parseInt(new URLSearchParams(window.location.search).get('id'), 10);
         var content = document.getElementById('profileContent');
 
-        function escapeHtml(str) {
-            var div = document.createElement('div');
-            div.textContent = str || '';
-            return div.innerHTML;
+        function notFound(msg) {
+            content.innerHTML = '<div class="error-note"><h2>' + esc(msg) + '</h2><p><a class="btn" href="find-vendors.html">Browse all vendors</a></p></div>';
         }
-        function formatPrice(price) {
-            var n = parseFloat(price);
-            if (isNaN(n)) return '';
-            return '₦' + n.toLocaleString('en-NG');
-        }
-        function stars(rating) {
-            var n = parseInt(rating, 10) || 0;
-            return '★★★★★'.slice(0, n) + '☆☆☆☆☆'.slice(0, 5 - n);
-        }
+        if (!id) return notFound('No vendor was specified.');
 
-        if (!id) {
-            content.innerHTML = '<p class="error-note">No vendor was specified.</p>';
-            return;
-        }
+        VC.getJSON('/.netlify/functions/get-listing-public?id=' + id).then(function (d) {
+            var l = d.listing;
+            document.title = l.business_name + ' | Vendoor Connect';
+            var photo = l.photo_data_url
+                ? '<img src="' + l.photo_data_url + '" alt="' + esc(l.business_name) + '">'
+                : '<div class="profile-photo-placeholder"><span>' + esc(l.business_name.charAt(0)) + '</span></div>';
+            var rating = l.review_count
+                ? '<a href="#reviews" class="profile-rating">' + VC.stars(l.avg_rating, 'lg') + '<span>' + l.avg_rating.toFixed(1) + ' from ' + l.review_count + (l.review_count === 1 ? ' review' : ' reviews') + '</span></a>'
+                : '<p class="profile-rating-none">No reviews yet</p>';
+            var actions = '';
+            if (l.whatsapp) actions += '<a class="btn" target="_blank" rel="noopener" href="' + VC.whatsappLink(l.whatsapp, 'Hello ' + l.business_name + ', I found you on Vendoor Connect and would like to ask about your services.') + '">Message on WhatsApp</a>';
+            if (l.instagram) actions += '<a class="profile-portfolio-link" target="_blank" rel="noopener" href="https://instagram.com/' + encodeURIComponent(l.instagram) + '">@' + esc(l.instagram) + ' on Instagram</a>';
+            if (l.portfolio) actions += '<a class="profile-portfolio-link" target="_blank" rel="noopener" href="' + esc(l.portfolio) + '">View portfolio</a>';
 
-        fetch('/.netlify/functions/get-listing-public?id=' + encodeURIComponent(id))
-            .then(function (res) { return res.json().then(function (json) { return { ok: res.ok, json: json }; }); })
-            .then(function (result) {
-                if (!result.ok) throw new Error(result.json.error || 'Vendor not found.');
-                var listing = result.json.listing;
-                document.title = listing.business_name + ' | Vendoor Connect';
-
-                var photoHtml = listing.photo_data_url
-                    ? '<img src="' + listing.photo_data_url + '" alt="' + escapeHtml(listing.business_name) + '">'
-                    : '<div class="profile-photo-placeholder">No photo uploaded</div>';
-
-                content.innerHTML =
-                    '<section class="profile-hero">' +
-                        '<div class="profile-photo">' + photoHtml + '</div>' +
-                        '<div class="profile-info">' +
-                            '<span class="profile-category">' + (CATEGORY_LABELS[listing.category] || listing.category) + '</span>' +
-                            '<h1>' + escapeHtml(listing.business_name) + '</h1>' +
-                            '<p class="profile-city">' + escapeHtml(listing.city) + '</p>' +
-                            '<p class="profile-description">' + escapeHtml(listing.description) + '</p>' +
-                            '<p class="profile-price">Starting at ' + formatPrice(listing.price) + '</p>' +
-                            '<a href="' + escapeHtml(listing.portfolio) + '" target="_blank" rel="noopener" class="profile-portfolio-link">View Portfolio</a>' +
-                        '</div>' +
-                    '</section>' +
-                    '<section class="profile-reviews">' +
-                        '<h2>Client Reviews</h2>' +
-                        '<div id="reviewsList"><p class="no-reviews-note">Loading reviews...</p></div>' +
-                    '</section>';
-
-                return fetch('/.netlify/functions/get-reviews?vendor_id=' + encodeURIComponent(id));
-            })
-            .then(function (res) { return res.json(); })
-            .then(function (json) {
-                var reviewsList = document.getElementById('reviewsList');
-                var reviews = json.reviews || [];
-                if (reviews.length === 0) {
-                    reviewsList.innerHTML = '<p class="no-reviews-note">No reviews yet for this vendor.</p>';
+            content.innerHTML =
+                '<nav class="crumbs"><a href="find-vendors.html">Find Vendors</a><span class="sep">/</span><span>' + esc(VC.CATEGORY_LABELS[l.category] || l.category) + '</span></nav>' +
+                '<section class="profile-hero">' +
+                    '<div class="profile-photo">' + photo + '</div>' +
+                    '<div class="profile-info">' +
+                        '<span class="profile-category">' + esc(VC.CATEGORY_LABELS[l.category] || l.category) + '</span>' +
+                        '<h1>' + esc(l.business_name) + '</h1>' +
+                        '<p class="profile-city">' + esc(l.city) + '</p>' +
+                        rating +
+                        '<p class="profile-description">' + esc(l.description) + '</p>' +
+                        '<p class="profile-price"><small>Starting at</small> ' + VC.naira(l.price) + '</p>' +
+                        '<div class="profile-actions">' + actions + '</div>' +
+                    '</div>' +
+                '</section>' +
+                '<section class="profile-reviews" id="reviews">' +
+                    '<div class="profile-reviews-head"><h2>Client reviews</h2>' +
+                    '<a class="btn" href="reviews.html?vendor=' + l.id + '#write">Review ' + esc(l.business_name) + '</a></div>' +
+                    '<div id="reviewsList"><p class="no-reviews-note">Loading reviews…</p></div>' +
+                '</section>';
+            return VC.getJSON('/.netlify/functions/get-reviews?vendor_id=' + id).then(function (rd) {
+                var reviews = rd.reviews || [];
+                var listEl = document.getElementById('reviewsList');
+                if (!reviews.length) {
+                    listEl.innerHTML = '<p class="no-reviews-note">No reviews yet. Worked with ' + esc(l.business_name) + '? Be the first to share how it went.</p>';
                     return;
                 }
-                reviewsList.innerHTML = reviews.map(function (r) {
-                    return '<div class="review-item">' +
-                        '<p class="review-rating">' + stars(r.rating) + '</p>' +
-                        '<p class="review-text">"' + escapeHtml(r.review_text) + '"</p>' +
-                        '<p class="review-author">' + escapeHtml(r.reviewer_name) + '</p>' +
-                    '</div>';
+                listEl.innerHTML = reviews.map(function (r) {
+                    var meta = [r.event_type, VC.date(r.created_at)].filter(Boolean).map(esc).join(', ');
+                    return '<article class="review-item">' + VC.stars(r.rating) +
+                        '<p class="review-text">' + esc(r.review_text) + '</p>' +
+                        '<p class="review-author">' + esc(r.reviewer_name) + (meta ? ' <span>' + meta + '</span>' : '') + '</p>' +
+                        (r.vendor_reply ? '<div class="vendor-reply"><strong>Reply from ' + esc(l.business_name) + '</strong><p>' + esc(r.vendor_reply) + '</p></div>' : '') +
+                    '</article>';
                 }).join('');
-            })
-            .catch(function (err) {
-                content.innerHTML = '<p class="error-note">' + escapeHtml(err.message) + '</p>';
             });
+        }).catch(function (err) {
+            notFound(err.status === 404 ? 'This vendor could not be found.' : 'This profile could not load. Refresh the page to try again.');
+        });
     })();
     </script>
 

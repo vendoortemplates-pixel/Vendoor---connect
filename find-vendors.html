@@ -29,17 +29,18 @@
                 <li class="has-dropdown">
                     <a href="templates.html">Templates</a>
                     <div class="dropdown-menu">
-                        <a href="templates.html" class="dropdown-item">Traditional Wedding</a>
-                        <a href="templates.html" class="dropdown-item">White Wedding</a>
-                        <a href="templates.html" class="dropdown-item">Bridal Shower</a>
-                        <a href="templates.html" class="dropdown-item">Engagement</a>
-                        <a href="templates.html" class="dropdown-item">Bachelorette</a>
-                        <a href="templates.html" class="dropdown-item">Honeymoon</a>
+                        <a href="templates.html?cat=traditional" class="dropdown-item">Traditional Wedding</a>
+                        <a href="templates.html?cat=white-wedding" class="dropdown-item">White Wedding</a>
+                        <a href="templates.html?cat=bridal-shower" class="dropdown-item">Bridal Shower</a>
+                        <a href="templates.html?cat=engagement" class="dropdown-item">Engagement</a>
+                        <a href="templates.html?cat=bachelorette" class="dropdown-item">Bachelorette</a>
+                        <a href="templates.html?cat=honeymoon" class="dropdown-item">Honeymoon</a>
                         <a href="custom-template.html" class="dropdown-item dropdown-item-custom">Custom Templates</a>
                     </div>
                 </li>
                 <li><a href="find-vendors.html">Find Vendors</a></li>
                 <li><a href="reviews.html">Reviews</a></li>
+                <li><a href="vendor-portal.html">For Vendors</a></li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="contact.html">Contact</a></li>
             </ul>
@@ -58,17 +59,18 @@
                 </button>
                 <ul class="drawer-submenu">
                     <li><a href="templates.html">All Templates</a></li>
-                    <li><a href="templates.html">Traditional Wedding</a></li>
-                    <li><a href="templates.html">White Wedding</a></li>
-                    <li><a href="templates.html">Bridal Shower</a></li>
-                    <li><a href="templates.html">Engagement</a></li>
-                    <li><a href="templates.html">Bachelorette</a></li>
-                    <li><a href="templates.html">Honeymoon</a></li>
+                    <li><a href="templates.html?cat=traditional">Traditional Wedding</a></li>
+                    <li><a href="templates.html?cat=white-wedding">White Wedding</a></li>
+                    <li><a href="templates.html?cat=bridal-shower">Bridal Shower</a></li>
+                    <li><a href="templates.html?cat=engagement">Engagement</a></li>
+                    <li><a href="templates.html?cat=bachelorette">Bachelorette</a></li>
+                    <li><a href="templates.html?cat=honeymoon">Honeymoon</a></li>
                     <li><a href="custom-template.html">Custom Templates</a></li>
                 </ul>
             </li>
             <li><a href="find-vendors.html">Find Vendors</a></li>
             <li><a href="reviews.html">Reviews</a></li>
+            <li><a href="vendor-portal.html">For Vendors</a></li>
             <li><a href="about.html">About</a></li>
             <li><a href="contact.html">Contact</a></li>
         </ul>
@@ -119,8 +121,14 @@
         <p>Search and filter vendors who've joined Vendoor Connect.</p>
     </section>
 
-    <section class="search-section">
-        <input type="text" id="directorySearch" placeholder="Search vendors by name or service...">
+    <section class="search-section directory-search">
+        <label class="sr-only" for="directorySearch">Search vendors</label>
+        <input type="text" id="directorySearch" placeholder="Search by name, service or city (e.g. Lagos)">
+        <label class="sr-only" for="directorySort">Sort vendors</label>
+        <select id="directorySort">
+            <option value="newest">Newest first</option>
+            <option value="rating">Highest rated</option>
+        </select>
     </section>
 
     <section class="filters" id="directoryFilters">
@@ -141,8 +149,8 @@
         <div class="listings-grid" id="directoryGrid"></div>
         <div class="directory-empty" id="directoryEmpty" style="display:none;">
             <h3>No vendors listed here yet</h3>
-            <p>Vendoor Connect is growing its directory city by city and category by category. Get notified the moment a vendor joins, or tell a vendor you love about us below.</p>
-            <a href="#get-notified" class="btn">Get Notified</a>
+            <p>Vendoor Connect is growing its directory city by city. Get notified when vendors join, or if you run an events business, list it for free.</p>
+            <a href="#get-notified" class="btn">Get notified</a> <a href="vendor-portal.html?signup=1" class="btn-outline">List your business free</a>
         </div>
     </section>
 
@@ -177,31 +185,16 @@
         </div>
 
         <!-- RIGHT — Vendors -->
-        <div class="contact-form-wrap">
+        <div class="contact-form-wrap vendor-join">
             <span class="section-eyebrow">For Vendors</span>
-            <h2>List Your Business With Us</h2>
-            <p style="font-size: 14px; color: var(--text-muted); margin-top: -14px; margin-bottom: 4px;">Already ready to create your listing? <a href="vendor-portal.html" style="color: var(--terracotta); font-weight: 600; text-decoration: none;">Go to the Vendor Portal</a> to sign up and list your business directly.</p>
-            <form class="contact-form" name="vendor-listing" method="POST" data-netlify="true" netlify-honeypot="bot-field">
-                <input type="hidden" name="form-name" value="vendor-listing">
-                <p class="form-hidden">
-                    <label>Don't fill this out if you're human: <input name="bot-field"></label>
-                </p>
-
-                <input type="text" name="business-name" placeholder="Your business name" required>
-                <input type="email" name="email" placeholder="Your email" required>
-                <select name="category" required>
-                    <option value="">Your category</option>
-                    <option value="photography">Photographers &amp; Videographers</option>
-                    <option value="catering">Caterers</option>
-                    <option value="decor">Decorators &amp; Florists</option>
-                    <option value="mc">MCs &amp; Entertainers</option>
-                    <option value="makeup">Makeup Artists &amp; Hair</option>
-                    <option value="venue">Venues &amp; Event Centers</option>
-                    <option value="fashion">Aso-ebi &amp; Fashion</option>
-                    <option value="cakes">Cakes &amp; Confectionery</option>
-                </select>
-                <button type="submit" class="btn">Join the Waitlist</button>
-            </form>
+            <h2>List your business for free</h2>
+            <ol class="join-steps">
+                <li><strong>Create a vendor account</strong> with your email.</li>
+                <li><strong>Add your listing</strong>: photo, prices, city, WhatsApp and Instagram.</li>
+                <li><strong>Collect reviews</strong> from your clients and reply to them from your dashboard.</li>
+            </ol>
+            <a href="vendor-portal.html?signup=1" class="btn">Create your listing</a>
+            <p class="form-note">Already listed? <a href="vendor-portal.html">Log in to your dashboard</a>.</p>
         </div>
 
     </section>
@@ -219,9 +212,9 @@
                 <h4>Shop</h4>
                 <ul>
                     <li><a href="templates.html">All Templates</a></li>
-                    <li><a href="templates.html">Traditional Wedding</a></li>
-                    <li><a href="templates.html">Bridal Shower</a></li>
-                    <li><a href="templates.html">White Wedding</a></li>
+                    <li><a href="templates.html?cat=traditional">Traditional Wedding</a></li>
+                    <li><a href="templates.html?cat=bridal-shower">Bridal Shower</a></li>
+                    <li><a href="templates.html?cat=white-wedding">White Wedding</a></li>
                 </ul>
             </div>
 
@@ -231,6 +224,7 @@
                     <li><a href="index.html">Home</a></li>
                     <li><a href="find-vendors.html">Find Vendors</a></li>
                     <li><a href="reviews.html">Reviews</a></li>
+                    <li><a href="vendor-portal.html">Vendor Login</a></li>
                     <li><a href="about.html">About</a></li>
                     <li><a href="contact.html">Contact</a></li>
                 </ul>
@@ -249,6 +243,7 @@
     </footer>
 
     <script src="main.js"></script>
+    <script src="vc.js"></script>
 
     <script>
     (function () {
@@ -297,19 +292,23 @@
             grid.style.display = 'grid';
             grid.innerHTML = listings.map(function (l) {
                 var photoHtml = l.photo_data_url
-                    ? '<img class="listing-photo" src="' + l.photo_data_url + '" alt="' + escapeHtml(l.business_name) + '">'
-                    : '<div class="listing-photo-placeholder">No photo uploaded</div>';
-                return '<div class="listing-card">' +
+                    ? '<img class="listing-photo" src="' + l.photo_data_url + '" alt="' + escapeHtml(l.business_name) + '" loading="lazy">'
+                    : '<div class="listing-photo-placeholder"><span>' + escapeHtml(l.business_name.charAt(0)) + '</span></div>';
+                var rating = l.review_count
+                    ? '<p class="listing-rating">' + VC.stars(l.avg_rating) + ' <span>' + Number(l.avg_rating).toFixed(1) + ' (' + l.review_count + ')</span></p>'
+                    : '<p class="listing-rating listing-rating-none">No reviews yet</p>';
+                return '<a class="listing-card listing-card-link" href="vendor-profile.html?id=' + l.id + '">' +
                     photoHtml +
                     '<div class="listing-body">' +
-                        '<span class="listing-category">' + (CATEGORY_LABELS[l.category] || l.category) + '</span>' +
+                        '<span class="listing-category">' + escapeHtml(CATEGORY_LABELS[l.category] || l.category) + '</span>' +
                         '<h3>' + escapeHtml(l.business_name) + '</h3>' +
                         '<p class="listing-city">' + escapeHtml(l.city) + '</p>' +
+                        rating +
                         '<p class="listing-desc">' + escapeHtml(l.description) + '</p>' +
-                        '<span class="listing-price">Starting at ' + formatPrice(l.price) + '</span>' +
-                        '<a href="vendor-profile.html?id=' + l.id + '" class="btn-card">View Profile</a>' +
+                        '<span class="listing-price">From ' + formatPrice(l.price) + '</span>' +
+                        '<span class="btn-card">View profile</span>' +
                     '</div>' +
-                '</div>';
+                '</a>';
             }).join('');
         }
 
@@ -323,6 +322,7 @@
             if (currentCategory) qp.push('category=' + encodeURIComponent(currentCategory));
             var q = searchInput.value.trim();
             if (q) qp.push('q=' + encodeURIComponent(q));
+            qp.push('sort=' + document.getElementById('directorySort').value);
             var url = '/.netlify/functions/list-listings' + (qp.length ? '?' + qp.join('&') : '');
 
             fetch(url)
@@ -348,6 +348,8 @@
                 loadDirectory();
             });
         });
+
+        document.getElementById('directorySort').addEventListener('change', loadDirectory);
 
         searchInput.addEventListener('input', function () {
             clearTimeout(searchTimer);

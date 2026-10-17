@@ -29,17 +29,18 @@
                 <li class="has-dropdown">
                     <a href="templates.html">Templates</a>
                     <div class="dropdown-menu">
-                        <a href="templates.html" class="dropdown-item">Traditional Wedding</a>
-                        <a href="templates.html" class="dropdown-item">White Wedding</a>
-                        <a href="templates.html" class="dropdown-item">Bridal Shower</a>
-                        <a href="templates.html" class="dropdown-item">Engagement</a>
-                        <a href="templates.html" class="dropdown-item">Bachelorette</a>
-                        <a href="templates.html" class="dropdown-item">Honeymoon</a>
+                        <a href="templates.html?cat=traditional" class="dropdown-item">Traditional Wedding</a>
+                        <a href="templates.html?cat=white-wedding" class="dropdown-item">White Wedding</a>
+                        <a href="templates.html?cat=bridal-shower" class="dropdown-item">Bridal Shower</a>
+                        <a href="templates.html?cat=engagement" class="dropdown-item">Engagement</a>
+                        <a href="templates.html?cat=bachelorette" class="dropdown-item">Bachelorette</a>
+                        <a href="templates.html?cat=honeymoon" class="dropdown-item">Honeymoon</a>
                         <a href="custom-template.html" class="dropdown-item dropdown-item-custom">Custom Templates</a>
                     </div>
                 </li>
                 <li><a href="find-vendors.html">Find Vendors</a></li>
                 <li><a href="reviews.html">Reviews</a></li>
+                <li><a href="vendor-portal.html">For Vendors</a></li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="contact.html">Contact</a></li>
             </ul>
@@ -58,17 +59,18 @@
                 </button>
                 <ul class="drawer-submenu">
                     <li><a href="templates.html">All Templates</a></li>
-                    <li><a href="templates.html">Traditional Wedding</a></li>
-                    <li><a href="templates.html">White Wedding</a></li>
-                    <li><a href="templates.html">Bridal Shower</a></li>
-                    <li><a href="templates.html">Engagement</a></li>
-                    <li><a href="templates.html">Bachelorette</a></li>
-                    <li><a href="templates.html">Honeymoon</a></li>
+                    <li><a href="templates.html?cat=traditional">Traditional Wedding</a></li>
+                    <li><a href="templates.html?cat=white-wedding">White Wedding</a></li>
+                    <li><a href="templates.html?cat=bridal-shower">Bridal Shower</a></li>
+                    <li><a href="templates.html?cat=engagement">Engagement</a></li>
+                    <li><a href="templates.html?cat=bachelorette">Bachelorette</a></li>
+                    <li><a href="templates.html?cat=honeymoon">Honeymoon</a></li>
                     <li><a href="custom-template.html">Custom Templates</a></li>
                 </ul>
             </li>
             <li><a href="find-vendors.html">Find Vendors</a></li>
             <li><a href="reviews.html">Reviews</a></li>
+            <li><a href="vendor-portal.html">For Vendors</a></li>
             <li><a href="about.html">About</a></li>
             <li><a href="contact.html">Contact</a></li>
         </ul>
@@ -80,7 +82,7 @@
 
         <!-- LEFT — Preview Image -->
         <div class="template-preview">
-            <img id="previewImage" src="https://placehold.co/600x400" alt="">
+            <img id="previewImage" src="images/covers/traditional.svg" alt="">
         </div>
 
         <!-- RIGHT — Template Info -->
@@ -96,7 +98,7 @@
                 <li>Budget tracker included</li>
                 <li>Vendor contact organizer</li>
                 <li>Free support for 30 days</li>
-                <li>Instant download after payment</li>
+                <li>Secure checkout with Paystack (card, transfer, USSD)</li>
             </ul>
 
             <!-- PRICE -->
@@ -106,7 +108,8 @@
             <input type="email" id="buyerEmail" class="buyer-email-input" placeholder="Your email address">
 
             <!-- BUY BUTTON -->
-            <button class="btn-buy" id="buyButton" data-amount="500000" data-name="">
+            <p class="form-error" id="buyError" role="alert" style="display:none;"></p>
+            <button class="btn-buy" id="buyButton" type="button">
                 <span id="buyButtonLabel">Buy Now</span>
             </button>
 
@@ -129,7 +132,7 @@
                 <h2 id="previewModalName"></h2>
                 <p id="previewModalDescription"></p>
                 <p class="preview-modal-note">Full sample pages are being finalized — this preview will update with actual interior pages soon. Every purchase includes free support for 30 days if anything needs adjusting.</p>
-                <a href="#" class="btn-buy" id="previewModalBuy">Close Preview &amp; Buy</a>
+                <a href="#" class="btn-buy" id="previewModalBuy">Continue to checkout</a>
             </div>
         </div>
     </div>
@@ -154,9 +157,9 @@
                 <h4>Shop</h4>
                 <ul>
                     <li><a href="templates.html">All Templates</a></li>
-                    <li><a href="templates.html">Traditional Wedding</a></li>
-                    <li><a href="templates.html">Bridal Shower</a></li>
-                    <li><a href="templates.html">White Wedding</a></li>
+                    <li><a href="templates.html?cat=traditional">Traditional Wedding</a></li>
+                    <li><a href="templates.html?cat=bridal-shower">Bridal Shower</a></li>
+                    <li><a href="templates.html?cat=white-wedding">White Wedding</a></li>
                 </ul>
             </div>
 
@@ -166,6 +169,7 @@
                     <li><a href="index.html">Home</a></li>
                     <li><a href="find-vendors.html">Find Vendors</a></li>
                     <li><a href="reviews.html">Reviews</a></li>
+                    <li><a href="vendor-portal.html">Vendor Login</a></li>
                     <li><a href="about.html">About</a></li>
                     <li><a href="contact.html">Contact</a></li>
                 </ul>
@@ -184,131 +188,113 @@
     </footer>
 
     <script src="https://js.paystack.co/v1/inline.js"></script>
+    <script src="catalog.js"></script>
+    <script src="vc.js"></script>
     <script>
-    // ===== TEMPLATE CATALOG =====
-    // Single source of truth for every template sold on the site. Add a new
-    // template here and it works everywhere: this detail page, "Buy Now"
-    // links just need `single-template.html?product=<slug>`.
-    var TEMPLATE_CATALOG = {
-        'traditional': {
-            badge: 'Traditional Wedding',
-            name: 'Traditional Wedding Planner',
-            price: 5000,
-            image: 'https://placehold.co/600x400',
-            description: 'A self-guided planning template for your traditional wedding ceremony, built around real Nigerian wedding traditions, from aso-ebi coordination to vendor bookings. No event planner required.'
-        },
-        'white-wedding': {
-            badge: 'White Wedding',
-            name: 'White Wedding Planner',
-            price: 7500,
-            image: 'https://placehold.co/600x400',
-            description: 'A complete self-guided planning template for your church or court wedding, covering the ceremony program, reception logistics, and every vendor in between.'
-        },
-        'bridal-shower': {
-            badge: 'Bridal Shower',
-            name: 'Bridal Shower Planner',
-            price: 3500,
-            image: 'https://placehold.co/600x400',
-            description: 'Everything you need to plan a beautiful bridal shower, from the guest list and games to décor and gifting, without the last-minute scramble.'
-        },
-        'bachelorette': {
-            badge: 'Bachelorette',
-            name: 'Bachelorette Planner',
-            price: 5500,
-            image: 'https://placehold.co/600x400',
-            description: 'Organize the perfect bachelorette weekend for the bride-to-be, from the guest list and itinerary to the budget and the surprises.'
-        },
-        'engagement': {
-            badge: 'Engagement',
-            name: 'Engagement & Introduction Planner',
-            price: 4500,
-            image: 'https://placehold.co/600x400',
-            description: 'Plan your introduction or knocking ceremony with ease, covering family coordination, traditional requirements, and the day-of run of show.'
-        },
-        'honeymoon': {
-            badge: 'Honeymoon',
-            name: 'Honeymoon Planner',
-            price: 4000,
-            image: 'https://placehold.co/600x400',
-            description: 'Plan your dream honeymoon, from a budget and destination shortlist to a full day-by-day itinerary.'
-        }
-    };
-
     (function () {
+        var CATALOG = window.VENDOOR.CATALOG;
         var params = new URLSearchParams(window.location.search);
-        var slug = params.get('product') || 'traditional';
-        var product = TEMPLATE_CATALOG[slug] || TEMPLATE_CATALOG['traditional'];
-
-        function formatPrice(n) {
-            return '₦' + n.toLocaleString('en-NG');
-        }
+        var slug = CATALOG[params.get('product')] ? params.get('product') : 'traditional';
+        var product = CATALOG[slug];
+        var naira = VC.naira;
 
         document.getElementById('pageTitle').textContent = product.name + ' | Vendoor Connect';
         document.getElementById('templateBadge').textContent = product.badge;
         document.getElementById('templateName').textContent = product.name;
         document.getElementById('templateDescription').textContent = product.description;
-        document.getElementById('templatePrice').textContent = formatPrice(product.price);
-        document.getElementById('previewImage').src = product.image;
-        document.getElementById('previewImage').alt = product.name;
+        document.getElementById('templatePrice').textContent = naira(product.price);
+        var previewImage = document.getElementById('previewImage');
+        previewImage.src = product.image;
+        previewImage.alt = product.name + ' cover';
+        document.getElementById('buyButtonLabel').textContent = 'Buy now for ' + naira(product.price);
 
+        // ----- CHECKOUT (Paystack) -----
         var buyButton = document.getElementById('buyButton');
-        buyButton.dataset.amount = String(product.price * 100);
-        buyButton.dataset.name = product.name;
-        buyButton.dataset.slug = slug;
-        document.getElementById('buyButtonLabel').textContent = 'Buy Now for ' + formatPrice(product.price);
+        var emailInput = document.getElementById('buyerEmail');
+        var buyError = document.getElementById('buyError');
+
+        function showBuyError(msg) {
+            buyError.textContent = msg;
+            buyError.style.display = msg ? 'block' : 'none';
+        }
+        function newReference() {
+            var a = new Uint8Array(8);
+            (window.crypto || window.msCrypto).getRandomValues(a);
+            return 'VC-' + Date.now().toString(36).toUpperCase() + '-' + Array.prototype.map.call(a, function (b) { return ('0' + b.toString(16)).slice(-2); }).join('').toUpperCase();
+        }
+
+        buyButton.addEventListener('click', function () {
+            var email = emailInput.value.trim();
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+                showBuyError('Enter your email address so we can send your receipt and template.');
+                emailInput.focus();
+                return;
+            }
+            if (typeof PaystackPop === 'undefined') {
+                showBuyError('The secure checkout could not load. Check your connection and refresh the page.');
+                return;
+            }
+            showBuyError('');
+            var reference = newReference();
+            var handler = PaystackPop.setup({
+                key: window.VENDOOR.PAYSTACK_PUBLIC_KEY,
+                email: email,
+                amount: product.price * 100,
+                currency: 'NGN',
+                ref: reference,
+                metadata: {
+                    custom_fields: [
+                        { display_name: 'Template Name', variable_name: 'template_name', value: product.name },
+                        { display_name: 'Product Slug', variable_name: 'product_slug', value: slug }
+                    ]
+                },
+                callback: function (response) {
+                    window.location.href = 'thank-you.html?ref=' + encodeURIComponent(response.reference) + '&product=' + encodeURIComponent(slug);
+                },
+                onClose: function () {
+                    showBuyError('Checkout closed. Your card was not charged. You can try again whenever you are ready.');
+                }
+            });
+            handler.openIframe();
+        });
 
         // ----- LIVE PREVIEW MODAL -----
-        var previewLink = document.getElementById('previewLink');
         var previewOverlay = document.getElementById('previewModalOverlay');
-        var previewClose = document.getElementById('previewModalClose');
-
-        function openPreview() {
+        function openPreview(e) {
+            if (e) e.preventDefault();
             document.getElementById('previewModalImage').src = product.image;
-            document.getElementById('previewModalImage').alt = product.name;
+            document.getElementById('previewModalImage').alt = product.name + ' cover';
             document.getElementById('previewModalBadge').textContent = product.badge;
             document.getElementById('previewModalName').textContent = product.name;
             document.getElementById('previewModalDescription').textContent = product.description;
-            var modalBuy = document.getElementById('previewModalBuy');
-            modalBuy.onclick = function (e) {
-                e.preventDefault();
-                closePreview();
-                buyButton.click();
-            };
             previewOverlay.classList.add('open');
         }
-
-        function closePreview() {
-            previewOverlay.classList.remove('open');
-        }
-
-        previewLink.addEventListener('click', function (e) {
+        function closePreview() { previewOverlay.classList.remove('open'); }
+        document.getElementById('previewLink').addEventListener('click', openPreview);
+        document.getElementById('previewModalClose').addEventListener('click', closePreview);
+        document.getElementById('previewModalBuy').addEventListener('click', function (e) {
             e.preventDefault();
-            openPreview();
+            closePreview();
+            emailInput.focus();
+            emailInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
         });
-        previewClose.addEventListener('click', closePreview);
-        previewOverlay.addEventListener('click', function (e) {
-            if (e.target === previewOverlay) closePreview();
-        });
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape') closePreview();
-        });
+        previewOverlay.addEventListener('click', function (e) { if (e.target === previewOverlay) closePreview(); });
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closePreview(); });
 
-        // ----- RELATED TEMPLATES: the other 3 templates, in catalog order -----
-        var relatedGrid = document.getElementById('relatedGrid');
-        var relatedSlugs = Object.keys(TEMPLATE_CATALOG).filter(function (s) { return s !== slug; }).slice(0, 3);
-        relatedGrid.innerHTML = relatedSlugs.map(function (s) {
-            var p = TEMPLATE_CATALOG[s];
+        // ----- RELATED TEMPLATES -----
+        var relatedSlugs = Object.keys(CATALOG).filter(function (s) { return s !== slug; }).slice(0, 3);
+        document.getElementById('relatedGrid').innerHTML = relatedSlugs.map(function (s) {
+            var p = CATALOG[s];
             return '<div class="template-card">' +
-                '<img src="' + p.image + '" alt="' + p.name + '">' +
-                '<h3>' + p.name + '</h3>' +
-                '<p>' + p.description + '</p>' +
-                '<span>' + formatPrice(p.price) + '</span>' +
-                '<a href="single-template.html?product=' + s + '" class="btn-card">Buy Now</a>' +
+                '<img src="' + p.image + '" alt="' + VC.esc(p.name) + ' cover" loading="lazy">' +
+                '<h3>' + VC.esc(p.name) + '</h3>' +
+                '<p>' + VC.esc(p.short) + '</p>' +
+                '<span>' + naira(p.price) + '</span>' +
+                '<a href="single-template.html?product=' + s + '" class="btn-card">View template</a>' +
             '</div>';
         }).join('');
     })();
     </script>
     <script src="main.js"></script>
-
 </body>
 </html>

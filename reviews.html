@@ -29,17 +29,18 @@
                 <li class="has-dropdown">
                     <a href="templates.html">Templates</a>
                     <div class="dropdown-menu">
-                        <a href="templates.html" class="dropdown-item">Traditional Wedding</a>
-                        <a href="templates.html" class="dropdown-item">White Wedding</a>
-                        <a href="templates.html" class="dropdown-item">Bridal Shower</a>
-                        <a href="templates.html" class="dropdown-item">Engagement</a>
-                        <a href="templates.html" class="dropdown-item">Bachelorette</a>
-                        <a href="templates.html" class="dropdown-item">Honeymoon</a>
+                        <a href="templates.html?cat=traditional" class="dropdown-item">Traditional Wedding</a>
+                        <a href="templates.html?cat=white-wedding" class="dropdown-item">White Wedding</a>
+                        <a href="templates.html?cat=bridal-shower" class="dropdown-item">Bridal Shower</a>
+                        <a href="templates.html?cat=engagement" class="dropdown-item">Engagement</a>
+                        <a href="templates.html?cat=bachelorette" class="dropdown-item">Bachelorette</a>
+                        <a href="templates.html?cat=honeymoon" class="dropdown-item">Honeymoon</a>
                         <a href="custom-template.html" class="dropdown-item dropdown-item-custom">Custom Templates</a>
                     </div>
                 </li>
                 <li><a href="find-vendors.html">Find Vendors</a></li>
                 <li><a href="reviews.html">Reviews</a></li>
+                <li><a href="vendor-portal.html">For Vendors</a></li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="contact.html">Contact</a></li>
             </ul>
@@ -58,17 +59,18 @@
                 </button>
                 <ul class="drawer-submenu">
                     <li><a href="templates.html">All Templates</a></li>
-                    <li><a href="templates.html">Traditional Wedding</a></li>
-                    <li><a href="templates.html">White Wedding</a></li>
-                    <li><a href="templates.html">Bridal Shower</a></li>
-                    <li><a href="templates.html">Engagement</a></li>
-                    <li><a href="templates.html">Bachelorette</a></li>
-                    <li><a href="templates.html">Honeymoon</a></li>
+                    <li><a href="templates.html?cat=traditional">Traditional Wedding</a></li>
+                    <li><a href="templates.html?cat=white-wedding">White Wedding</a></li>
+                    <li><a href="templates.html?cat=bridal-shower">Bridal Shower</a></li>
+                    <li><a href="templates.html?cat=engagement">Engagement</a></li>
+                    <li><a href="templates.html?cat=bachelorette">Bachelorette</a></li>
+                    <li><a href="templates.html?cat=honeymoon">Honeymoon</a></li>
                     <li><a href="custom-template.html">Custom Templates</a></li>
                 </ul>
             </li>
             <li><a href="find-vendors.html">Find Vendors</a></li>
             <li><a href="reviews.html">Reviews</a></li>
+            <li><a href="vendor-portal.html">For Vendors</a></li>
             <li><a href="about.html">About</a></li>
             <li><a href="contact.html">Contact</a></li>
         </ul>
@@ -77,65 +79,127 @@
 
     <!-- PAGE HEADER -->
     <section class="page-header">
-        <h1>Real Stories From Real Celebrations</h1>
-        <p>Worked with a vendor recently, or want to tell us how Vendoor Connect helped with your planning? We would love to hear from you.</p>
+        <h1>Vendor Reviews</h1>
+        <p>Honest reviews of Nigerian event vendors, written by the clients who hired them. Every review is checked by our team before it appears.</p>
+        <a href="#write" class="btn page-header-cta">Write a review</a>
     </section>
 
-    <!-- REVIEW A VENDOR -->
-    <div class="review-form-block">
-        <span class="section-eyebrow">Vendor Reviews</span>
-        <h2>Help Other Clients Choose With Confidence</h2>
-        <p class="error-msg" id="vendorReviewError" style="display:none; background-color:#FBEAE3; border:1px solid var(--terracotta); color:var(--terracotta-dark); font-size:13px; padding:10px 14px; border-radius:2px; margin-bottom:16px;"></p>
-        <p class="form-success" id="vendorReviewSuccess" style="display:none; background-color:#EFF6EC; border:1px solid #7A9B6E; color:#3E5A34; font-size:13px; padding:10px 14px; border-radius:2px; margin-bottom:16px;">Thank you! Your review has been posted below.</p>
-        <form class="contact-form" id="vendorReviewForm">
-            <input type="text" id="reviewVendorName" placeholder="Vendor name" required>
-            <select id="reviewVendorCategory" required>
-                <option value="">Vendor category</option>
-                <option value="photography">Photographers &amp; Videographers</option>
-                <option value="catering">Caterers</option>
-                <option value="decor">Decorators &amp; Florists</option>
-                <option value="mc">MCs &amp; Entertainers</option>
-                <option value="makeup">Makeup Artists &amp; Hair</option>
-                <option value="venue">Venues &amp; Event Centers</option>
-                <option value="fashion">Aso-ebi &amp; Fashion</option>
-                <option value="cakes">Cakes &amp; Confectionery</option>
-                <option value="planning">Event Planners</option>
-                <option value="other">Other</option>
-            </select>
-            <input type="text" id="reviewerName" placeholder="Your name" required>
-            <select id="reviewRating" required>
-                <option value="">Your rating</option>
-                <option value="5">5 out of 5, excellent</option>
-                <option value="4">4 out of 5, very good</option>
-                <option value="3">3 out of 5, good</option>
-                <option value="2">2 out of 5, fair</option>
-                <option value="1">1 out of 5, poor</option>
-            </select>
-            <textarea id="reviewText" placeholder="Tell us about your experience with this vendor" required></textarea>
-            <button type="submit" class="btn" id="submitReviewBtn">Submit Review</button>
-        </form>
-    </div>
+    <section class="reviews-layout">
+        <!-- REVIEW FEED -->
+        <div class="reviews-feed">
+            <div class="feed-toolbar">
+                <h2 id="feedHeading">Latest reviews</h2>
+                <label class="sr-only" for="feedCategory">Filter by category</label>
+                <select id="feedCategory">
+                    <option value="">All categories</option>
+                    <option value="photography">Photographers &amp; Videographers</option>
+                    <option value="catering">Caterers</option>
+                    <option value="decor">Decorators &amp; Florists</option>
+                    <option value="mc">MCs &amp; Entertainers</option>
+                    <option value="makeup">Makeup Artists &amp; Hair</option>
+                    <option value="venue">Venues &amp; Event Centers</option>
+                    <option value="fashion">Aso-ebi &amp; Fashion</option>
+                    <option value="cakes">Cakes &amp; Confectionery</option>
+                    <option value="planning">Event Planners</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <p class="feed-status" id="feedStatus">Loading reviews…</p>
+            <div id="feedList"></div>
+            <div class="feed-empty" id="feedEmpty" hidden>
+                <h3>No reviews here yet</h3>
+                <p>Hired a vendor for a wedding, introduction or party? Your review helps the next couple choose well.</p>
+                <a href="#write" class="btn">Write the first review</a>
+            </div>
+        </div>
 
-    <!-- VENDOR REVIEWS DISPLAY -->
-    <section class="testimonials-section" id="vendorReviewsSection">
-        <span class="section-eyebrow">From Our Community</span>
-        <h2>Verified Vendor Reviews</h2>
-        <p class="loading-note" id="verifiedReviewsLoading" style="text-align:center; color:var(--text-muted); font-size:14px;">Loading reviews...</p>
-        <div class="testimonials-grid" id="verifiedReviewsGrid"></div>
-        <p id="noVerifiedReviews" style="display:none; text-align:center; color:var(--text-muted); font-size:14px;">No verified vendor reviews yet, be the first to leave one above.</p>
-    </section>
+        <!-- WRITE A REVIEW -->
+        <aside class="review-form-card" id="write">
+            <h2>Review a vendor</h2>
+            <p class="form-note">Your email stays private. We only use it to confirm your review is genuine.</p>
+            <div class="form-error" id="reviewError" role="alert" hidden></div>
+            <div class="form-success-box" id="reviewSuccess" role="status" hidden>
+                <h3>Thank you, your review is in.</h3>
+                <p>We check every review before it goes live, usually within 48 hours.</p>
+                <button type="button" class="link-btn" id="writeAnother">Write another review</button>
+            </div>
+            <form id="reviewForm" novalidate>
+                <div class="vendor-locked" id="vendorLocked" hidden>
+                    <span>Reviewing</span>
+                    <strong id="vendorLockedName"></strong>
+                    <button type="button" class="link-btn" id="vendorUnlock">Change</button>
+                </div>
+                <div id="vendorFields">
+                    <label class="field-label" for="reviewVendorName">Vendor or business name</label>
+                    <input type="text" id="reviewVendorName" list="vendorNames" autocomplete="off" maxlength="120">
+                    <datalist id="vendorNames"></datalist>
+                    <label class="field-label" for="reviewVendorCategory">Category</label>
+                    <select id="reviewVendorCategory">
+                        <option value="">Choose a category</option>
+                        <option value="photography">Photographers &amp; Videographers</option>
+                        <option value="catering">Caterers</option>
+                        <option value="decor">Decorators &amp; Florists</option>
+                        <option value="mc">MCs &amp; Entertainers</option>
+                        <option value="makeup">Makeup Artists &amp; Hair</option>
+                        <option value="venue">Venues &amp; Event Centers</option>
+                        <option value="fashion">Aso-ebi &amp; Fashion</option>
+                        <option value="cakes">Cakes &amp; Confectionery</option>
+                        <option value="planning">Event Planners</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
 
-    <section class="testimonials-section" id="communityMentionsSection" style="display:none;">
-        <span class="section-eyebrow">Not Yet Listed</span>
-        <h2>Community Mentions</h2>
-        <p style="text-align:center; color:var(--text-muted); font-size:14px; max-width:520px; margin:-20px auto 30px;">Reviews for vendors who haven't joined Vendoor Connect yet. Know one of them? Send them to our <a href="find-vendors.html#get-notified" style="color:var(--terracotta); font-weight:600;">Vendor Community</a> page.</p>
-        <div class="testimonials-grid" id="communityMentionsGrid"></div>
+                <fieldset class="star-field">
+                    <legend class="field-label">Your rating</legend>
+                    <div class="star-input">
+                        <input type="radio" name="rating" id="star5" value="5"><label for="star5" title="5 stars, excellent"><span class="sr-only">5 stars</span>★</label>
+                        <input type="radio" name="rating" id="star4" value="4"><label for="star4" title="4 stars, very good"><span class="sr-only">4 stars</span>★</label>
+                        <input type="radio" name="rating" id="star3" value="3"><label for="star3" title="3 stars, good"><span class="sr-only">3 stars</span>★</label>
+                        <input type="radio" name="rating" id="star2" value="2"><label for="star2" title="2 stars, fair"><span class="sr-only">2 stars</span>★</label>
+                        <input type="radio" name="rating" id="star1" value="1"><label for="star1" title="1 star, poor"><span class="sr-only">1 star</span>★</label>
+                    </div>
+                    <span class="star-caption" id="starCaption">Tap a star</span>
+                </fieldset>
+
+                <label class="field-label" for="reviewEventType">Event</label>
+                <select id="reviewEventType">
+                    <option value="">What was the occasion? (optional)</option>
+                    <option>Traditional wedding</option>
+                    <option>White wedding</option>
+                    <option>Introduction / engagement</option>
+                    <option>Bridal shower</option>
+                    <option>Bachelorette</option>
+                    <option>Birthday</option>
+                    <option>Corporate event</option>
+                    <option>Other celebration</option>
+                </select>
+
+                <label class="field-label" for="reviewText">Your review</label>
+                <textarea id="reviewText" rows="5" maxlength="2000" placeholder="What went well? Was anything disappointing? Would you hire them again?"></textarea>
+
+                <div class="form-row-2">
+                    <div>
+                        <label class="field-label" for="reviewerName">Your name</label>
+                        <input type="text" id="reviewerName" maxlength="80" autocomplete="name" placeholder="e.g. Adaeze O.">
+                    </div>
+                    <div>
+                        <label class="field-label" for="reviewerEmail">Your email (private)</label>
+                        <input type="email" id="reviewerEmail" maxlength="160" autocomplete="email">
+                    </div>
+                </div>
+                <div class="form-hidden" aria-hidden="true">
+                    <label>Leave this empty <input type="text" id="reviewWebsite" tabindex="-1" autocomplete="off"></label>
+                </div>
+                <button type="submit" class="btn btn-block" id="submitReviewBtn">Submit review</button>
+            </form>
+        </aside>
     </section>
 
     <!-- SHARE YOUR STORY -->
     <div class="review-form-block">
         <span class="section-eyebrow">Your Experience</span>
-        <h2>Tell Us How Vendoor Connect Helped You</h2>
+        <h2>Tell us how Vendoor Connect helped you</h2>
+        <p class="form-note" style="text-align:center;">Used one of our planning templates? Share your story. It comes privately to our team.</p>
         <form class="contact-form" name="testimonial" method="POST" data-netlify="true" netlify-honeypot="bot-field">
             <input type="hidden" name="form-name" value="testimonial">
             <p class="form-hidden">
@@ -170,9 +234,9 @@
                 <h4>Shop</h4>
                 <ul>
                     <li><a href="templates.html">All Templates</a></li>
-                    <li><a href="templates.html">Traditional Wedding</a></li>
-                    <li><a href="templates.html">Bridal Shower</a></li>
-                    <li><a href="templates.html">White Wedding</a></li>
+                    <li><a href="templates.html?cat=traditional">Traditional Wedding</a></li>
+                    <li><a href="templates.html?cat=bridal-shower">Bridal Shower</a></li>
+                    <li><a href="templates.html?cat=white-wedding">White Wedding</a></li>
                 </ul>
             </div>
 
@@ -182,6 +246,7 @@
                     <li><a href="index.html">Home</a></li>
                     <li><a href="find-vendors.html">Find Vendors</a></li>
                     <li><a href="reviews.html">Reviews</a></li>
+                    <li><a href="vendor-portal.html">Vendor Login</a></li>
                     <li><a href="about.html">About</a></li>
                     <li><a href="contact.html">Contact</a></li>
                 </ul>
@@ -200,111 +265,130 @@
     </footer>
 
     <script src="main.js"></script>
-
+    <script src="vc.js"></script>
     <script>
     (function () {
-        function escapeHtml(str) {
-            var div = document.createElement('div');
-            div.textContent = str || '';
-            return div.innerHTML;
-        }
-        function stars(rating) {
-            var n = parseInt(rating, 10) || 0;
-            return '★★★★★'.slice(0, n) + '☆☆☆☆☆'.slice(0, 5 - n);
-        }
-
-        // ----- SUBMIT A VENDOR REVIEW -----
-        var form = document.getElementById('vendorReviewForm');
-        var errorMsg = document.getElementById('vendorReviewError');
-        var successMsg = document.getElementById('vendorReviewSuccess');
+        var esc = VC.esc;
+        var params = new URLSearchParams(window.location.search);
+        var form = document.getElementById('reviewForm');
+        var errBox = document.getElementById('reviewError');
+        var okBox = document.getElementById('reviewSuccess');
         var submitBtn = document.getElementById('submitReviewBtn');
+        var captions = { 1: 'Poor', 2: 'Fair', 3: 'Good', 4: 'Very good', 5: 'Excellent' };
+        var lockedVendorId = null;
+        var allReviews = [];
+
+        // ----- STAR PICKER CAPTION -----
+        form.querySelectorAll('input[name="rating"]').forEach(function (r) {
+            r.addEventListener('change', function () { document.getElementById('starCaption').textContent = captions[r.value]; });
+        });
+
+        // ----- VENDOR NAME SUGGESTIONS (from listed vendors) -----
+        var listingsById = {};
+        VC.getJSON('/.netlify/functions/list-listings').then(function (d) {
+            var opts = '';
+            (d.listings || []).forEach(function (l) { listingsById[l.id] = l; opts += '<option value="' + esc(l.business_name) + '">'; });
+            document.getElementById('vendorNames').innerHTML = opts;
+            var pre = parseInt(params.get('vendor'), 10);
+            if (pre && listingsById[pre]) lockVendor(listingsById[pre]);
+        }).catch(function () {});
+
+        function lockVendor(l) {
+            lockedVendorId = l.id;
+            document.getElementById('vendorLockedName').textContent = l.business_name;
+            document.getElementById('vendorLocked').hidden = false;
+            document.getElementById('vendorFields').hidden = true;
+        }
+        document.getElementById('vendorUnlock').addEventListener('click', function () {
+            lockedVendorId = null;
+            document.getElementById('vendorLocked').hidden = true;
+            document.getElementById('vendorFields').hidden = false;
+        });
+
+        function showError(msg) { errBox.textContent = msg; errBox.hidden = !msg; if (msg) errBox.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
 
         form.addEventListener('submit', function (e) {
             e.preventDefault();
-            errorMsg.style.display = 'none';
-            successMsg.style.display = 'none';
-            submitBtn.disabled = true;
-
+            showError('');
+            var ratingEl = form.querySelector('input[name="rating"]:checked');
             var payload = {
+                vendorId: lockedVendorId,
                 vendorName: document.getElementById('reviewVendorName').value.trim(),
                 vendorCategory: document.getElementById('reviewVendorCategory').value,
+                rating: ratingEl ? ratingEl.value : '',
+                eventType: document.getElementById('reviewEventType').value,
+                reviewText: document.getElementById('reviewText').value.trim(),
                 reviewerName: document.getElementById('reviewerName').value.trim(),
-                rating: document.getElementById('reviewRating').value,
-                reviewText: document.getElementById('reviewText').value.trim()
+                reviewerEmail: document.getElementById('reviewerEmail').value.trim(),
+                website: document.getElementById('reviewWebsite').value
             };
+            if (!lockedVendorId && !payload.vendorName) return showError('Enter the vendor or business name.');
+            if (!payload.rating) return showError('Choose a star rating.');
+            if (payload.reviewText.length < 20) return showError('Write a little more about your experience (at least 20 characters).');
+            if (!payload.reviewerName) return showError('Enter your name as you would like it shown.');
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(payload.reviewerEmail)) return showError('Enter a valid email address. It is never shown publicly.');
 
-            fetch('/.netlify/functions/submit-review', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            })
-                .then(function (res) { return res.json().then(function (json) { return { ok: res.ok, json: json }; }); })
-                .then(function (result) {
-                    submitBtn.disabled = false;
-                    if (!result.ok) throw new Error(result.json.error || 'Something went wrong.');
-                    successMsg.style.display = 'block';
-                    form.reset();
-                    loadReviews();
-                })
-                .catch(function (err) {
-                    submitBtn.disabled = false;
-                    errorMsg.textContent = err.message;
-                    errorMsg.style.display = 'block';
-                });
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting…';
+            VC.getJSON('/.netlify/functions/submit-review', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+            }).then(function () {
+                form.hidden = true;
+                okBox.hidden = false;
+                okBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }).catch(function (err) {
+                showError(err.message);
+            }).then(function () {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit review';
+            });
+        });
+        document.getElementById('writeAnother').addEventListener('click', function () {
+            form.reset();
+            document.getElementById('starCaption').textContent = 'Tap a star';
+            okBox.hidden = true;
+            form.hidden = false;
         });
 
-        // ----- LOAD + DISPLAY REVIEWS -----
-        function loadReviews() {
-            var verifiedLoading = document.getElementById('verifiedReviewsLoading');
-            var verifiedGrid = document.getElementById('verifiedReviewsGrid');
-            var noVerified = document.getElementById('noVerifiedReviews');
-            var communitySection = document.getElementById('communityMentionsSection');
-            var communityGrid = document.getElementById('communityMentionsGrid');
+        // ----- FEED -----
+        var list = document.getElementById('feedList');
+        var status = document.getElementById('feedStatus');
+        var empty = document.getElementById('feedEmpty');
+        var catSelect = document.getElementById('feedCategory');
 
-            fetch('/.netlify/functions/get-reviews')
-                .then(function (res) { return res.json().then(function (json) { return { ok: res.ok, json: json }; }); })
-                .then(function (result) {
-                    if (!result.ok) throw new Error(result.json.error || 'Something went wrong.');
-                    verifiedLoading.style.display = 'none';
-                    var reviews = result.json.reviews || [];
-                    var verified = reviews.filter(function (r) { return r.vendor_id; });
-                    var community = reviews.filter(function (r) { return !r.vendor_id; });
-
-                    if (verified.length === 0) {
-                        noVerified.style.display = 'block';
-                        verifiedGrid.innerHTML = '';
-                    } else {
-                        noVerified.style.display = 'none';
-                        verifiedGrid.innerHTML = verified.map(function (r) {
-                            return '<div class="testimonial-card">' +
-                                '<p class="testimonial-quote">' + stars(r.rating) + '<br>"' + escapeHtml(r.review_text) + '"</p>' +
-                                '<p class="testimonial-author">' + escapeHtml(r.reviewer_name) + ' on <a href="vendor-profile.html?id=' + r.vendor_id + '" style="color:var(--terracotta); font-weight:600; text-decoration:none;">' + escapeHtml(r.vendor_name) + '</a></p>' +
-                            '</div>';
-                        }).join('');
-                    }
-
-                    if (community.length === 0) {
-                        communitySection.style.display = 'none';
-                    } else {
-                        communitySection.style.display = 'block';
-                        communityGrid.innerHTML = community.map(function (r) {
-                            return '<div class="testimonial-card">' +
-                                '<p class="testimonial-quote">' + stars(r.rating) + '<br>"' + escapeHtml(r.review_text) + '"</p>' +
-                                '<p class="testimonial-author">' + escapeHtml(r.reviewer_name) + ' on ' + escapeHtml(r.vendor_name) + '</p>' +
-                            '</div>';
-                        }).join('');
-                    }
-                })
-                .catch(function () {
-                    noVerified.style.display = 'none';
-                    verifiedLoading.style.display = 'block';
-                    verifiedLoading.textContent = 'Reviews can\'t be loaded right now — this is a temporary issue on our end. Please try again shortly.';
-                });
+        function reviewHtml(r) {
+            var vendor = r.vendor_id
+                ? '<a href="vendor-profile.html?id=' + r.vendor_id + '">' + esc(r.vendor_name) + '</a>'
+                : '<span>' + esc(r.vendor_name) + '</span>';
+            var meta = [VC.CATEGORY_LABELS[r.vendor_category], r.event_type, VC.date(r.created_at)].filter(Boolean).map(esc).join(', ');
+            return '<article class="review-entry">' +
+                '<header><h3 class="review-vendor">' + vendor + '</h3>' + VC.stars(r.rating) + '</header>' +
+                (meta ? '<p class="review-meta">' + meta + '</p>' : '') +
+                '<p class="review-body">' + esc(r.review_text) + '</p>' +
+                '<p class="review-by">' + esc(r.reviewer_name) + (r.vendor_id ? '' : '<span class="tag-muted">Vendor not yet listed</span>') + '</p>' +
+                (r.vendor_reply ? '<div class="vendor-reply"><strong>Reply from ' + esc(r.vendor_name) + '</strong><p>' + esc(r.vendor_reply) + '</p></div>' : '') +
+            '</article>';
         }
-
-        loadReviews();
+        function render() {
+            var cat = catSelect.value;
+            var rows = allReviews.filter(function (r) { return !cat || r.vendor_category === cat; });
+            list.innerHTML = rows.map(reviewHtml).join('');
+            empty.hidden = rows.length > 0;
+            document.getElementById('feedHeading').textContent = rows.length ? (rows.length + (rows.length === 1 ? ' review' : ' reviews')) : 'Latest reviews';
+        }
+        catSelect.addEventListener('change', render);
+        VC.getJSON('/.netlify/functions/get-reviews').then(function (d) {
+            allReviews = d.reviews || [];
+            status.hidden = true;
+            render();
+        }).catch(function () {
+            status.textContent = 'Reviews could not load. Refresh the page to try again.';
+        });
     })();
     </script>
+
+
+
 
 </body>
 </html>

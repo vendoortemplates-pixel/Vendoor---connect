@@ -1,42 +1,21 @@
-// Returns only the listings that belong to the currently logged-in vendor.
-const { getDatabase } = require('@netlify/database');
-
-// Netlify only auto-injects the database connection string for v2-style
-// functions. These are Lambda-style (exports.handler), so we look the
-// connection string up ourselves and pass it in explicitly. Falls back to
-// the default behaviour if none of these are set.
-function getDb() {
-  var url = process.env.NETLIFY_DB_URL
-    || process.env.NETLIFY_DATABASE_URL
-    || process.env.DATABASE_URL
-    || process.env.NEON_DATABASE_URL
-    || process.env.POSTGRES_URL;
-  return url ? getDatabase({ connectionString: url }) : getDatabase();
-}
-
-// @netlify/database (waddler driver) resolves a query to a PLAIN ARRAY of rows.
-// Some other Postgres drivers return { rows: [...] } instead. This handles both
-// so the code cannot break again if the driver shape changes.
-function rowsOf(result) {
-  if (Array.isArray(result)) return result;
-  if (result && Array.isArray(result.rows)) return result.rows;
-  return [];
-}
+// Vendor (logged in): their own listings, with rating summary.
+const { getDb, rowsOf, json, currentUser } = require('../lib/common');
 
 exports.handler = async (event, context) => {
-  const user = context.clientContext && context.clientContext.user;
-  if (!user) {
-    return { statusCode: 401, body: JSON.stringify({ error: 'You must be logged in.' }) };
-  }
-
+  const user = currentUser(context);
+  if (!user) return json(401, { error: 'Please log in again.' });
   try {
     const db = getDb();
     const result = await db.sql`
-      SELECT * FROM listings WHERE vendor_id = ${user.sub} ORDER BY created_at DESC
+      SELECT l.*,
+        (SELECT ROUND(AVG(rating)::numeric, 1) FROM reviews WHERE vendor_id = l.id AND status = 'approved') AS avg_rating,
+        (SELECT COUNT(*)::int FROM reviews WHERE vendor_id = l.id AND status = 'approved') AS review_count,
+        (SELECT COUNT(*)::int FROM reviews WHERE vendor_id = l.id AND status = 'pending') AS pending_count
+      FROM listings l WHERE l.vendor_id = ${user.sub} ORDER BY l.created_at DESC
     `;
-    return { statusCode: 200, body: JSON.stringify({ listings: rowsOf(result) }) };
+    return json(200, { listings: rowsOf(result) });
   } catch (err) {
     console.error('my-listings error:', err);
-    return { statusCode: 500, body: JSON.stringify({ error: 'Something went wrong loading your listings.' }) };
+    return json(500, { error: 'Something went wrong loading your listings.' });
   }
 };

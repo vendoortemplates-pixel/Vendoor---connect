@@ -1,77 +1,40 @@
-// Public endpoint — returns published vendor listings for the client-facing
-// directory (find-vendors.html). Supports optional filtering:
-//   ?category=photography   filter by one category
-//   ?q=search+term          case-insensitive match on business name or description
-// Deliberately excludes vendor_email and vendor_id (internal/account fields),
-// same as get-listing-public — those aren't for public display.
-const { getDatabase } = require('@netlify/database');
-
-// Netlify only auto-injects the database connection string for v2-style
-// functions. These are Lambda-style (exports.handler), so we look the
-// connection string up ourselves and pass it in explicitly. Falls back to
-// the default behaviour if none of these are set.
-function getDb() {
-  var url = process.env.NETLIFY_DB_URL
-    || process.env.NETLIFY_DATABASE_URL
-    || process.env.DATABASE_URL
-    || process.env.NEON_DATABASE_URL
-    || process.env.POSTGRES_URL;
-  return url ? getDatabase({ connectionString: url }) : getDatabase();
-}
-
-// @netlify/database (waddler driver) resolves a query to a PLAIN ARRAY of rows.
-// Some other Postgres drivers return { rows: [...] } instead. This handles both
-// so the code cannot break again if the driver shape changes.
-function rowsOf(result) {
-  if (Array.isArray(result)) return result;
-  if (result && Array.isArray(result.rows)) return result.rows;
-  return [];
-}
+// Public: vendor directory. Optional ?category=, ?q= (name/description/city),
+// ?city=, ?sort=newest|rating. Never exposes vendor_email / vendor_id.
+const { getDb, rowsOf, json, clean } = require('../lib/common');
 
 exports.handler = async (event) => {
-  const params = event.queryStringParameters || {};
-  const category = (params.category || '').trim();
-  const q = (params.q || '').trim();
+  const p = event.queryStringParameters || {};
+  const category = clean(p.category, 40);
+  const q = clean(p.q, 80);
+  const city = clean(p.city, 80);
+  const like = '%' + q + '%';
+  const cityLike = '%' + city + '%';
+  const byRating = p.sort === 'rating';
 
   try {
     const db = getDb();
-    let result;
-
-    if (category && q) {
-      const like = '%' + q + '%';
-      result = await db.sql`
-        SELECT id, business_name, category, city, price, description, portfolio, photo_data_url, created_at
-        FROM listings
-        WHERE category = ${category}
-          AND (business_name ILIKE ${like} OR description ILIKE ${like})
-        ORDER BY created_at DESC
-      `;
-    } else if (category) {
-      result = await db.sql`
-        SELECT id, business_name, category, city, price, description, portfolio, photo_data_url, created_at
-        FROM listings
-        WHERE category = ${category}
-        ORDER BY created_at DESC
-      `;
-    } else if (q) {
-      const like = '%' + q + '%';
-      result = await db.sql`
-        SELECT id, business_name, category, city, price, description, portfolio, photo_data_url, created_at
-        FROM listings
-        WHERE business_name ILIKE ${like} OR description ILIKE ${like}
-        ORDER BY created_at DESC
-      `;
-    } else {
-      result = await db.sql`
-        SELECT id, business_name, category, city, price, description, portfolio, photo_data_url, created_at
-        FROM listings
-        ORDER BY created_at DESC
-      `;
+    const result = await db.sql`
+      SELECT l.id, l.business_name, l.category, l.city, l.price, l.description, l.portfolio,
+             l.instagram, l.photo_data_url, l.created_at,
+             COALESCE(r.avg_rating, 0) AS avg_rating, COALESCE(r.review_count, 0) AS review_count
+      FROM listings l
+      LEFT JOIN (
+        SELECT vendor_id, ROUND(AVG(rating)::numeric, 1) AS avg_rating, COUNT(*)::int AS review_count
+        FROM reviews WHERE status = 'approved' AND vendor_id IS NOT NULL GROUP BY vendor_id
+      ) r ON r.vendor_id = l.id
+      WHERE COALESCE(l.status, 'active') = 'active'
+        AND (${category} = '' OR l.category = ${category})
+        AND (${city} = '' OR l.city ILIKE ${cityLike})
+        AND (${q} = '' OR l.business_name ILIKE ${like} OR l.description ILIKE ${like} OR l.city ILIKE ${like})
+      ORDER BY l.created_at DESC
+    `;
+    let listings = rowsOf(result).map(l => Object.assign(l, { avg_rating: Number(l.avg_rating), review_count: Number(l.review_count) }));
+    if (byRating) {
+      listings.sort((a, b) => (b.avg_rating - a.avg_rating) || (b.review_count - a.review_count));
     }
-
-    return { statusCode: 200, body: JSON.stringify({ listings: rowsOf(result) }) };
+    return json(200, { listings });
   } catch (err) {
     console.error('list-listings error:', err);
-    return { statusCode: 500, body: JSON.stringify({ error: 'Something went wrong loading vendors.' }) };
+    return json(500, { error: 'Something went wrong loading vendors.' });
   }
 };

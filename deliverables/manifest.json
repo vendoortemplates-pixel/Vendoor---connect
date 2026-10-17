@@ -1,5 +1,5 @@
 {
-  "_readme": "Maps each template's product slug to its deliverable filename in this folder. Leave a slug's value as null until the real finished file is ready — thank-you.html falls back to the honest 'you'll receive it by email' message for any slug that is still null. To go live with a template: 1) drop the finished PDF into this deliverables folder, 2) set that slug's value below to the exact filename (e.g. \"traditional-wedding-planner.pdf\"), 3) commit and push. No code changes needed.",
+  "_readme": "Maps each template's product slug to its finished file in this folder. To start selling a template with instant download: 1) drop the finished PDF in this deliverables folder (keep it under 4MB — compress it in Canva/Smallpdf if needed), 2) set that slug's value below to the exact filename, e.g. \"traditional-wedding-planner.pdf\", 3) commit and push. Files here are private: buyers can only download them through a verified payment link. While a value is null, buyers see 'we'll email it within 24 hours' and the order appears on your admin page so you can email it yourself.",
   "traditional": null,
   "white-wedding": null,
   "bridal-shower": null,
