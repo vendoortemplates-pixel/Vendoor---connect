@@ -34,7 +34,7 @@ exports.handler = async (event, context) => {
         const status = ['pending', 'approved', 'rejected'].indexOf(p.status) !== -1 ? p.status : 'pending';
         const rows = rowsOf(await db.sql`
           SELECT id, vendor_name, vendor_category, vendor_id, reviewer_name, reviewer_email, rating,
-                 review_text, event_type, vendor_reply, status, created_at
+                 review_text, event_type, vendor_reply, status, COALESCE(review_type, 'vendor') AS review_type, created_at
           FROM reviews WHERE status = ${status} ORDER BY created_at DESC LIMIT 300
         `);
         return json(200, { reviews: rows });

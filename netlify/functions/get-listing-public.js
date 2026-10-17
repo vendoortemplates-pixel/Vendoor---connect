@@ -10,8 +10,8 @@ exports.handler = async (event) => {
     const result = await db.sql`
       SELECT l.id, l.business_name, l.category, l.city, l.price, l.description, l.portfolio,
              l.whatsapp, l.instagram, l.photo_data_url, l.created_at,
-             (SELECT ROUND(AVG(rating)::numeric, 1) FROM reviews WHERE vendor_id = l.id AND status = 'approved') AS avg_rating,
-             (SELECT COUNT(*)::int FROM reviews WHERE vendor_id = l.id AND status = 'approved') AS review_count
+             (SELECT ROUND(AVG(rating)::numeric, 1) FROM reviews WHERE vendor_id = l.id AND status = 'approved' AND COALESCE(review_type, 'vendor') = 'vendor') AS avg_rating,
+             (SELECT COUNT(*)::int FROM reviews WHERE vendor_id = l.id AND status = 'approved' AND COALESCE(review_type, 'vendor') = 'vendor') AS review_count
       FROM listings l
       WHERE l.id = ${id} AND COALESCE(l.status, 'active') = 'active'
     `;

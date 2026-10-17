@@ -14,9 +14,10 @@ exports.handler = async (event) => {
   // Bots fill every field; humans never see this one.
   if (data.website) return json(200, { ok: true, status: 'pending' });
 
-  const vendorIdIn = parseInt(data.vendorId, 10) || null;
-  let vendorName = clean(data.vendorName, 120);
-  let vendorCategory = CATEGORIES.indexOf(data.vendorCategory) !== -1 ? data.vendorCategory : null;
+  const isPlatform = data.reviewType === 'platform';
+  const vendorIdIn = isPlatform ? null : (parseInt(data.vendorId, 10) || null);
+  let vendorName = isPlatform ? 'Vendoor Connect' : clean(data.vendorName, 120);
+  let vendorCategory = isPlatform ? null : (CATEGORIES.indexOf(data.vendorCategory) !== -1 ? data.vendorCategory : null);
   const reviewerName = clean(data.reviewerName, 80);
   const reviewerEmail = clean(data.reviewerEmail, 160).toLowerCase();
   const eventType = clean(data.eventType, 60) || null;
@@ -50,7 +51,7 @@ exports.handler = async (event) => {
       const m = rowsOf(await db.sql`SELECT id, business_name, category FROM listings WHERE id = ${vendorIdIn}`);
       if (m.length) { vendorId = m[0].id; vendorName = m[0].business_name; vendorCategory = m[0].category; }
     }
-    if (!vendorId && vendorName) {
+    if (!isPlatform && !vendorId && vendorName) {
       const m = rowsOf(await db.sql`
         SELECT id, category FROM listings WHERE LOWER(TRIM(business_name)) = LOWER(${vendorName}) LIMIT 1
       `);
@@ -61,18 +62,18 @@ exports.handler = async (event) => {
     const dupe = rowsOf(await db.sql`
       SELECT id FROM reviews
       WHERE reviewer_email = ${reviewerEmail} AND LOWER(TRIM(vendor_name)) = LOWER(${vendorName})
-        AND status <> 'rejected'
+        AND review_type = ${isPlatform ? 'platform' : 'vendor'} AND status <> 'rejected'
       LIMIT 1
     `);
     if (dupe.length) {
-      return json(409, { error: 'You have already reviewed this vendor. Thank you!' });
+      return json(409, { error: isPlatform ? 'You have already reviewed Vendoor Connect. Thank you!' : 'You have already reviewed this vendor. Thank you!' });
     }
 
     await db.sql`
       INSERT INTO reviews (vendor_name, vendor_category, vendor_id, reviewer_name, reviewer_email,
-                           rating, review_text, event_type, ip_hash, status)
+                           rating, review_text, event_type, ip_hash, status, review_type)
       VALUES (${vendorName}, ${vendorCategory}, ${vendorId}, ${reviewerName}, ${reviewerEmail},
-              ${rating}, ${reviewText}, ${eventType}, ${ip}, 'pending')
+              ${rating}, ${reviewText}, ${eventType}, ${ip}, 'pending', ${isPlatform ? 'platform' : 'vendor'})
     `;
     return json(200, { ok: true, status: 'pending', matched: !!vendorId });
   } catch (err) {

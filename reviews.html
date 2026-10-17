@@ -79,14 +79,19 @@
 
     <!-- PAGE HEADER -->
     <section class="page-header">
-        <h1>Vendor Reviews</h1>
-        <p>Honest reviews of Nigerian event vendors, written by the clients who hired them. Every review is checked by our team before it appears.</p>
+        <h1>Reviews</h1>
+        <p>Honest reviews of Nigerian event vendors, and of Vendoor Connect itself, written by real clients. Every review is checked by our team before it appears.</p>
         <a href="#write" class="btn page-header-cta">Write a review</a>
     </section>
 
     <section class="reviews-layout">
         <!-- REVIEW FEED -->
         <div class="reviews-feed">
+            <div class="feed-tabs" role="tablist">
+                <button type="button" role="tab" class="feed-tab" data-type="vendor" aria-selected="true">Vendor reviews</button>
+                <button type="button" role="tab" class="feed-tab" data-type="platform" aria-selected="false">Reviews of Vendoor Connect</button>
+            </div>
+            <p class="platform-summary" id="platformSummary" hidden></p>
             <div class="feed-toolbar">
                 <h2 id="feedHeading">Latest reviews</h2>
                 <label class="sr-only" for="feedCategory">Filter by category</label>
@@ -115,7 +120,11 @@
 
         <!-- WRITE A REVIEW -->
         <aside class="review-form-card" id="write">
-            <h2>Review a vendor</h2>
+            <h2 id="formHeading">Write a review</h2>
+            <div class="review-type-switch" role="radiogroup" aria-label="What are you reviewing?">
+                <button type="button" class="type-btn" data-type="vendor" aria-checked="true" role="radio">A vendor</button>
+                <button type="button" class="type-btn" data-type="platform" aria-checked="false" role="radio">Vendoor Connect</button>
+            </div>
             <p class="form-note">Your email stays private. We only use it to confirm your review is genuine.</p>
             <div class="form-error" id="reviewError" role="alert" hidden></div>
             <div class="form-success-box" id="reviewSuccess" role="status" hidden>
@@ -161,7 +170,7 @@
                     <span class="star-caption" id="starCaption">Tap a star</span>
                 </fieldset>
 
-                <label class="field-label" for="reviewEventType">Event</label>
+                <label class="field-label" for="reviewEventType" id="eventLabel">Event</label>
                 <select id="reviewEventType">
                     <option value="">What was the occasion? (optional)</option>
                     <option>Traditional wedding</option>
@@ -194,32 +203,6 @@
             </form>
         </aside>
     </section>
-
-    <!-- SHARE YOUR STORY -->
-    <div class="review-form-block">
-        <span class="section-eyebrow">Your Experience</span>
-        <h2>Tell us how Vendoor Connect helped you</h2>
-        <p class="form-note" style="text-align:center;">Used one of our planning templates? Share your story. It comes privately to our team.</p>
-        <form class="contact-form" name="testimonial" method="POST" data-netlify="true" netlify-honeypot="bot-field">
-            <input type="hidden" name="form-name" value="testimonial">
-            <p class="form-hidden">
-                <label>Don't fill this out if you're human: <input name="bot-field"></label>
-            </p>
-
-            <input type="text" name="name" placeholder="Your name" required>
-            <select name="role">
-                <option value="">I am a</option>
-                <option value="bride">Bride</option>
-                <option value="groom">Groom</option>
-                <option value="couple">Couple</option>
-                <option value="bridal-party">Bridal Party</option>
-                <option value="vendor">Vendor</option>
-                <option value="other">Other</option>
-            </select>
-            <textarea name="story" placeholder="Tell us your story" required></textarea>
-            <button type="submit" class="btn">Share Your Story</button>
-        </form>
-    </div>
 
     <!-- FOOTER -->
     <footer>
@@ -279,6 +262,31 @@
         var captions = { 1: 'Poor', 2: 'Fair', 3: 'Good', 4: 'Very good', 5: 'Excellent' };
         var lockedVendorId = null;
         var allReviews = [];
+        var reviewType = 'vendor';
+        var feedType = 'vendor';
+        var eventSelect = document.getElementById('reviewEventType');
+        var vendorEventOptions = eventSelect.innerHTML;
+        var platformEventOptions = '<option value="">What did you use? (optional)</option>' +
+            '<option>Bought a planning template</option><option>Requested a custom template</option>' +
+            '<option>Used the vendor directory</option><option>Listed my business as a vendor</option><option>Other</option>';
+
+        // ----- WHAT ARE YOU REVIEWING: a vendor, or Vendoor Connect itself -----
+        function setReviewType(type) {
+            reviewType = type;
+            document.querySelectorAll('.type-btn').forEach(function (b) { b.setAttribute('aria-checked', b.dataset.type === type ? 'true' : 'false'); });
+            var platform = type === 'platform';
+            document.getElementById('vendorFields').hidden = platform || !!lockedVendorId;
+            document.getElementById('vendorLocked').hidden = platform || !lockedVendorId;
+            document.getElementById('formHeading').textContent = platform ? 'Review Vendoor Connect' : 'Review a vendor';
+            document.getElementById('eventLabel').textContent = platform ? 'Your experience' : 'Event';
+            eventSelect.innerHTML = platform ? platformEventOptions : vendorEventOptions;
+            document.getElementById('reviewText').placeholder = platform
+                ? 'How was your experience with Vendoor Connect? Did the template or the site help your planning?'
+                : 'What went well? Was anything disappointing? Would you hire them again?';
+        }
+        document.querySelectorAll('.type-btn').forEach(function (b) {
+            b.addEventListener('click', function () { setReviewType(b.dataset.type); });
+        });
 
         // ----- STAR PICKER CAPTION -----
         form.querySelectorAll('input[name="rating"]').forEach(function (r) {
@@ -298,13 +306,11 @@
         function lockVendor(l) {
             lockedVendorId = l.id;
             document.getElementById('vendorLockedName').textContent = l.business_name;
-            document.getElementById('vendorLocked').hidden = false;
-            document.getElementById('vendorFields').hidden = true;
+            setReviewType('vendor');
         }
         document.getElementById('vendorUnlock').addEventListener('click', function () {
             lockedVendorId = null;
-            document.getElementById('vendorLocked').hidden = true;
-            document.getElementById('vendorFields').hidden = false;
+            setReviewType('vendor');
         });
 
         function showError(msg) { errBox.textContent = msg; errBox.hidden = !msg; if (msg) errBox.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
@@ -313,8 +319,10 @@
             e.preventDefault();
             showError('');
             var ratingEl = form.querySelector('input[name="rating"]:checked');
+            var platform = reviewType === 'platform';
             var payload = {
-                vendorId: lockedVendorId,
+                reviewType: reviewType,
+                vendorId: platform ? null : lockedVendorId,
                 vendorName: document.getElementById('reviewVendorName').value.trim(),
                 vendorCategory: document.getElementById('reviewVendorCategory').value,
                 rating: ratingEl ? ratingEl.value : '',
@@ -324,7 +332,7 @@
                 reviewerEmail: document.getElementById('reviewerEmail').value.trim(),
                 website: document.getElementById('reviewWebsite').value
             };
-            if (!lockedVendorId && !payload.vendorName) return showError('Enter the vendor or business name.');
+            if (!platform && !lockedVendorId && !payload.vendorName) return showError('Enter the vendor or business name.');
             if (!payload.rating) return showError('Choose a star rating.');
             if (payload.reviewText.length < 20) return showError('Write a little more about your experience (at least 20 characters).');
             if (!payload.reviewerName) return showError('Enter your name as you would like it shown.');
@@ -347,6 +355,7 @@
         });
         document.getElementById('writeAnother').addEventListener('click', function () {
             form.reset();
+            setReviewType(reviewType);
             document.getElementById('starCaption').textContent = 'Tap a star';
             okBox.hidden = true;
             form.hidden = false;
@@ -359,6 +368,15 @@
         var catSelect = document.getElementById('feedCategory');
 
         function reviewHtml(r) {
+            if (r.review_type === 'platform') {
+                var pmeta = [r.event_type, VC.date(r.created_at)].filter(Boolean).map(esc).join(', ');
+                return '<article class="review-entry">' +
+                    '<header><h3 class="review-vendor">' + esc(r.reviewer_name) + '</h3>' + VC.stars(r.rating) + '</header>' +
+                    (pmeta ? '<p class="review-meta">' + pmeta + '</p>' : '') +
+                    '<p class="review-body">' + esc(r.review_text) + '</p>' +
+                    (r.vendor_reply ? '<div class="vendor-reply"><strong>Reply from Vendoor Connect</strong><p>' + esc(r.vendor_reply) + '</p></div>' : '') +
+                '</article>';
+            }
             var vendor = r.vendor_id
                 ? '<a href="vendor-profile.html?id=' + r.vendor_id + '">' + esc(r.vendor_name) + '</a>'
                 : '<span>' + esc(r.vendor_name) + '</span>';
@@ -376,16 +394,54 @@
             var rows = allReviews.filter(function (r) { return !cat || r.vendor_category === cat; });
             list.innerHTML = rows.map(reviewHtml).join('');
             empty.hidden = rows.length > 0;
-            document.getElementById('feedHeading').textContent = rows.length ? (rows.length + (rows.length === 1 ? ' review' : ' reviews')) : 'Latest reviews';
+            document.getElementById('feedHeading').textContent = rows.length ? (rows.length + (rows.length === 1 ? ' review' : ' reviews')) : (feedType === 'platform' ? 'Reviews of Vendoor Connect' : 'Latest reviews');
+            if (!rows.length) {
+                empty.querySelector('h3').textContent = feedType === 'platform' ? 'No reviews of Vendoor Connect yet' : 'No reviews here yet';
+                empty.querySelector('p').textContent = feedType === 'platform'
+                    ? 'Bought a template or used the site? Tell others how Vendoor Connect helped with your planning.'
+                    : 'Hired a vendor for a wedding, introduction or party? Your review helps the next couple choose well.';
+            }
         }
         catSelect.addEventListener('change', render);
-        VC.getJSON('/.netlify/functions/get-reviews').then(function (d) {
-            allReviews = d.reviews || [];
-            status.hidden = true;
-            render();
-        }).catch(function () {
-            status.textContent = 'Reviews could not load. Refresh the page to try again.';
+
+        function loadFeed() {
+            status.hidden = false;
+            status.textContent = 'Loading reviews…';
+            list.innerHTML = '';
+            empty.hidden = true;
+            var platform = feedType === 'platform';
+            catSelect.hidden = platform;
+            if (platform) catSelect.value = '';
+            VC.getJSON('/.netlify/functions/get-reviews' + (platform ? '?type=platform' : '')).then(function (d) {
+                allReviews = d.reviews || [];
+                status.hidden = true;
+                var sum = document.getElementById('platformSummary');
+                if (platform && d.summary && d.summary.count) {
+                    sum.innerHTML = VC.stars(d.summary.average, 'lg') + ' <strong>' + d.summary.average.toFixed(1) + '</strong> from ' + d.summary.count + (d.summary.count === 1 ? ' review' : ' reviews');
+                    sum.hidden = false;
+                } else { sum.hidden = true; }
+                render();
+            }).catch(function () {
+                status.textContent = 'Reviews could not load. Refresh the page to try again.';
+            });
+        }
+        document.querySelectorAll('.feed-tab').forEach(function (t) {
+            t.addEventListener('click', function () {
+                feedType = t.dataset.type;
+                document.querySelectorAll('.feed-tab').forEach(function (x) { x.setAttribute('aria-selected', x === t ? 'true' : 'false'); });
+                loadFeed();
+            });
         });
+
+        // ?about=vendoorconnect opens straight to reviewing / reading about Vendoor Connect
+        if (params.get('about') === 'vendoorconnect') {
+            setReviewType('platform');
+            feedType = 'platform';
+            document.querySelectorAll('.feed-tab').forEach(function (x) { x.setAttribute('aria-selected', x.dataset.type === 'platform' ? 'true' : 'false'); });
+        } else {
+            setReviewType('vendor');
+        }
+        loadFeed();
     })();
     </script>
 

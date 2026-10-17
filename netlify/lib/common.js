@@ -31,17 +31,19 @@ async function ensureSchema(base) {
         email TEXT, amount_kobo INTEGER NOT NULL, currency TEXT NOT NULL DEFAULT 'NGN', paid_at TIMESTAMP,
         download_count INTEGER NOT NULL DEFAULT 0, created_at TIMESTAMP NOT NULL DEFAULT NOW())`,
     () => base.sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS email_sent_at TIMESTAMP`,
-    () => base.sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS email_had_file BOOLEAN`
+    () => base.sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS email_had_file BOOLEAN`,
+    () => base.sql`ALTER TABLE reviews ADD COLUMN IF NOT EXISTS review_type TEXT NOT NULL DEFAULT 'vendor'`
   ];
   const probe = await base.sql`
     SELECT
       (SELECT COUNT(*)::int FROM information_schema.columns WHERE table_name = 'reviews' AND column_name IN ('status','reviewer_email','event_type','ip_hash','vendor_reply','vendor_reply_at','moderated_at')) AS r,
       (SELECT COUNT(*)::int FROM information_schema.columns WHERE table_name = 'listings' AND column_name IN ('whatsapp','instagram','status')) AS l,
       (SELECT COUNT(*)::int FROM information_schema.tables WHERE table_name = 'orders') AS o,
-      (SELECT COUNT(*)::int FROM information_schema.columns WHERE table_name = 'orders' AND column_name IN ('email_sent_at','email_had_file')) AS e
+      (SELECT COUNT(*)::int FROM information_schema.columns WHERE table_name = 'orders' AND column_name IN ('email_sent_at','email_had_file')) AS e,
+      (SELECT COUNT(*)::int FROM information_schema.columns WHERE table_name = 'reviews' AND column_name = 'review_type') AS t
   `;
   const p = rowsOf(probe)[0] || {};
-  if (Number(p.r) === 7 && Number(p.l) === 3 && Number(p.o) === 1 && Number(p.e) === 2) return;
+  if (Number(p.r) === 7 && Number(p.l) === 3 && Number(p.o) === 1 && Number(p.e) === 2 && Number(p.t) === 1) return;
   for (const step of steps) {
     try { await step(); } catch (e) { console.error('ensureSchema step failed:', e && e.message); }
   }

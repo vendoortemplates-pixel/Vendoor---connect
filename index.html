@@ -216,10 +216,14 @@
     <!-- REVIEWS -->
     <!-- Only real, approved reviews ever appear here. -->
     <section class="testimonials-section" id="homeReviewsSection">
-        <h2 id="homeReviewsHeading">Share how your vendor did</h2>
+        <h2 id="homeReviewsHeading">What customers say about Vendoor Connect</h2>
+        <p class="home-reviews-summary" id="homeReviewsSummary" hidden></p>
         <div class="home-reviews" id="homeReviews"></div>
-        <p class="home-reviews-empty" id="homeReviewsEmpty">Every review on Vendoor Connect comes from a real client and is checked before it goes live. Worked with a great vendor, or a disappointing one? Your review helps the next couple choose well.</p>
-        <a href="reviews.html#write" class="btn">Write a review</a>
+        <p class="home-reviews-empty" id="homeReviewsEmpty">Every review on Vendoor Connect comes from a real customer and is checked before it goes live. Used one of our templates or found a vendor here? We'd love to hear how it went.</p>
+        <div class="home-reviews-actions">
+            <a href="reviews.html?about=vendoorconnect#write" class="btn">Review Vendoor Connect</a>
+            <a href="reviews.html#write" class="btn-outline">Review a vendor</a>
+        </div>
     </section>
 
     <!-- NEWSLETTER SIGNUP -->
@@ -343,17 +347,28 @@
             }).join('');
         }).catch(function () {});
 
-        VC.getJSON('/.netlify/functions/get-reviews?limit=3').then(function (d) {
-            var reviews = d.reviews || [];
-            if (!reviews.length) return;
-            document.getElementById('homeReviewsHeading').textContent = 'What clients are saying';
+        function showHomeReviews(reviews, platform, summary) {
+            if (!reviews.length) return false;
+            document.getElementById('homeReviewsHeading').textContent = platform ? 'What customers say about Vendoor Connect' : 'What clients are saying about our vendors';
             document.getElementById('homeReviewsEmpty').style.display = 'none';
-            document.getElementById('homeReviews').innerHTML = reviews.map(function (r) {
-                var vendor = r.vendor_id ? '<a href="vendor-profile.html?id=' + r.vendor_id + '">' + esc(r.vendor_name) + '</a>' : esc(r.vendor_name);
+            if (platform && summary && summary.count) {
+                var sumEl = document.getElementById('homeReviewsSummary');
+                sumEl.innerHTML = VC.stars(summary.average, 'lg') + ' <strong>' + summary.average.toFixed(1) + '</strong> from ' + summary.count + (summary.count === 1 ? ' review' : ' reviews');
+                sumEl.hidden = false;
+            }
+            document.getElementById('homeReviews').innerHTML = reviews.slice(0, 3).map(function (r) {
+                var who = platform ? esc(r.reviewer_name) + (r.event_type ? ', ' + esc(r.event_type) : '')
+                    : esc(r.reviewer_name) + ' on ' + (r.vendor_id ? '<a href="vendor-profile.html?id=' + r.vendor_id + '">' + esc(r.vendor_name) + '</a>' : esc(r.vendor_name));
                 return '<figure class="home-review">' + VC.stars(r.rating) +
                     '<blockquote>' + esc(r.review_text.length > 260 ? r.review_text.slice(0, 257) + '…' : r.review_text) + '</blockquote>' +
-                    '<figcaption>' + esc(r.reviewer_name) + ' on ' + vendor + '</figcaption></figure>';
+                    '<figcaption>' + who + '</figcaption></figure>';
             }).join('');
+            return true;
+        }
+        // Reviews of Vendoor Connect first; fall back to vendor reviews if there are none yet.
+        VC.getJSON('/.netlify/functions/get-reviews?type=platform').then(function (d) {
+            if (showHomeReviews(d.reviews || [], true, d.summary)) return;
+            return VC.getJSON('/.netlify/functions/get-reviews?limit=3').then(function (v) { showHomeReviews(v.reviews || [], false); });
         }).catch(function () {});
     })();
     </script>

@@ -10,7 +10,7 @@ exports.handler = async (event, context) => {
       SELECT r.id, r.vendor_id, r.vendor_name, r.reviewer_name, r.rating, r.review_text, r.event_type,
              r.vendor_reply, r.vendor_reply_at, r.created_at
       FROM reviews r JOIN listings l ON l.id = r.vendor_id
-      WHERE l.vendor_id = ${user.sub} AND r.status = 'approved'
+      WHERE l.vendor_id = ${user.sub} AND r.status = 'approved' AND COALESCE(review_type, 'vendor') = 'vendor'
       ORDER BY r.created_at DESC
     `;
     return json(200, { reviews: rowsOf(result) });

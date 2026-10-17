@@ -2068,3 +2068,18 @@ button.btn { cursor: pointer; }
 .footer-legal { text-align: center; font-size: 13px; color: var(--text-on-dark-muted); margin-bottom: 10px; }
 .footer-legal a { color: var(--text-on-dark-muted); margin: 0 8px; }
 .buy-policy-note { margin-bottom: 14px; }
+
+/* ----- Review type switch + feed tabs ----- */
+.review-type-switch { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--border-light); margin: 6px 0 14px; }
+.type-btn { background: var(--white); border: none; padding: 11px 10px; font-size: 14px; font-weight: 600; color: var(--text-muted); cursor: pointer; }
+.type-btn + .type-btn { border-left: 1px solid var(--border-light); }
+.type-btn[aria-checked="true"] { background: var(--cocoa); color: #fff; }
+.feed-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border-light); margin-bottom: 18px; flex-wrap: wrap; }
+.feed-tab { background: none; border: none; border-bottom: 2px solid transparent; padding: 10px 14px; font-size: 14px; font-weight: 600; color: var(--text-muted); cursor: pointer; margin-bottom: -1px; }
+.feed-tab[aria-selected="true"] { color: var(--cocoa); border-bottom-color: var(--gold); }
+.platform-summary { display: flex; align-items: center; gap: 10px; font-size: 15px; color: var(--cocoa); margin-bottom: 14px; }
+.home-reviews-summary { display: flex; justify-content: center; align-items: center; gap: 10px; color: var(--cocoa); margin: -24px 0 28px; font-size: 15px; }
+.home-reviews-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.thanks-review { margin-top: 26px; font-size: 14px; color: var(--text-muted); }
+.thanks-review a { color: var(--terracotta); font-weight: 600; }
+.home-reviews { grid-template-columns: repeat(auto-fit, minmax(260px, 350px)); justify-content: center; }

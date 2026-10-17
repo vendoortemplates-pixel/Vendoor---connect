@@ -42,6 +42,7 @@ function buildEmail(order, hasFile) {
         <tr><td>Order reference</td><td style="text-align:right;color:#5B4636">${esc(order.reference)}</td></tr>
       </table>
       <p style="margin:22px 0 0;font-size:14px;color:#8A7C6F;line-height:1.6">Need help, or bought the wrong template? Just reply to this email. Change-of-mind purchases can be exchanged or turned into store credit within 7 days. See our <a href="${SITE}/refund-policy.html" style="color:#C97A5A">refund policy</a>.</p>
+      <p style="margin:14px 0 0;font-size:14px;color:#8A7C6F;line-height:1.6">Once you've used your planner, we'd love your honest review: <a href="${SITE}/reviews.html?about=vendoorconnect#write" style="color:#C97A5A">review Vendoor Connect</a>.</p>
     </div>
     <p style="text-align:center;font-size:12px;color:#8A7C6F;margin:20px 0 0">Vendoor Connect · <a href="${SITE}" style="color:#8A7C6F">vendoorconnect.com</a> · ${OWNER}</p>
   </div></body></html>`;
@@ -53,7 +54,8 @@ function buildEmail(order, hasFile) {
             : 'Your template is being prepared and will be emailed to you within 24 hours.',
     'Amount paid: ' + naira(order.amount_kobo),
     'Order reference: ' + order.reference,
-    'Need help? Reply to this email. Refund policy: ' + SITE + '/refund-policy.html'
+    'Need help? Reply to this email. Refund policy: ' + SITE + '/refund-policy.html',
+    'Enjoyed your planner? Review Vendoor Connect: ' + SITE + '/reviews.html?about=vendoorconnect#write'
   ].join('\n\n');
 
   return { subject, html, text };

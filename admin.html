@@ -227,13 +227,14 @@
             return;
         }
         $('panel').innerHTML = rows.map(function (r) {
-            var vendor = r.vendor_id ? '<a href="vendor-profile.html?id=' + r.vendor_id + '" target="_blank">' + esc(r.vendor_name) + '</a>' : esc(r.vendor_name);
+            var isPlatform = r.review_type === 'platform';
+            var vendor = isPlatform ? 'Vendoor Connect' : (r.vendor_id ? '<a href="vendor-profile.html?id=' + r.vendor_id + '" target="_blank">' + esc(r.vendor_name) + '</a>' : esc(r.vendor_name));
             var buttons = view === 'pending'
                 ? '<button class="approve" data-act="approve">Approve and publish</button><button class="reject" data-act="reject">Reject</button>'
                 : view === 'approved'
                     ? '<button class="reject" data-act="reject">Unpublish</button>'
                     : '<button data-act="approve">Approve and publish</button><button class="del" data-act="delete">Delete forever</button>';
-            return '<div class="mod-card" data-id="' + r.id + '"><div class="top"><h3>' + vendor + '<small>' + (r.vendor_id ? 'Listed vendor' : 'Not listed') + '</small></h3>' + VC.stars(r.rating) + '</div>' +
+            return '<div class="mod-card" data-id="' + r.id + '"><div class="top"><h3>' + vendor + '<small>' + (isPlatform ? 'Review of our platform' : (r.vendor_id ? 'Listed vendor' : 'Not listed')) + '</small></h3>' + VC.stars(r.rating) + '</div>' +
                 '<p class="meta">' + [esc(r.reviewer_name), '<a href="mailto:' + esc(r.reviewer_email) + '">' + esc(r.reviewer_email || '') + '</a>', esc(VC.CATEGORY_LABELS[r.vendor_category] || ''), esc(r.event_type || ''), VC.date(r.created_at)].filter(Boolean).join(', ') + '</p>' +
                 '<p class="text">' + esc(r.review_text) + '</p>' +
                 '<div class="mod-actions">' + buttons + '</div></div>';

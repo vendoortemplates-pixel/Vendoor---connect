@@ -20,7 +20,7 @@ exports.handler = async (event) => {
       FROM listings l
       LEFT JOIN (
         SELECT vendor_id, ROUND(AVG(rating)::numeric, 1) AS avg_rating, COUNT(*)::int AS review_count
-        FROM reviews WHERE status = 'approved' AND vendor_id IS NOT NULL GROUP BY vendor_id
+        FROM reviews WHERE status = 'approved' AND COALESCE(review_type, 'vendor') = 'vendor' AND vendor_id IS NOT NULL GROUP BY vendor_id
       ) r ON r.vendor_id = l.id
       WHERE COALESCE(l.status, 'active') = 'active'
         AND (${category} = '' OR l.category = ${category})
