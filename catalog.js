@@ -9,47 +9,19 @@
   var VENDOOR = {
     PAYSTACK_PUBLIC_KEY: 'pk_test_4d437e9c1cf459fca585716974a5eb5e4247cb1e',
     CATALOG: {
-      'traditional': {
-        badge: 'Traditional Wedding',
-        name: 'Traditional Wedding Planner',
+      'yoruba-wedding': {
+        badge: 'Yoruba Wedding',
+        name: 'Yoruba Wedding Planner',
         price: 5000,
-        short: 'Plan every detail of your traditional ceremony, from aso-ebi to vendor bookings',
-        description: 'A self-guided planning template for your traditional wedding ceremony, built around real Nigerian wedding traditions, from aso-ebi coordination to vendor bookings. No event planner required.'
+        short: 'Plan your Yoruba traditional wedding, from aso-ebi and gele to the owambe',
+        description: 'A self-guided planner for your Yoruba traditional wedding (igbeyawo): family introductions, the engagement list, aso-ebi and gele coordination, the alaga, vendors, budget and the day-of programme, all in one place. No event planner required.'
       },
-      'white-wedding': {
-        badge: 'White Wedding',
-        name: 'White Wedding Planner',
-        price: 7500,
-        short: 'A complete self-guided planning template for your church or court wedding',
-        description: 'A complete self-guided planning template for your church or court wedding, covering the ceremony program, reception logistics, and every vendor in between.'
-      },
-      'bridal-shower': {
-        badge: 'Bridal Shower',
-        name: 'Bridal Shower Planner',
-        price: 3500,
-        short: 'Everything you need to plan a beautiful bridal shower',
-        description: 'Everything you need to plan a beautiful bridal shower, from the guest list and games to décor and gifting, without the last-minute scramble.'
-      },
-      'bachelorette': {
-        badge: 'Bachelorette',
-        name: 'Bachelorette Planner',
-        price: 5500,
-        short: 'Organize the perfect bachelorette weekend',
-        description: 'Organize the perfect bachelorette weekend for the bride-to-be, from the guest list and itinerary to the budget and the surprises.'
-      },
-      'engagement': {
-        badge: 'Engagement',
-        name: 'Engagement & Introduction Planner',
-        price: 4500,
-        short: 'Plan your introduction or knocking ceremony with ease',
-        description: 'Plan your introduction or knocking ceremony with ease, covering family coordination, traditional requirements, and the day-of run of show.'
-      },
-      'honeymoon': {
-        badge: 'Honeymoon',
-        name: 'Honeymoon Planner',
-        price: 4000,
-        short: 'Plan your dream honeymoon, from budget to itinerary',
-        description: 'Plan your dream honeymoon, from a budget and destination shortlist to a full day-by-day itinerary.'
+      'igbo-wedding': {
+        badge: 'Igbo Wedding',
+        name: 'Igbo Wedding Planner',
+        price: 5000,
+        short: 'Plan your Igbo traditional wedding, from the list to igba nkwu',
+        description: 'A self-guided planner for your Igbo traditional wedding (igba nkwu): knocking and family visits, the bride price list, wine carrying, attire and coral beads, vendors, budget and the day-of programme, all in one place. No event planner required.'
       }
     }
   };

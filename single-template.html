@@ -29,13 +29,9 @@
                 <li class="has-dropdown">
                     <a href="templates.html">Templates</a>
                     <div class="dropdown-menu">
-                        <a href="templates.html?cat=traditional" class="dropdown-item">Traditional Wedding</a>
-                        <a href="templates.html?cat=white-wedding" class="dropdown-item">White Wedding</a>
-                        <a href="templates.html?cat=bridal-shower" class="dropdown-item">Bridal Shower</a>
-                        <a href="templates.html?cat=engagement" class="dropdown-item">Engagement</a>
-                        <a href="templates.html?cat=bachelorette" class="dropdown-item">Bachelorette</a>
-                        <a href="templates.html?cat=honeymoon" class="dropdown-item">Honeymoon</a>
-                        <a href="custom-template.html" class="dropdown-item dropdown-item-custom">Custom Templates</a>
+                        <a href="single-template.html?product=yoruba-wedding" class="dropdown-item">Yoruba Wedding Planner</a>
+                        <a href="single-template.html?product=igbo-wedding" class="dropdown-item">Igbo Wedding Planner</a>
+                        <a href="custom-template.html" class="dropdown-item dropdown-item-custom">Customize Your Own Planner</a>
                     </div>
                 </li>
                 <li><a href="find-vendors.html">Find Vendors</a></li>
@@ -59,13 +55,9 @@
                 </button>
                 <ul class="drawer-submenu">
                     <li><a href="templates.html">All Templates</a></li>
-                    <li><a href="templates.html?cat=traditional">Traditional Wedding</a></li>
-                    <li><a href="templates.html?cat=white-wedding">White Wedding</a></li>
-                    <li><a href="templates.html?cat=bridal-shower">Bridal Shower</a></li>
-                    <li><a href="templates.html?cat=engagement">Engagement</a></li>
-                    <li><a href="templates.html?cat=bachelorette">Bachelorette</a></li>
-                    <li><a href="templates.html?cat=honeymoon">Honeymoon</a></li>
-                    <li><a href="custom-template.html">Custom Templates</a></li>
+                    <li><a href="single-template.html?product=yoruba-wedding">Yoruba Wedding Planner</a></li>
+                    <li><a href="single-template.html?product=igbo-wedding">Igbo Wedding Planner</a></li>
+                    <li><a href="custom-template.html">Customize Your Own Planner</a></li>
                 </ul>
             </li>
             <li><a href="find-vendors.html">Find Vendors</a></li>
@@ -82,7 +74,7 @@
 
         <!-- LEFT — Preview Image -->
         <div class="template-preview">
-            <img id="previewImage" src="images/covers/traditional.svg" alt="">
+            <img id="previewImage" src="images/covers/yoruba-wedding.svg" alt="">
         </div>
 
         <!-- RIGHT — Template Info -->
@@ -159,9 +151,9 @@
                 <h4>Shop</h4>
                 <ul>
                     <li><a href="templates.html">All Templates</a></li>
-                    <li><a href="templates.html?cat=traditional">Traditional Wedding</a></li>
-                    <li><a href="templates.html?cat=bridal-shower">Bridal Shower</a></li>
-                    <li><a href="templates.html?cat=white-wedding">White Wedding</a></li>
+                    <li><a href="single-template.html?product=yoruba-wedding">Yoruba Wedding Planner</a></li>
+                    <li><a href="single-template.html?product=igbo-wedding">Igbo Wedding Planner</a></li>
+                    <li><a href="custom-template.html">Custom Planner</a></li>
                 </ul>
             </div>
 
@@ -198,7 +190,7 @@
     (function () {
         var CATALOG = window.VENDOOR.CATALOG;
         var params = new URLSearchParams(window.location.search);
-        var slug = CATALOG[params.get('product')] ? params.get('product') : 'traditional';
+        var slug = CATALOG[params.get('product')] ? params.get('product') : 'yoruba-wedding';
         var product = CATALOG[slug];
         var naira = VC.naira;
 
@@ -296,7 +288,10 @@
                 '<span>' + naira(p.price) + '</span>' +
                 '<a href="single-template.html?product=' + s + '" class="btn-card">View template</a>' +
             '</div>';
-        }).join('');
+        }).join('') +
+            '<div class="template-card"><img src="images/covers/custom-planner.svg" alt="Custom planner cover" loading="lazy">' +
+            '<h3>Customize Your Own Planner</h3><p>A planner designed around your celebration: any culture, any event, your style</p>' +
+            '<span>Priced to your needs</span><a href="custom-template.html" class="btn-card">Request yours</a></div>';
     })();
     </script>
     <script src="main.js"></script>
