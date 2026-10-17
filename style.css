@@ -2095,3 +2095,6 @@ button.btn { cursor: pointer; }
   .about-hero h1 { font-size: 38px; }
   .about-hero p { font-size: 16px; }
 }
+.about-hero .about-hero-tagline { font-family: var(--font-heading); font-size: 22px; color: var(--text-on-dark-muted); letter-spacing: 3px; margin: 14px auto 0; }
+.about-hero-tagline span { color: var(--gold); margin: 0 6px; }
+@media (max-width: 640px) { .about-hero .about-hero-tagline { font-size: 17px; letter-spacing: 2px; } }
