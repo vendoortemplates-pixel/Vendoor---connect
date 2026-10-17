@@ -2053,3 +2053,18 @@ button.btn { cursor: pointer; }
 .mod-card a, .admin-table a { color: var(--terracotta); }
 .mod-card h3 a { text-decoration: none; }
 .review-form-card .form-note { text-align: left; }
+/* ----- Policy pages ----- */
+.policy { max-width: 720px; margin: 0 auto; padding: 56px 24px 90px; color: var(--cocoa); }
+.policy-updated { font-size: 13px; color: var(--text-muted); margin-bottom: 28px; }
+.policy h2 { font-family: var(--font-heading); font-size: 24px; font-weight: 600; margin: 36px 0 12px; }
+.policy p, .policy li { font-size: 16px; line-height: 1.75; }
+.policy p { margin-bottom: 14px; }
+.policy ul { margin: 0 0 16px 22px; }
+.policy li { margin-bottom: 8px; }
+.policy a { color: var(--terracotta); font-weight: 600; }
+.policy-nav { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--border-light); font-size: 14px; }
+.buy-policy-note { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-top: 12px; }
+.buy-policy-note a { color: var(--terracotta); font-weight: 600; }
+.footer-legal { text-align: center; font-size: 13px; color: var(--text-on-dark-muted); margin-bottom: 10px; }
+.footer-legal a { color: var(--text-on-dark-muted); margin: 0 8px; }
+.buy-policy-note { margin-bottom: 14px; }
