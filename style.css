@@ -2156,3 +2156,13 @@ h1, h2 { font-weight: 600; }
   .story-content .section-eyebrow { font-size: 38px; }
   .story-content h2 { font-size: 24px; }
 }
+
+/* Home hero headline: reads as a sentence on two lines */
+.hero-split h1 { max-width: none; font-size: 58px; line-height: 1.08; text-wrap: balance; letter-spacing: -0.3px; }
+.hero-split h1 .nowrap { white-space: nowrap; }
+.hero-eyebrow { display: inline-block; font-family: var(--font-heading); font-style: italic; font-size: 21px; letter-spacing: 1.5px; color: var(--terracotta); margin-bottom: 14px; }
+.hero-eyebrow span { color: var(--gold); margin: 0 4px; }
+@media (max-width: 900px) { .hero-split h1 { font-size: 46px; } }
+@media (max-width: 480px) { .hero-split h1 { font-size: 36px; } .hero-eyebrow { font-size: 18px; } }
+nav ul li a { white-space: nowrap; }
+@media (max-width: 1000px) and (min-width: 769px) { nav { padding-left: 20px; padding-right: 20px; } nav ul { gap: 18px; } nav ul li a { font-size: 13px; letter-spacing: 1px; } }
