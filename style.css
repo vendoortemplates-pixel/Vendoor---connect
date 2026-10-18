@@ -12,8 +12,8 @@
     --text-muted: #8A7C6F;
     --text-on-dark-muted: #CFC3B6;
     --border-light: #ECE3D8;
-    --font-heading: 'Playfair Display', Georgia, serif;
-    --font-body: 'Segoe UI', sans-serif;
+    --font-heading: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+    --font-body: 'Jost', 'Segoe UI', Helvetica, Arial, sans-serif;
 }
 
 * {
@@ -2098,3 +2098,33 @@ button.btn { cursor: pointer; }
 .about-hero .about-hero-tagline { font-family: var(--font-heading); font-size: 22px; color: var(--text-on-dark-muted); letter-spacing: 3px; margin: 14px auto 0; }
 .about-hero-tagline span { color: var(--gold); margin: 0 6px; }
 @media (max-width: 640px) { .about-hero .about-hero-tagline { font-size: 17px; letter-spacing: 2px; } }
+
+/* ===== TYPOGRAPHY: Cormorant Garamond headings + Jost body ===== */
+/* Cormorant has a small x-height, so headings are nudged up to keep the same visual size. */
+h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; letter-spacing: 0.2px; }
+body { font-family: var(--font-body); font-weight: 400; }
+h1 *, h2 *, h3 *, h4 *, blockquote * { font-family: inherit; }
+h1, h2, h3, h4, .testimonial-quote, .home-review blockquote, .listing-price, .profile-price, .template-price,
+.scroll-card span, .template-card span, .summary b, .stars, .form-success-box h3 { font-family: var(--font-heading); }
+.stars { font-family: Arial, sans-serif; }
+.page-header h1 { font-size: 46px; }
+.hero h1, .hero-split h1 { font-size: 64px; font-weight: 600; line-height: 1.02; }
+.section-eyebrow + h2, .category-section h2, .testimonials-section h2, .home-vendors-head h2, .scroll-row-header h2, .promo-content h2, .newsletter-section h2 { font-size: 40px; }
+.template-card h3, .scroll-card h3, .listing-body h3 { font-size: 21px; }
+.template-card span, .scroll-card span, .listing-price { font-size: 24px; font-weight: 700; }
+.home-review blockquote { font-size: 20px; font-style: italic; font-weight: 500; }
+.about-hero h1 { font-size: 66px; font-weight: 600; }
+.about-hero .about-hero-tagline { font-style: italic; font-weight: 500; font-size: 25px; letter-spacing: 2px; }
+.about-hero p { font-weight: 300; font-size: 18px; letter-spacing: 0.3px; }
+p { line-height: 1.65; }
+@media (max-width: 900px) { .hero h1, .hero-split h1 { font-size: 46px; } }
+@media (max-width: 640px) {
+  .page-header h1 { font-size: 36px; }
+  .about-hero h1 { font-size: 44px; }
+  .about-hero .about-hero-tagline { font-size: 19px; }
+  .section-eyebrow + h2, .category-section h2, .testimonials-section h2, .home-vendors-head h2, .scroll-row-header h2, .promo-content h2, .newsletter-section h2 { font-size: 31px; }
+}
+/* Prices read best in the clean body font */
+.template-card span, .scroll-card span, .listing-price, .template-price, .profile-price { font-family: var(--font-body); font-weight: 600; font-size: 20px; }
+.template-price, .profile-price { font-size: 30px; }
+h1, h2 { font-weight: 600; }
