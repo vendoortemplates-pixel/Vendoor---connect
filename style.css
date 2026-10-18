@@ -2149,3 +2149,10 @@ h1, h2 { font-weight: 600; }
 }
 .story-content .story-signoff em { display: block; margin-top: 4px; }
 .story-content p { color: #6b5a4c; }
+/* Our Story: bigger section title, softer headline */
+.story-content .section-eyebrow { display: block; font-family: var(--font-heading); font-size: 48px; font-weight: 600; text-transform: none; letter-spacing: 0.5px; color: var(--terracotta); line-height: 1.1; margin-bottom: 10px; }
+.story-content h2 { font-size: 30px; font-weight: 500; line-height: 1.25; margin-bottom: 22px; }
+@media (max-width: 768px) {
+  .story-content .section-eyebrow { font-size: 38px; }
+  .story-content h2 { font-size: 24px; }
+}
