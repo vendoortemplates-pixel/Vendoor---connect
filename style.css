@@ -2310,3 +2310,4 @@ nav ul li a { white-space: nowrap; }
 .dash-stats strong { font-family: var(--font-body); font-weight: 600; font-size: 20px; }
 h1, h2, h3, h4, .mem-steps li span { font-variant-numeric: lining-nums; }
 .profile-info .profile-price { font-family: var(--font-body); font-weight: 600; }
+.mem-steps p a { color: var(--terracotta); font-weight: 500; }
