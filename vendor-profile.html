@@ -84,7 +84,14 @@
                 </li>
                 <li><a href="find-vendors.html">Find Vendors</a></li>
                 <li><a href="reviews.html">Reviews</a></li>
-                <li><a href="vendor-portal.html">For Vendors</a></li>
+                <li class="has-dropdown">
+                    <a href="vendor-portal.html">For Vendors</a>
+                    <div class="dropdown-menu">
+                        <a href="vendor-portal.html?signup=1" class="dropdown-item">List Your Business Free</a>
+                        <a href="vendor-portal.html" class="dropdown-item">Vendor Dashboard</a>
+                        <a href="vendor-memberships.html" class="dropdown-item dropdown-item-custom">Memberships &amp; Promotion</a>
+                    </div>
+                </li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="contact.html">Contact</a></li>
             </ul>
@@ -111,7 +118,17 @@
             </li>
             <li><a href="find-vendors.html">Find Vendors</a></li>
             <li><a href="reviews.html">Reviews</a></li>
-            <li><a href="vendor-portal.html">For Vendors</a></li>
+            <li class="drawer-has-submenu">
+                <button class="drawer-submenu-toggle" type="button">
+                    For Vendors
+                    <span class="drawer-caret">&#9662;</span>
+                </button>
+                <ul class="drawer-submenu">
+                    <li><a href="vendor-portal.html?signup=1">List Your Business Free</a></li>
+                    <li><a href="vendor-portal.html">Vendor Dashboard</a></li>
+                    <li><a href="vendor-memberships.html">Memberships &amp; Promotion</a></li>
+                </ul>
+            </li>
             <li><a href="about.html">About</a></li>
             <li><a href="contact.html">Contact</a></li>
         </ul>
@@ -146,6 +163,7 @@
                     <li><a href="find-vendors.html">Find Vendors</a></li>
                     <li><a href="reviews.html">Reviews</a></li>
                     <li><a href="vendor-portal.html">Vendor Login</a></li>
+                    <li><a href="vendor-memberships.html">Vendor Memberships</a></li>
                     <li><a href="about.html">About</a></li>
                     <li><a href="contact.html">Contact</a></li>
                 </ul>
@@ -175,9 +193,23 @@
         }
         if (!id) return notFound('No vendor was specified.');
 
+        // Anonymous daily counters so vendors can see views and client clicks.
+        function track(kind) {
+            try {
+                var body = JSON.stringify({ id: id, kind: kind });
+                if (navigator.sendBeacon) navigator.sendBeacon('/.netlify/functions/track', new Blob([body], { type: 'application/json' }));
+                else fetch('/.netlify/functions/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body, keepalive: true });
+            } catch (e) {}
+        }
+        content.addEventListener('click', function (e) {
+            var a = e.target.closest && e.target.closest('[data-track]');
+            if (a) track(a.getAttribute('data-track'));
+        });
+
         VC.getJSON('/.netlify/functions/get-listing-public?id=' + id).then(function (d) {
             var l = d.listing;
             document.title = l.business_name + ' | Vendoor Connect';
+            track('view');
             var photo = l.photo_data_url
                 ? '<img src="' + l.photo_data_url + '" alt="' + esc(l.business_name) + '">'
                 : '<div class="profile-photo-placeholder"><span>' + esc(l.business_name.charAt(0)) + '</span></div>';
@@ -185,9 +217,9 @@
                 ? '<a href="#reviews" class="profile-rating">' + VC.stars(l.avg_rating, 'lg') + '<span>' + l.avg_rating.toFixed(1) + ' from ' + l.review_count + (l.review_count === 1 ? ' review' : ' reviews') + '</span></a>'
                 : '<p class="profile-rating-none">No reviews yet</p>';
             var actions = '';
-            if (l.whatsapp) actions += '<a class="btn" target="_blank" rel="noopener" href="' + VC.whatsappLink(l.whatsapp, 'Hello ' + l.business_name + ', I found you on Vendoor Connect and would like to ask about your services.') + '">Message on WhatsApp</a>';
-            if (l.instagram) actions += '<a class="profile-portfolio-link" target="_blank" rel="noopener" href="https://instagram.com/' + encodeURIComponent(l.instagram) + '">@' + esc(l.instagram) + ' on Instagram</a>';
-            if (l.portfolio) actions += '<a class="profile-portfolio-link" target="_blank" rel="noopener" href="' + esc(l.portfolio) + '">View portfolio</a>';
+            if (l.whatsapp) actions += '<a class="btn" data-track="whatsapp" target="_blank" rel="noopener" href="' + VC.whatsappLink(l.whatsapp, 'Hello ' + l.business_name + ', I found you on Vendoor Connect and would like to ask about your services.') + '">Message on WhatsApp</a>';
+            if (l.instagram) actions += '<a class="profile-portfolio-link" data-track="instagram" target="_blank" rel="noopener" href="https://instagram.com/' + encodeURIComponent(l.instagram) + '">@' + esc(l.instagram) + ' on Instagram</a>';
+            if (l.portfolio) actions += '<a class="profile-portfolio-link" data-track="website" target="_blank" rel="noopener" href="' + esc(l.portfolio) + '">View portfolio</a>';
 
             content.innerHTML =
                 '<nav class="crumbs"><a href="find-vendors.html">Find Vendors</a><span class="sep">/</span><span>' + esc(VC.CATEGORY_LABELS[l.category] || l.category) + '</span></nav>' +
@@ -195,6 +227,7 @@
                     '<div class="profile-photo">' + photo + '</div>' +
                     '<div class="profile-info">' +
                         '<span class="profile-category">' + esc(VC.CATEGORY_LABELS[l.category] || l.category) + '</span>' +
+                        (l.is_founding ? ' <span class="badge-founding" title="One of the first 50 businesses to support Vendoor Connect">Founding Vendor</span>' : '') +
                         '<h1>' + esc(l.business_name) + '</h1>' +
                         '<p class="profile-city">' + esc(l.city) + '</p>' +
                         rating +

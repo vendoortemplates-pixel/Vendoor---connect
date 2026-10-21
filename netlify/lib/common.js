@@ -32,7 +32,20 @@ async function ensureSchema(base) {
         download_count INTEGER NOT NULL DEFAULT 0, created_at TIMESTAMP NOT NULL DEFAULT NOW())`,
     () => base.sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS email_sent_at TIMESTAMP`,
     () => base.sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS email_had_file BOOLEAN`,
-    () => base.sql`ALTER TABLE reviews ADD COLUMN IF NOT EXISTS review_type TEXT NOT NULL DEFAULT 'vendor'`
+    () => base.sql`ALTER TABLE reviews ADD COLUMN IF NOT EXISTS review_type TEXT NOT NULL DEFAULT 'vendor'`,
+    () => base.sql`ALTER TABLE listings ADD COLUMN IF NOT EXISTS membership TEXT`,
+    () => base.sql`ALTER TABLE listings ADD COLUMN IF NOT EXISTS membership_until TIMESTAMP`,
+    () => base.sql`ALTER TABLE listings ADD COLUMN IF NOT EXISTS featured_until TIMESTAMP`,
+    () => base.sql`ALTER TABLE reviews ADD COLUMN IF NOT EXISTS dispute_reason TEXT`,
+    () => base.sql`ALTER TABLE reviews ADD COLUMN IF NOT EXISTS disputed_at TIMESTAMP`,
+    () => base.sql`ALTER TABLE reviews ADD COLUMN IF NOT EXISTS dispute_resolved_at TIMESTAMP`,
+    () => base.sql`CREATE TABLE IF NOT EXISTS listing_stats (
+        listing_id INTEGER NOT NULL, day DATE NOT NULL DEFAULT CURRENT_DATE, kind TEXT NOT NULL,
+        count INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (listing_id, day, kind))`,
+    () => base.sql`CREATE TABLE IF NOT EXISTS membership_inquiries (
+        id SERIAL PRIMARY KEY, business_name TEXT NOT NULL, contact_name TEXT, email TEXT NOT NULL, phone TEXT,
+        interest TEXT NOT NULL, listing_id INTEGER, message TEXT, status TEXT NOT NULL DEFAULT 'new', ip_hash TEXT,
+        created_at TIMESTAMP NOT NULL DEFAULT NOW())`
   ];
   const probe = await base.sql`
     SELECT
@@ -40,10 +53,14 @@ async function ensureSchema(base) {
       (SELECT COUNT(*)::int FROM information_schema.columns WHERE table_name = 'listings' AND column_name IN ('whatsapp','instagram','status')) AS l,
       (SELECT COUNT(*)::int FROM information_schema.tables WHERE table_name = 'orders') AS o,
       (SELECT COUNT(*)::int FROM information_schema.columns WHERE table_name = 'orders' AND column_name IN ('email_sent_at','email_had_file')) AS e,
-      (SELECT COUNT(*)::int FROM information_schema.columns WHERE table_name = 'reviews' AND column_name = 'review_type') AS t
+      (SELECT COUNT(*)::int FROM information_schema.columns WHERE table_name = 'reviews' AND column_name = 'review_type') AS t,
+      (SELECT COUNT(*)::int FROM information_schema.columns WHERE table_name = 'listings' AND column_name IN ('membership','membership_until','featured_until')) AS m,
+      (SELECT COUNT(*)::int FROM information_schema.columns WHERE table_name = 'reviews' AND column_name IN ('dispute_reason','disputed_at','dispute_resolved_at')) AS d,
+      (SELECT COUNT(*)::int FROM information_schema.tables WHERE table_name IN ('listing_stats','membership_inquiries')) AS s
   `;
   const p = rowsOf(probe)[0] || {};
-  if (Number(p.r) === 7 && Number(p.l) === 3 && Number(p.o) === 1 && Number(p.e) === 2 && Number(p.t) === 1) return;
+  if (Number(p.r) === 7 && Number(p.l) === 3 && Number(p.o) === 1 && Number(p.e) === 2 && Number(p.t) === 1
+      && Number(p.m) === 3 && Number(p.d) === 3 && Number(p.s) === 2) return;
   for (const step of steps) {
     try { await step(); } catch (e) { console.error('ensureSchema step failed:', e && e.message); }
   }
@@ -146,4 +163,8 @@ function validPhoto(dataUrl) {
   return s;
 }
 
-module.exports = { getDb, rowsOf, json, parseBody, currentUser, isAdmin, clean, safeUrl, normalizePhone, ipHash, CATEGORIES, validPhoto };
+// Founding Vendor Membership: 12 months, capped at the first 50 businesses.
+const FOUNDING_LIMIT = 50;
+const STAT_KINDS = ['view', 'whatsapp', 'instagram', 'website'];
+
+module.exports = { FOUNDING_LIMIT, STAT_KINDS, getDb, rowsOf, json, parseBody, currentUser, isAdmin, clean, safeUrl, normalizePhone, ipHash, CATEGORIES, validPhoto };

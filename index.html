@@ -37,7 +37,14 @@
                 </li>
                 <li><a href="find-vendors.html">Find Vendors</a></li>
                 <li><a href="reviews.html">Reviews</a></li>
-                <li><a href="vendor-portal.html">For Vendors</a></li>
+                <li class="has-dropdown">
+                    <a href="vendor-portal.html">For Vendors</a>
+                    <div class="dropdown-menu">
+                        <a href="vendor-portal.html?signup=1" class="dropdown-item">List Your Business Free</a>
+                        <a href="vendor-portal.html" class="dropdown-item">Vendor Dashboard</a>
+                        <a href="vendor-memberships.html" class="dropdown-item dropdown-item-custom">Memberships &amp; Promotion</a>
+                    </div>
+                </li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="contact.html">Contact</a></li>
             </ul>
@@ -64,7 +71,17 @@
             </li>
             <li><a href="find-vendors.html">Find Vendors</a></li>
             <li><a href="reviews.html">Reviews</a></li>
-            <li><a href="vendor-portal.html">For Vendors</a></li>
+            <li class="drawer-has-submenu">
+                <button class="drawer-submenu-toggle" type="button">
+                    For Vendors
+                    <span class="drawer-caret">&#9662;</span>
+                </button>
+                <ul class="drawer-submenu">
+                    <li><a href="vendor-portal.html?signup=1">List Your Business Free</a></li>
+                    <li><a href="vendor-portal.html">Vendor Dashboard</a></li>
+                    <li><a href="vendor-memberships.html">Memberships &amp; Promotion</a></li>
+                </ul>
+            </li>
             <li><a href="about.html">About</a></li>
             <li><a href="contact.html">Contact</a></li>
         </ul>
@@ -145,6 +162,7 @@
     <section class="home-vendors">
         <div class="home-vendors-head">
             <div>
+                <p class="home-vendors-quote">Beautiful pictures tell one story. Real experiences tell another.</p>
                 <h2>Vendors reviewed by real clients</h2>
                 <p>Photographers, caterers, decorators, MCs, makeup artists and more. Read what past clients say, then message them directly.</p>
             </div>
@@ -154,9 +172,12 @@
         <div class="home-vendors-join">
             <div>
                 <h3>Run an events business?</h3>
-                <p>List it for free, show off your work and collect reviews you can share.</p>
+                <p>Your next client should be able to find you beyond Instagram. List for free, show off your work and collect reviews you can share.</p>
             </div>
-            <a href="vendor-portal.html?signup=1" class="btn">List your business</a>
+            <div class="home-vendors-join-actions">
+                <a href="vendor-portal.html?signup=1" class="btn">List your business</a>
+                <a href="vendor-memberships.html" class="home-join-link">Founding memberships</a>
+            </div>
         </div>
     </section>
 
@@ -219,6 +240,7 @@
                     <li><a href="find-vendors.html">Find Vendors</a></li>
                     <li><a href="reviews.html">Reviews</a></li>
                     <li><a href="vendor-portal.html">Vendor Login</a></li>
+                    <li><a href="vendor-memberships.html">Vendor Memberships</a></li>
                     <li><a href="about.html">About</a></li>
                     <li><a href="contact.html">Contact</a></li>
                 </ul>
@@ -278,17 +300,25 @@
     // ----- HOMEPAGE: featured vendors + latest approved reviews -----
     (function () {
         var esc = VC.esc;
+        function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var k = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[k]; a[k] = t; } return a; }
         VC.getJSON('/.netlify/functions/list-listings?sort=rating').then(function (d) {
-            var top = (d.listings || []).slice(0, 3);
+            var all = d.listings || [];
+            // Paid Sponsored spots first, then founding members (rotated fairly), then top rated.
+            var sponsored = shuffle(all.filter(function (l) { return l.is_featured; }));
+            var founding = shuffle(all.filter(function (l) { return l.is_founding && !l.is_featured; }));
+            var rest = all.filter(function (l) { return !l.is_featured && !l.is_founding; });
+            var top = sponsored.concat(founding, rest).slice(0, 3);
             if (!top.length) return;
             document.getElementById('homeVendors').innerHTML = top.map(function (l) {
+                var flags = (l.is_featured ? '<span class="badge-sponsored">Sponsored</span>' : '') + (l.is_founding ? '<span class="badge-founding">Founding Vendor</span>' : '');
                 var photo = l.photo_data_url
                     ? '<img class="listing-photo" src="' + l.photo_data_url + '" alt="' + esc(l.business_name) + '" loading="lazy">'
                     : '<div class="listing-photo-placeholder"><span>' + esc(l.business_name.charAt(0)) + '</span></div>';
                 var rating = l.review_count
                     ? '<p class="listing-rating">' + VC.stars(l.avg_rating) + ' <span>' + Number(l.avg_rating).toFixed(1) + ' (' + l.review_count + ')</span></p>'
                     : '<p class="listing-rating listing-rating-none">New on Vendoor Connect</p>';
-                return '<a class="listing-card listing-card-link" href="vendor-profile.html?id=' + l.id + '">' + photo +
+                return '<a class="listing-card listing-card-link' + (l.is_featured ? ' listing-card-featured' : '') + '" href="vendor-profile.html?id=' + l.id + '">' +
+                    (flags ? '<div class="listing-flags">' + flags + '</div>' : '') + photo +
                     '<div class="listing-body"><span class="listing-category">' + esc(VC.CATEGORY_LABELS[l.category] || l.category) + '</span>' +
                     '<h3>' + esc(l.business_name) + '</h3><p class="listing-city">' + esc(l.city) + '</p>' + rating +
                     '<span class="listing-price">From ' + VC.naira(l.price) + '</span></div></a>';

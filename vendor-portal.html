@@ -227,7 +227,14 @@
                 </li>
                 <li><a href="find-vendors.html">Find Vendors</a></li>
                 <li><a href="reviews.html">Reviews</a></li>
-                <li><a href="vendor-portal.html">For Vendors</a></li>
+                <li class="has-dropdown">
+                    <a href="vendor-portal.html">For Vendors</a>
+                    <div class="dropdown-menu">
+                        <a href="vendor-portal.html?signup=1" class="dropdown-item">List Your Business Free</a>
+                        <a href="vendor-portal.html" class="dropdown-item">Vendor Dashboard</a>
+                        <a href="vendor-memberships.html" class="dropdown-item dropdown-item-custom">Memberships &amp; Promotion</a>
+                    </div>
+                </li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="contact.html">Contact</a></li>
             </ul>
@@ -254,7 +261,17 @@
             </li>
             <li><a href="find-vendors.html">Find Vendors</a></li>
             <li><a href="reviews.html">Reviews</a></li>
-            <li><a href="vendor-portal.html">For Vendors</a></li>
+            <li class="drawer-has-submenu">
+                <button class="drawer-submenu-toggle" type="button">
+                    For Vendors
+                    <span class="drawer-caret">&#9662;</span>
+                </button>
+                <ul class="drawer-submenu">
+                    <li><a href="vendor-portal.html?signup=1">List Your Business Free</a></li>
+                    <li><a href="vendor-portal.html">Vendor Dashboard</a></li>
+                    <li><a href="vendor-memberships.html">Memberships &amp; Promotion</a></li>
+                </ul>
+            </li>
             <li><a href="about.html">About</a></li>
             <li><a href="contact.html">Contact</a></li>
         </ul>
@@ -288,6 +305,20 @@
             </form>
 
             <p class="mode-toggle" id="modeToggle"></p>
+        </div>
+    </section>
+
+    <section class="grow-section">
+        <div class="grow-inner">
+            <span class="section-eyebrow">Free to list, always</span>
+            <h2>Grow Your Business With Vendoor Connect</h2>
+            <p>Your next client should be able to find you beyond Instagram. Every business can list for free and collect reviews. When you want more visibility, choose an optional Founding Vendor Membership or a sponsored placement on our homepage and Instagram.</p>
+            <ul class="grow-points">
+                <li><strong>Founding Vendor Membership</strong><span>₦30,000 for 12 months, first 50 businesses only</span></li>
+                <li><strong>Homepage Spotlight</strong><span>₦15,000 per month, limited spots</span></li>
+                <li><strong>Website + Instagram Feature</strong><span>₦25,000 per month</span></li>
+            </ul>
+            <a href="vendor-memberships.html" class="btn">Explore Vendor Memberships</a>
         </div>
     </section>
 </div>
@@ -336,6 +367,14 @@
                 </div>
 
                 <div id="listingsGrid" class="listings-grid"></div>
+
+                <div class="dash-grow" id="dashGrow" style="display:none;">
+                    <div>
+                        <h3>Want more clients to see your business?</h3>
+                        <p>Founding vendors get a badge, priority placement in the directory, homepage features and a monthly visibility report. Only 50 spots.</p>
+                    </div>
+                    <a href="vendor-memberships.html" class="btn-small">Explore Vendor Memberships</a>
+                </div>
 
                 <div class="listing-form-overlay" id="listingFormOverlay">
                     <h3 id="listingFormTitle">Create listing</h3>
@@ -433,6 +472,7 @@
                     <li><a href="find-vendors.html">Find Vendors</a></li>
                     <li><a href="reviews.html">Reviews</a></li>
                     <li><a href="vendor-portal.html">Vendor Login</a></li>
+                    <li><a href="vendor-memberships.html">Vendor Memberships</a></li>
                     <li><a href="about.html">About</a></li>
                     <li><a href="contact.html">Contact</a></li>
                 </ul>
@@ -689,6 +729,7 @@
         if (!myListings.length) {
             $('emptyState').style.display = 'block';
             grid.style.display = 'none';
+            $('dashGrow').style.display = 'none';
             return;
         }
         $('emptyState').style.display = 'none';
@@ -702,13 +743,24 @@
                 ? '<p class="listing-rating">' + VC.stars(l.avg_rating) + ' <span>' + Number(l.avg_rating).toFixed(1) + ' (' + count + ')</span></p>'
                 : '<p class="listing-rating listing-rating-none">No reviews yet' + (Number(l.pending_count) ? ', ' + l.pending_count + ' awaiting approval' : '') + '</p>';
             var hidden = l.status === 'hidden' ? '<p class="error-msg show">This listing is hidden from the directory. Contact us for details.</p>' : '';
+            var isFounding = l.membership === 'founding' && (!l.membership_until || new Date(l.membership_until) > new Date());
+            var plan = '';
+            if (isFounding) plan += '<p class="dash-plan"><span class="badge-founding">Founding Vendor</span>' + (l.membership_until ? ' until ' + esc(VC.date(l.membership_until)) : '') + '</p>';
+            if (l.is_featured) plan += '<p class="dash-plan"><span class="badge-sponsored">Sponsored</span> featured until ' + esc(VC.date(l.featured_until)) + '</p>';
+            var stats = '<div class="dash-stats" title="Last 30 days">' +
+                '<span><strong>' + Number(l.views_30d || 0) + '</strong>profile views</span>' +
+                '<span><strong>' + Number(l.whatsapp_30d || 0) + '</strong>WhatsApp clicks</span>' +
+                '<span><strong>' + Number(l.instagram_30d || 0) + '</strong>Instagram clicks</span>' +
+                '<span><strong>' + Number(l.website_30d || 0) + '</strong>website clicks</span>' +
+                '</div><p class="dash-stats-note">Last 30 days</p>';
             return '<div class="listing-card">' + photo +
-                '<div class="listing-body">' + hidden +
+                '<div class="listing-body">' + hidden + plan +
                     '<span class="listing-category">' + esc(VC.CATEGORY_LABELS[l.category] || l.category) + '</span>' +
                     '<h3>' + esc(l.business_name) + '</h3>' +
                     '<p class="listing-city">' + esc(l.city) + '</p>' + rating +
                     '<p class="listing-desc">' + esc(l.description) + '</p>' +
                     '<span class="listing-price">From ' + VC.naira(l.price) + '</span>' +
+                    stats +
                     '<div class="listing-links"><a href="vendor-profile.html?id=' + l.id + '" target="_blank" rel="noopener">View public profile</a></div>' +
                     '<div class="listing-actions">' +
                         '<button class="btn-edit" data-id="' + l.id + '">Edit</button>' +
@@ -716,6 +768,8 @@
                     '</div>' +
                 '</div></div>';
         }).join('');
+        var anyFounding = myListings.some(function (l) { return l.membership === 'founding'; });
+        $('dashGrow').style.display = anyFounding ? 'none' : 'flex';
 
         grid.querySelectorAll('.btn-edit').forEach(function (btn) {
             btn.addEventListener('click', function () {
@@ -773,6 +827,13 @@
                     '<form class="reply-form"><label class="field-label" for="reply' + r.id + '">Your public reply</label>' +
                     '<textarea id="reply' + r.id + '" maxlength="1000" placeholder="Thank the client or respond to their feedback">' + esc(r.vendor_reply || '') + '</textarea>' +
                     '<div class="row"><button type="submit" class="btn-small">' + (r.vendor_reply ? 'Update reply' : 'Post reply') + '</button><span class="reply-saved" aria-live="polite"></span></div></form>' +
+                    ((r.disputed_at && !r.dispute_resolved_at)
+                        ? '<p class="dispute-status">Dispute received. We are looking into this review and will email you.</p>'
+                        : '<details class="dispute-box"><summary>Dispute this review</summary>' +
+                          '<form class="dispute-form"><p class="form-note">Use this if the review breaks our rules, for example the person was never your client. The review stays up while we look into it. To respond to fair feedback, post a reply above instead.</p>' +
+                          '<label class="field-label" for="dispute' + r.id + '">Why should we look at this review?</label>' +
+                          '<textarea id="dispute' + r.id + '" maxlength="1000" placeholder="Explain what is wrong and any details that help (e.g. no booking under this name)"></textarea>' +
+                          '<div class="row"><button type="submit" class="btn-small">Send dispute</button><span class="reply-saved" aria-live="polite"></span></div></form></details>') +
                 '</div>';
             }).join('');
             $('reviewsList').querySelectorAll('.reply-form').forEach(function (f) {
@@ -783,6 +844,17 @@
                     saved.textContent = 'Saving…';
                     api('vendor-reply', { method: 'POST', body: JSON.stringify({ reviewId: id, reply: f.querySelector('textarea').value }) })
                         .then(function () { saved.textContent = 'Reply saved. It shows on your public profile.'; f.querySelector('button').textContent = 'Update reply'; })
+                        .catch(function (err) { saved.textContent = err.message; });
+                });
+            });
+            $('reviewsList').querySelectorAll('.dispute-form').forEach(function (f) {
+                f.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    var id = f.closest('.dash-review').dataset.id;
+                    var saved = f.querySelector('.reply-saved');
+                    saved.textContent = 'Sending…';
+                    api('review-dispute', { method: 'POST', body: JSON.stringify({ reviewId: id, reason: f.querySelector('textarea').value }) })
+                        .then(function () { f.closest('.dispute-box').outerHTML = '<p class="dispute-status">Dispute received. We are looking into this review and will email you.</p>'; })
                         .catch(function (err) { saved.textContent = err.message; });
                 });
             });

@@ -37,7 +37,14 @@
                 </li>
                 <li><a href="find-vendors.html">Find Vendors</a></li>
                 <li><a href="reviews.html">Reviews</a></li>
-                <li><a href="vendor-portal.html">For Vendors</a></li>
+                <li class="has-dropdown">
+                    <a href="vendor-portal.html">For Vendors</a>
+                    <div class="dropdown-menu">
+                        <a href="vendor-portal.html?signup=1" class="dropdown-item">List Your Business Free</a>
+                        <a href="vendor-portal.html" class="dropdown-item">Vendor Dashboard</a>
+                        <a href="vendor-memberships.html" class="dropdown-item dropdown-item-custom">Memberships &amp; Promotion</a>
+                    </div>
+                </li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="contact.html">Contact</a></li>
             </ul>
@@ -64,7 +71,17 @@
             </li>
             <li><a href="find-vendors.html">Find Vendors</a></li>
             <li><a href="reviews.html">Reviews</a></li>
-            <li><a href="vendor-portal.html">For Vendors</a></li>
+            <li class="drawer-has-submenu">
+                <button class="drawer-submenu-toggle" type="button">
+                    For Vendors
+                    <span class="drawer-caret">&#9662;</span>
+                </button>
+                <ul class="drawer-submenu">
+                    <li><a href="vendor-portal.html?signup=1">List Your Business Free</a></li>
+                    <li><a href="vendor-portal.html">Vendor Dashboard</a></li>
+                    <li><a href="vendor-memberships.html">Memberships &amp; Promotion</a></li>
+                </ul>
+            </li>
             <li><a href="about.html">About</a></li>
             <li><a href="contact.html">Contact</a></li>
         </ul>
@@ -198,6 +215,18 @@
         </aside>
     </section>
 
+    <!-- HOW REVIEWS WORK -->
+    <section class="how-reviews" id="how-reviews-work">
+        <span class="section-eyebrow">Trust &amp; transparency</span>
+        <h2>How reviews work on Vendoor Connect</h2>
+        <div class="how-reviews-grid">
+            <div><h3>Checked before publishing</h3><p>Our team reads every review before it goes live and declines anything fake, abusive or off-topic.</p></div>
+            <div><h3>Vendors can reply</h3><p>Every vendor can respond publicly, so you hear both sides of the story.</p></div>
+            <div><h3>Fair disputes</h3><p>If a vendor believes a review breaks our rules, they can dispute it. We look into it, and the review stays up unless it does.</p></div>
+            <div><h3>Never for sale</h3><p>No one can pay to remove, hide or change a review. Sponsored vendors are always clearly labelled.</p></div>
+        </div>
+    </section>
+
     <!-- FOOTER -->
     <footer>
         <div class="footer-grid">
@@ -225,6 +254,7 @@
                     <li><a href="find-vendors.html">Find Vendors</a></li>
                     <li><a href="reviews.html">Reviews</a></li>
                     <li><a href="vendor-portal.html">Vendor Login</a></li>
+                    <li><a href="vendor-memberships.html">Vendor Memberships</a></li>
                     <li><a href="about.html">About</a></li>
                     <li><a href="contact.html">Contact</a></li>
                 </ul>

@@ -46,6 +46,12 @@
 .table-scroll { overflow-x: auto; }
 .admin-empty { padding: 40px 0; color: var(--text-muted); font-size: 15px; }
 .status-pill { font-size: 12px; font-weight: 600; padding: 3px 9px; background: var(--ivory); border: 1px solid var(--border-light); }
+.summary-2 { margin-top: -24px; }
+.summary b { font-variant-numeric: lining-nums; }
+.admin-help { font-size: 14px; color: var(--text-muted); margin: 0 0 16px; line-height: 1.55; }
+.dispute-note { background: #fbf1ec; border-left: 3px solid var(--terracotta); padding: 10px 14px; font-size: 14px; color: var(--cocoa); margin: 10px 0; }
+.mod-actions-col { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+.admin-table small { color: var(--text-muted); font-size: 12px; }
 @media (max-width: 700px) { .summary { grid-template-columns: repeat(2, 1fr); } .summary div:nth-child(2) { border-right: none; } .summary div:nth-child(-n+2) { border-bottom: 1px solid var(--border-light); } }
 </style>
 </head>
@@ -76,7 +82,14 @@
                 </li>
                 <li><a href="find-vendors.html">Find Vendors</a></li>
                 <li><a href="reviews.html">Reviews</a></li>
-                <li><a href="vendor-portal.html">For Vendors</a></li>
+                <li class="has-dropdown">
+                    <a href="vendor-portal.html">For Vendors</a>
+                    <div class="dropdown-menu">
+                        <a href="vendor-portal.html?signup=1" class="dropdown-item">List Your Business Free</a>
+                        <a href="vendor-portal.html" class="dropdown-item">Vendor Dashboard</a>
+                        <a href="vendor-memberships.html" class="dropdown-item dropdown-item-custom">Memberships &amp; Promotion</a>
+                    </div>
+                </li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="contact.html">Contact</a></li>
             </ul>
@@ -103,7 +116,17 @@
             </li>
             <li><a href="find-vendors.html">Find Vendors</a></li>
             <li><a href="reviews.html">Reviews</a></li>
-            <li><a href="vendor-portal.html">For Vendors</a></li>
+            <li class="drawer-has-submenu">
+                <button class="drawer-submenu-toggle" type="button">
+                    For Vendors
+                    <span class="drawer-caret">&#9662;</span>
+                </button>
+                <ul class="drawer-submenu">
+                    <li><a href="vendor-portal.html?signup=1">List Your Business Free</a></li>
+                    <li><a href="vendor-portal.html">Vendor Dashboard</a></li>
+                    <li><a href="vendor-memberships.html">Memberships &amp; Promotion</a></li>
+                </ul>
+            </li>
             <li><a href="about.html">About</a></li>
             <li><a href="contact.html">Contact</a></li>
         </ul>
@@ -134,12 +157,20 @@
             <div><b id="sListings">–</b><span>Vendor listings</span></div>
             <div><b id="sRevenue">–</b><span id="sOrders">Orders</span></div>
         </div>
+        <div class="summary summary-2">
+            <div class="attn"><b id="sInquiries">–</b><span>New membership enquiries</span></div>
+            <div><b id="sFounding">–</b><span>Founding members (of 50)</span></div>
+            <div><b id="sFeatured">–</b><span>Sponsored placements live</span></div>
+            <div class="attn"><b id="sDisputes">–</b><span>Open review disputes</span></div>
+        </div>
         <div class="admin-tabs" role="tablist">
             <button role="tab" data-view="pending" aria-selected="true">Waiting for approval</button>
             <button role="tab" data-view="approved" aria-selected="false">Published</button>
             <button role="tab" data-view="rejected" aria-selected="false">Rejected</button>
+            <button role="tab" data-view="disputed" aria-selected="false">Disputes</button>
             <button role="tab" data-view="orders" aria-selected="false">Orders</button>
-            <button role="tab" data-view="listings" aria-selected="false">Vendors</button>
+            <button role="tab" data-view="listings" aria-selected="false">Vendors &amp; memberships</button>
+            <button role="tab" data-view="inquiries" aria-selected="false">Membership enquiries</button>
         </div>
         <p class="error-msg" id="appError" role="alert"></p>
         <div id="panel"></div>
@@ -183,6 +214,7 @@
             $('sListings').textContent = s.listings;
             $('sRevenue').textContent = VC.naira(s.revenue_kobo / 100);
             $('sOrders').textContent = s.orders + (s.orders === 1 ? ' order' : ' orders') + ' paid';
+            fillSummary2(s);
             load();
         }).catch(function (err) {
             if (err.status === 403) { identity.currentUser().logout(); showLogin('This account does not have admin access. Log in with the owner email.'); }
@@ -211,13 +243,14 @@
         $('panel').innerHTML = '<p class="admin-empty">Loading…</p>';
         if (view === 'orders') return api('admin?view=orders').then(renderOrders).catch(function (e) { showError(e.message); });
         if (view === 'listings') return api('admin?view=listings').then(renderListings).catch(function (e) { showError(e.message); });
+        if (view === 'inquiries') return api('admin?view=inquiries').then(renderInquiries).catch(function (e) { showError(e.message); });
         api('admin?view=reviews&status=' + view).then(renderReviews).catch(function (e) { showError(e.message); });
     }
 
     function renderReviews(d) {
         var rows = d.reviews || [];
         if (!rows.length) {
-            $('panel').innerHTML = '<p class="admin-empty">' + (view === 'pending' ? 'All caught up. New reviews will appear here for you to approve.' : 'Nothing here yet.') + '</p>';
+            $('panel').innerHTML = '<p class="admin-empty">' + (view === 'pending' ? 'All caught up. New reviews will appear here for you to approve.' : view === 'disputed' ? 'No open disputes. When a vendor disputes a published review, it appears here with their reason.' : 'Nothing here yet.') + '</p>';
             return;
         }
         $('panel').innerHTML = rows.map(function (r) {
@@ -225,12 +258,15 @@
             var vendor = isPlatform ? 'Vendoor Connect' : (r.vendor_id ? '<a href="vendor-profile.html?id=' + r.vendor_id + '" target="_blank">' + esc(r.vendor_name) + '</a>' : esc(r.vendor_name));
             var buttons = view === 'pending'
                 ? '<button class="approve" data-act="approve">Approve and publish</button><button class="reject" data-act="reject">Reject</button>'
+                : view === 'disputed'
+                    ? '<button class="approve" data-act="resolve-dispute">Keep review (close dispute)</button><button class="reject" data-act="reject">Unpublish review</button>'
                 : view === 'approved'
                     ? '<button class="reject" data-act="reject">Unpublish</button>'
                     : '<button data-act="approve">Approve and publish</button><button class="del" data-act="delete">Delete forever</button>';
             return '<div class="mod-card" data-id="' + r.id + '"><div class="top"><h3>' + vendor + '<small>' + (isPlatform ? 'Review of our platform' : (r.vendor_id ? 'Listed vendor' : 'Not listed')) + '</small></h3>' + VC.stars(r.rating) + '</div>' +
                 '<p class="meta">' + [esc(r.reviewer_name), '<a href="mailto:' + esc(r.reviewer_email) + '">' + esc(r.reviewer_email || '') + '</a>', esc(VC.CATEGORY_LABELS[r.vendor_category] || ''), esc(r.event_type || ''), VC.date(r.created_at)].filter(Boolean).join(', ') + '</p>' +
                 '<p class="text">' + esc(r.review_text) + '</p>' +
+                (r.disputed_at && !r.dispute_resolved_at ? '<p class="dispute-note"><strong>Disputed by the vendor ' + VC.date(r.disputed_at) + ':</strong> ' + esc(r.dispute_reason || '') + '</p>' : '') +
                 '<div class="mod-actions">' + buttons + '</div></div>';
         }).join('');
         $('panel').querySelectorAll('.mod-actions button').forEach(function (btn) {
@@ -245,8 +281,14 @@
             });
         });
     }
+    function fillSummary2(s) {
+        $('sInquiries').textContent = s.new_inquiries;
+        $('sFounding').textContent = s.founding_members;
+        $('sFeatured').textContent = s.featured_now;
+        $('sDisputes').textContent = s.open_disputes;
+    }
     function refreshCounts() {
-        api('admin?view=summary').then(function (d) { $('sPending').textContent = d.summary.pending_reviews; $('sApproved').textContent = d.summary.approved_reviews; });
+        api('admin?view=summary').then(function (d) { $('sPending').textContent = d.summary.pending_reviews; $('sApproved').textContent = d.summary.approved_reviews; fillSummary2(d.summary); });
     }
 
     function renderOrders(d) {
@@ -274,16 +316,60 @@
     function renderListings(d) {
         var rows = d.listings || [];
         if (!rows.length) { $('panel').innerHTML = '<p class="admin-empty">No vendors have listed yet.</p>'; return; }
-        $('panel').innerHTML = '<div class="table-scroll"><table class="admin-table"><thead><tr><th>Business</th><th>Category</th><th>City</th><th>Account email</th><th>Status</th><th></th></tr></thead><tbody>' +
+        var now = new Date();
+        $('panel').innerHTML = '<p class="admin-help">Switch on a membership or sponsored placement after the vendor has paid. Founding memberships run 12 months from today; each click on <em>Feature 30 days</em> adds 30 days.</p>' +
+            '<div class="table-scroll"><table class="admin-table"><thead><tr><th>Business</th><th>City</th><th>Account email</th><th>Last 30 days</th><th>Membership</th><th>Sponsored</th><th>Status</th><th></th></tr></thead><tbody>' +
             rows.map(function (l) {
                 var hidden = l.status === 'hidden';
-                return '<tr data-id="' + l.id + '"><td><a href="vendor-profile.html?id=' + l.id + '" target="_blank">' + esc(l.business_name) + '</a></td><td>' + esc(VC.CATEGORY_LABELS[l.category] || l.category) + '</td><td>' + esc(l.city) + '</td>' +
-                    '<td>' + esc(l.vendor_email) + '</td><td><span class="status-pill">' + (hidden ? 'Hidden' : 'Live') + '</span></td>' +
-                    '<td class="mod-actions"><button data-act="' + (hidden ? 'show' : 'hide') + '">' + (hidden ? 'Show in directory' : 'Hide from directory') + '</button></td></tr>';
+                var founding = l.membership === 'founding';
+                var featured = l.featured_until && new Date(l.featured_until) > now;
+                return '<tr data-id="' + l.id + '"><td><a href="vendor-profile.html?id=' + l.id + '" target="_blank">' + esc(l.business_name) + '</a><br><small>' + esc(VC.CATEGORY_LABELS[l.category] || l.category) + '</small></td><td>' + esc(l.city) + '</td>' +
+                    '<td><a href="mailto:' + esc(l.vendor_email) + '">' + esc(l.vendor_email) + '</a></td>' +
+                    '<td>' + Number(l.views_30d || 0) + ' views<br><small>' + Number(l.clicks_30d || 0) + ' contact clicks</small></td>' +
+                    '<td>' + (founding ? '<span class="badge-founding">Founding</span><br><small>until ' + VC.date(l.membership_until) + '</small>' : '<small>Free</small>') + '</td>' +
+                    '<td>' + (featured ? '<span class="badge-sponsored">Sponsored</span><br><small>until ' + VC.date(l.featured_until) + '</small>' : '<small>No</small>') + '</td>' +
+                    '<td><span class="status-pill">' + (hidden ? 'Hidden' : 'Live') + '</span></td>' +
+                    '<td class="mod-actions mod-actions-col">' +
+                        '<button data-act="' + (founding ? 'founding-off' : 'founding-on') + '">' + (founding ? 'End founding membership' : 'Make founding member') + '</button>' +
+                        '<button data-act="feature">Feature 30 days</button>' +
+                        (featured ? '<button data-act="unfeature">Stop sponsoring</button>' : '') +
+                        '<button data-act="' + (hidden ? 'show' : 'hide') + '">' + (hidden ? 'Show in directory' : 'Hide from directory') + '</button>' +
+                    '</td></tr>';
             }).join('') + '</tbody></table></div>';
         $('panel').querySelectorAll('button[data-act]').forEach(function (btn) {
             btn.addEventListener('click', function () {
-                api('admin', { method: 'POST', body: JSON.stringify({ action: btn.dataset.act, listingId: btn.closest('tr').dataset.id }) }).then(load).catch(function (e) { showError(e.message); });
+                var act = btn.dataset.act;
+                if ((act === 'founding-off' || act === 'unfeature') && !btn.classList.contains('sure')) { btn.classList.add('sure'); btn.textContent = 'Click again to confirm'; return; }
+                btn.disabled = true;
+                api('admin', { method: 'POST', body: JSON.stringify({ action: act, listingId: btn.closest('tr').dataset.id, days: 30 }) })
+                    .then(function () { load(); refreshCounts(); })
+                    .catch(function (e) { btn.disabled = false; showError(e.message); });
+            });
+        });
+    }
+
+    var INTEREST_LABELS = { founding: 'Founding Vendor Membership', spotlight: 'Homepage Spotlight', spotlight_instagram: 'Website + Instagram Feature', unsure: 'Not sure yet' };
+    function renderInquiries(d) {
+        var rows = d.inquiries || [];
+        if (!rows.length) { $('panel').innerHTML = '<p class="admin-empty">No membership enquiries yet. They arrive here (and in your Gmail) when vendors use the form on the Vendor Memberships page.</p>'; return; }
+        $('panel').innerHTML = '<p class="admin-help">Reply by email with availability and payment details. Once they have paid, go to <em>Vendors &amp; memberships</em> to switch it on, then mark the enquiry Active.</p>' +
+            rows.map(function (i) {
+                var subject = encodeURIComponent('Your Vendoor Connect ' + (INTEREST_LABELS[i.interest] || 'membership') + ' enquiry');
+                return '<div class="mod-card" data-id="' + i.id + '"><div class="top"><h3>' + esc(i.business_name) + '<small>' + esc(INTEREST_LABELS[i.interest] || i.interest) + '</small></h3><span class="status-pill">' + esc(i.status) + '</span></div>' +
+                    '<p class="meta">' + [esc(i.contact_name || ''), '<a href="mailto:' + esc(i.email) + '?subject=' + subject + '">' + esc(i.email) + '</a>', esc(i.phone || ''), i.listing_name ? 'Listing: ' + esc(i.listing_name) : 'No listing yet', VC.date(i.created_at)].filter(Boolean).join(', ') + '</p>' +
+                    (i.message ? '<p class="text">' + esc(i.message) + '</p>' : '') +
+                    '<div class="mod-actions">' +
+                        ['contacted', 'active', 'closed', 'new'].filter(function (st) { return st !== i.status; }).map(function (st) {
+                            return '<button data-st="' + st + '">Mark ' + st + '</button>';
+                        }).join('') +
+                    '</div></div>';
+            }).join('');
+        $('panel').querySelectorAll('button[data-st]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                btn.disabled = true;
+                api('admin', { method: 'POST', body: JSON.stringify({ action: 'inquiry-status', inquiryId: btn.closest('.mod-card').dataset.id, status: btn.dataset.st }) })
+                    .then(function () { load(); refreshCounts(); })
+                    .catch(function (e) { btn.disabled = false; showError(e.message); });
             });
         });
     }

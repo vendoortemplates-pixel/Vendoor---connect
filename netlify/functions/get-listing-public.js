@@ -10,6 +10,7 @@ exports.handler = async (event) => {
     const result = await db.sql`
       SELECT l.id, l.business_name, l.category, l.city, l.price, l.description, l.portfolio,
              l.whatsapp, l.instagram, l.photo_data_url, l.created_at,
+             (l.membership = 'founding' AND (l.membership_until IS NULL OR l.membership_until > NOW())) AS is_founding,
              (SELECT ROUND(AVG(rating)::numeric, 1) FROM reviews WHERE vendor_id = l.id AND status = 'approved' AND COALESCE(review_type, 'vendor') = 'vendor') AS avg_rating,
              (SELECT COUNT(*)::int FROM reviews WHERE vendor_id = l.id AND status = 'approved' AND COALESCE(review_type, 'vendor') = 'vendor') AS review_count
       FROM listings l
@@ -20,6 +21,7 @@ exports.handler = async (event) => {
     const listing = rows[0];
     listing.avg_rating = listing.avg_rating === null ? 0 : Number(listing.avg_rating);
     listing.review_count = Number(listing.review_count || 0);
+    listing.is_founding = !!listing.is_founding;
     return json(200, { listing });
   } catch (err) {
     console.error('get-listing-public error:', err);

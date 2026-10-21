@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Memberships | Vendoor Connect</title>
+    <meta name="description" content="List your events business on Vendoor Connect for free, or grow faster with a Founding Vendor Membership and sponsored placements.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- SITE HEADER -->
+    <header class="site-header">
+        <div class="brand-bar">
+            <a href="index.html" class="logo">
+                <img src="logo-wordmark.png" alt="Vendoor Connect Logo">
+            </a>
+        </div>
+        <nav>
+            <button class="menu-toggle" id="menuToggle" aria-label="Open menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li class="has-dropdown">
+                    <a href="templates.html">Templates</a>
+                    <div class="dropdown-menu">
+                        <a href="single-template.html?product=yoruba-wedding" class="dropdown-item">Yoruba Wedding Planner</a>
+                        <a href="single-template.html?product=igbo-wedding" class="dropdown-item">Igbo Wedding Planner</a>
+                        <a href="single-template.html?product=welcome-party" class="dropdown-item">Welcome Party Planner</a>
+                        <a href="custom-template.html" class="dropdown-item dropdown-item-custom">Customize Your Own Planner</a>
+                    </div>
+                </li>
+                <li><a href="find-vendors.html">Find Vendors</a></li>
+                <li><a href="reviews.html">Reviews</a></li>
+                <li class="has-dropdown">
+                    <a href="vendor-portal.html">For Vendors</a>
+                    <div class="dropdown-menu">
+                        <a href="vendor-portal.html?signup=1" class="dropdown-item">List Your Business Free</a>
+                        <a href="vendor-portal.html" class="dropdown-item">Vendor Dashboard</a>
+                        <a href="vendor-memberships.html" class="dropdown-item dropdown-item-custom">Memberships &amp; Promotion</a>
+                    </div>
+                </li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- MOBILE NAV DRAWER -->
+    <div class="mobile-drawer" id="mobileDrawer">
+        <button class="drawer-close" id="drawerClose" aria-label="Close menu">&times;</button>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li class="drawer-has-submenu">
+                <button class="drawer-submenu-toggle" type="button">
+                    Templates
+                    <span class="drawer-caret">&#9662;</span>
+                </button>
+                <ul class="drawer-submenu">
+                    <li><a href="templates.html">All Templates</a></li>
+                    <li><a href="single-template.html?product=yoruba-wedding">Yoruba Wedding Planner</a></li>
+                    <li><a href="single-template.html?product=igbo-wedding">Igbo Wedding Planner</a></li>
+                    <li><a href="single-template.html?product=welcome-party">Welcome Party Planner</a></li>
+                    <li><a href="custom-template.html">Customize Your Own Planner</a></li>
+                </ul>
+            </li>
+            <li><a href="find-vendors.html">Find Vendors</a></li>
+            <li><a href="reviews.html">Reviews</a></li>
+            <li class="drawer-has-submenu">
+                <button class="drawer-submenu-toggle" type="button">
+                    For Vendors
+                    <span class="drawer-caret">&#9662;</span>
+                </button>
+                <ul class="drawer-submenu">
+                    <li><a href="vendor-portal.html?signup=1">List Your Business Free</a></li>
+                    <li><a href="vendor-portal.html">Vendor Dashboard</a></li>
+                    <li><a href="vendor-memberships.html">Memberships &amp; Promotion</a></li>
+                </ul>
+            </li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </div>
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+
+
+    <!-- HERO -->
+    <section class="page-header mem-hero">
+        <span class="mem-hero-eyebrow">For event vendors</span>
+        <h1>Grow Your Business With Vendoor Connect</h1>
+        <p class="mem-hero-line">Your next client should be able to find you beyond Instagram.</p>
+        <p>Listing your business is free, always. When you're ready for more visibility, our optional memberships and sponsored placements put you in front of couples and planners who are ready to book.</p>
+        <div class="mem-hero-actions">
+            <a href="#enquire" class="btn">Enquire about membership</a>
+            <a href="vendor-portal.html?signup=1" class="btn-gold">List your business free</a>
+        </div>
+    </section>
+
+    <!-- PLANS -->
+    <section class="mem-plans" id="plans">
+        <div class="mem-plan">
+            <span class="mem-plan-tag">Free forever</span>
+            <h2>Basic Listing</h2>
+            <p class="mem-price">₦0</p>
+            <p class="mem-plan-sub">Everything you need to be found and reviewed.</p>
+            <ul class="mem-list">
+                <li>Your business profile, photo and starting prices</li>
+                <li>Listed in the vendor directory by category and city</li>
+                <li>Direct WhatsApp, Instagram and website links</li>
+                <li>Collect verified client reviews</li>
+                <li>Reply publicly to every review</li>
+            </ul>
+            <a href="vendor-portal.html?signup=1" class="btn-outline btn-block">Create your free listing</a>
+        </div>
+
+        <div class="mem-plan mem-plan-featured">
+            <span class="mem-plan-tag mem-plan-tag-gold">Limited to the first 50 businesses</span>
+            <h2>Founding Vendor Membership</h2>
+            <p class="mem-price">₦30,000 <span>for 12 months</span></p>
+            <p class="mem-plan-sub" id="foundingSpots">Join the businesses building Vendoor Connect from day one.</p>
+            <ul class="mem-list">
+                <li><strong>Founding Vendor badge</strong> on your profile and directory listing</li>
+                <li><strong>Priority placement:</strong> shown ahead of standard listings in directory results</li>
+                <li><strong>Eligible for homepage features</strong>, rotated fairly among founding members</li>
+                <li><strong>One promotional feature</strong> on the Vendoor Connect Instagram</li>
+                <li><strong>Monthly visibility report:</strong> profile views and WhatsApp, Instagram and website clicks</li>
+                <li>Founding price held for your full 12 months</li>
+            </ul>
+            <a href="#enquire" class="btn btn-block" data-interest="founding">Become a founding vendor</a>
+        </div>
+
+        <div class="mem-plan">
+            <span class="mem-plan-tag">Only 3 to 5 spots each month</span>
+            <h2>Sponsored Placements</h2>
+            <p class="mem-plan-sub">Short bursts of extra visibility, no annual commitment.</p>
+            <div class="mem-option">
+                <h3>Homepage Spotlight</h3>
+                <p class="mem-price mem-price-sm">₦15,000 <span>per month</span></p>
+                <p>Your business in the Featured Vendors spotlight on the homepage and at the top of the vendor directory.</p>
+            </div>
+            <div class="mem-option">
+                <h3>Website + Instagram Feature</h3>
+                <p class="mem-price mem-price-sm">₦25,000 <span>per month</span></p>
+                <p>Everything in the Homepage Spotlight, plus a dedicated feature post on our Instagram.</p>
+            </div>
+            <p class="mem-small">Sponsored placements are always clearly labelled as Sponsored.</p>
+            <a href="#enquire" class="btn-outline btn-block" data-interest="spotlight">Ask about available dates</a>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="mem-steps-section">
+        <span class="section-eyebrow">How it works</span>
+        <h2>Simple, personal and no automatic charges</h2>
+        <ol class="mem-steps">
+            <li><span>1</span><h3>Send an enquiry</h3><p>Tell us about your business and what you're interested in using the form below.</p></li>
+            <li><span>2</span><h3>We confirm the details</h3><p>We reply within 1 to 2 business days with availability, what's included and how to pay.</p></li>
+            <li><span>3</span><h3>We switch it on</h3><p>Your membership or placement goes live within 24 hours of payment.</p></li>
+            <li><span>4</span><h3>See the results</h3><p>Track profile views and client clicks anytime in your vendor dashboard.</p></li>
+        </ol>
+    </section>
+
+    <!-- TRUST -->
+    <section class="mem-trust">
+        <div>
+            <h2>Paying never changes your reviews</h2>
+            <p>Our directory is only valuable because clients can trust it. Every review is checked before it is published, and no vendor can pay to remove, hide or edit a review. Paid placements are always labelled, and free listings are never hidden to make room for them.</p>
+        </div>
+    </section>
+
+    <!-- ENQUIRY FORM -->
+    <section class="mem-enquire" id="enquire">
+        <div class="mem-enquire-copy">
+            <span class="section-eyebrow">Enquire</span>
+            <h2>Let's grow your business together</h2>
+            <p>Send us a few details and we'll get back to you personally. There's no obligation and nothing is charged until you've agreed the details with us.</p>
+            <p class="form-note">Prefer email? Write to <a href="mailto:vendoor.templates@gmail.com">vendoor.templates@gmail.com</a>.</p>
+        </div>
+        <form class="contact-form mem-form" id="memForm" novalidate>
+            <p class="form-hidden"><label>Leave this empty: <input name="website" tabindex="-1" autocomplete="off"></label></p>
+            <label class="field-label" for="mBusiness">Business name</label>
+            <input type="text" id="mBusiness" name="businessName" required maxlength="120">
+            <label class="field-label" for="mName">Your name</label>
+            <input type="text" id="mName" name="contactName" maxlength="80">
+            <label class="field-label" for="mEmail">Email</label>
+            <input type="email" id="mEmail" name="email" required maxlength="160">
+            <label class="field-label" for="mPhone">WhatsApp or phone (optional)</label>
+            <input type="tel" id="mPhone" name="phone" maxlength="40">
+            <label class="field-label" for="mInterest">I'm interested in</label>
+            <select id="mInterest" name="interest">
+                <option value="founding">Founding Vendor Membership (₦30,000 / 12 months)</option>
+                <option value="spotlight">Homepage Spotlight (₦15,000 / month)</option>
+                <option value="spotlight_instagram">Website + Instagram Feature (₦25,000 / month)</option>
+                <option value="unsure">Not sure yet, tell me more</option>
+            </select>
+            <label class="field-label" for="mMessage">Anything you'd like us to know? (optional)</label>
+            <textarea id="mMessage" name="message" rows="4" maxlength="1500" placeholder="Your services, city, or questions"></textarea>
+            <button type="submit" class="btn" id="memSubmit">Send enquiry</button>
+            <p class="form-status" id="memStatus" role="status"></p>
+        </form>
+    </section>
+
+    <!-- FAQ -->
+    <section class="mem-faq">
+        <h2>Questions vendors ask</h2>
+        <details><summary>Do I need a membership to be listed?</summary><p>No. Basic listings are free and stay free. Memberships and sponsored placements are optional extras for businesses that want more visibility.</p></details>
+        <details><summary>Can I pay to remove or hide a negative review?</summary><p>No, never. If you believe a review breaks our guidelines (for example, the person was never your client), you can dispute it from your dashboard and we'll look into it. You can also reply publicly to any review.</p></details>
+        <details><summary>Will I always be on the homepage as a founding vendor?</summary><p>Founding members are eligible for homepage features, which we rotate fairly among members. A permanent homepage spot isn't included. If you'd like guaranteed homepage time, ask about a Homepage Spotlight.</p></details>
+        <details><summary>When does my 12 months start?</summary><p>On the day your membership is switched on, not the day you enquire.</p></details>
+        <details><summary>How do I pay?</summary><p>Once we've agreed the details, we'll send you a secure payment link or bank transfer details. There are no automatic renewals or surprise charges.</p></details>
+        <details><summary>What if a placement can't go ahead?</summary><p>If we can't deliver a placement you've paid for, we'll reschedule it with you or refund that part. Details are in our <a href="terms.html#vendor-memberships">terms</a>.</p></details>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+
+            <div class="footer-brand">
+                <img src="logo.png" alt="Vendoor Connect" class="footer-logo">
+                <p>Discover • Review • Connect</p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Shop</h4>
+                <ul>
+                    <li><a href="templates.html">All Templates</a></li>
+                    <li><a href="single-template.html?product=yoruba-wedding">Yoruba Wedding Planner</a></li>
+                    <li><a href="single-template.html?product=igbo-wedding">Igbo Wedding Planner</a></li>
+                    <li><a href="single-template.html?product=welcome-party">Welcome Party Planner</a></li>
+                    <li><a href="custom-template.html">Custom Planner</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="find-vendors.html">Find Vendors</a></li>
+                    <li><a href="reviews.html">Reviews</a></li>
+                    <li><a href="vendor-portal.html">Vendor Login</a></li>
+                    <li><a href="vendor-memberships.html">Vendor Memberships</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Connect With Us</h4>
+                <ul>
+                    <li><a href="https://www.instagram.com/vendoortemplates" target="_blank" rel="noopener" class="social-link"><svg class="icon-instagram" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>Instagram</a></li>
+                    <li><a href="mailto:vendoor.templates@gmail.com" class="social-link">vendoor.templates@gmail.com</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <p class="footer-legal"><a href="terms.html">Terms of sale</a><a href="refund-policy.html">Refund policy</a><a href="delivery-policy.html">Delivery policy</a><a href="privacy-policy.html">Privacy policy</a></p>
+        <p class="footer-bottom">&copy; 2026 Vendoor Connect. All rights reserved.</p>
+    </footer>
+
+    <script src="main.js"></script>
+    <script>
+    (function () {
+        var spots = document.getElementById('foundingSpots');
+        fetch('/.netlify/functions/membership-inquiry').then(function (r) { return r.json(); }).then(function (j) {
+            if (typeof j.foundingLeft !== 'number') return;
+            spots.innerHTML = j.foundingLeft > 0
+                ? '<strong>' + j.foundingLeft + ' of ' + j.foundingLimit + ' founding spots left.</strong> Join the businesses building Vendoor Connect from day one.'
+                : '<strong>All founding spots are taken.</strong> Enquire to join the waiting list.';
+        }).catch(function () {});
+
+        var interest = document.getElementById('mInterest');
+        document.querySelectorAll('[data-interest]').forEach(function (a) {
+            a.addEventListener('click', function () { interest.value = a.getAttribute('data-interest'); });
+        });
+        var want = new URLSearchParams(location.search).get('interest');
+        if (want && interest.querySelector('option[value="' + want + '"]')) interest.value = want;
+
+        var form = document.getElementById('memForm');
+        var status = document.getElementById('memStatus');
+        var btn = document.getElementById('memSubmit');
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            var data = {};
+            new FormData(form).forEach(function (v, k) { data[k] = v; });
+            if (!data.businessName.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(data.email.trim())) {
+                status.className = 'form-status form-status-error';
+                status.textContent = 'Please add your business name and a valid email address.';
+                return;
+            }
+            btn.disabled = true; btn.textContent = 'Sending...';
+            var headers = { 'Content-Type': 'application/json' };
+            fetch('/.netlify/functions/membership-inquiry', { method: 'POST', headers: headers, body: JSON.stringify(data) })
+                .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+                .then(function (res) {
+                    if (!res.ok) throw new Error(res.j.error || 'Something went wrong.');
+                    form.reset();
+                    status.className = 'form-status form-status-ok';
+                    status.textContent = 'Thank you! Your enquiry is in. We will reply to your email within 1 to 2 business days.';
+                })
+                .catch(function (err) {
+                    status.className = 'form-status form-status-error';
+                    status.textContent = err.message;
+                })
+                .then(function () { btn.disabled = false; btn.textContent = 'Send enquiry'; });
+        });
+    })();
+    </script>
+</body>
+</html>

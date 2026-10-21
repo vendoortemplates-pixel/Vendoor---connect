@@ -101,4 +101,22 @@ async function sendOrderEmail(order, force) {
   return { ok: true, hasFile };
 }
 
-module.exports = { sendOrderEmail, buildEmail };
+// Short heads-up to the owner's inbox (new membership enquiry, review dispute).
+async function notifyOwner(subject, lines) {
+  const key = process.env.RESEND_API_KEY;
+  if (!key) return { ok: false, error: 'RESEND_API_KEY is not set' };
+  const text = lines.join('\n');
+  const html = '<div style="font-family:Arial,sans-serif;color:#5B4636;line-height:1.6">' +
+    lines.map(l => '<p style="margin:0 0 8px">' + esc(l) + '</p>').join('') +
+    '<p style="margin-top:16px"><a href="' + SITE + '/admin.html">Open the admin page</a></p></div>';
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + key, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ from: FROM, to: [OWNER], subject, html, text })
+    });
+    return { ok: res.ok };
+  } catch (e) { return { ok: false, error: e && e.message }; }
+}
+
+module.exports = { sendOrderEmail, buildEmail, notifyOwner };

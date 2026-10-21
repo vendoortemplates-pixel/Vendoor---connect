@@ -37,7 +37,14 @@
                 </li>
                 <li><a href="find-vendors.html">Find Vendors</a></li>
                 <li><a href="reviews.html">Reviews</a></li>
-                <li><a href="vendor-portal.html">For Vendors</a></li>
+                <li class="has-dropdown">
+                    <a href="vendor-portal.html">For Vendors</a>
+                    <div class="dropdown-menu">
+                        <a href="vendor-portal.html?signup=1" class="dropdown-item">List Your Business Free</a>
+                        <a href="vendor-portal.html" class="dropdown-item">Vendor Dashboard</a>
+                        <a href="vendor-memberships.html" class="dropdown-item dropdown-item-custom">Memberships &amp; Promotion</a>
+                    </div>
+                </li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="contact.html">Contact</a></li>
             </ul>
@@ -64,7 +71,17 @@
             </li>
             <li><a href="find-vendors.html">Find Vendors</a></li>
             <li><a href="reviews.html">Reviews</a></li>
-            <li><a href="vendor-portal.html">For Vendors</a></li>
+            <li class="drawer-has-submenu">
+                <button class="drawer-submenu-toggle" type="button">
+                    For Vendors
+                    <span class="drawer-caret">&#9662;</span>
+                </button>
+                <ul class="drawer-submenu">
+                    <li><a href="vendor-portal.html?signup=1">List Your Business Free</a></li>
+                    <li><a href="vendor-portal.html">Vendor Dashboard</a></li>
+                    <li><a href="vendor-memberships.html">Memberships &amp; Promotion</a></li>
+                </ul>
+            </li>
             <li><a href="about.html">About</a></li>
             <li><a href="contact.html">Contact</a></li>
         </ul>
@@ -74,7 +91,8 @@
     <!-- PAGE HEADER -->
     <section class="page-header">
         <h1>Find Vendors You Can Trust</h1>
-        <p>Browse real vendors who've joined Vendoor Connect, or get notified as our directory grows city by city.</p>
+        <p class="page-header-quote">Beautiful pictures tell one story. Real experiences tell another.</p>
+        <p>Browse vendors who've joined Vendoor Connect and read honest reviews from their clients before you book.</p>
     </section>
 
     <!-- VENDOR CATEGORIES -->
@@ -107,6 +125,18 @@
                 <h3>Cakes &amp; Confectionery</h3>
             </a>
         </div>
+    </section>
+
+    <!-- FEATURED (SPONSORED) VENDORS: only shown when there are paid placements -->
+    <section class="featured-vendors" id="featuredVendors" hidden>
+        <div class="featured-vendors-head">
+            <div>
+                <h2>Featured Vendors</h2>
+                <p>Discover businesses making their mark in Nigeria's events industry.</p>
+            </div>
+            <a href="vendor-memberships.html">Feature your business</a>
+        </div>
+        <div class="listings-grid" id="featuredGrid"></div>
     </section>
 
     <!-- LIVE VENDOR DIRECTORY -->
@@ -143,7 +173,7 @@
         <div class="listings-grid" id="directoryGrid"></div>
         <div class="directory-empty" id="directoryEmpty" style="display:none;">
             <h3>No vendors listed here yet</h3>
-            <p>Vendoor Connect is growing its directory city by city. Get notified when vendors join, or if you run an events business, list it for free.</p>
+            <p>Vendoor Connect is growing its directory city by city. Get notified when vendors join, or if you run an events business, list it for free and become one of our first 50 founding vendors.</p>
             <a href="#get-notified" class="btn">Get notified</a> <a href="vendor-portal.html?signup=1" class="btn-outline">List your business free</a>
         </div>
     </section>
@@ -189,6 +219,7 @@
             </ol>
             <a href="vendor-portal.html?signup=1" class="btn">Create your listing</a>
             <p class="form-note">Already listed? <a href="vendor-portal.html">Log in to your dashboard</a>.</p>
+            <p class="form-note">Want more visibility? <a href="vendor-memberships.html">See founding memberships and sponsored placements</a>.</p>
         </div>
 
     </section>
@@ -220,6 +251,7 @@
                     <li><a href="find-vendors.html">Find Vendors</a></li>
                     <li><a href="reviews.html">Reviews</a></li>
                     <li><a href="vendor-portal.html">Vendor Login</a></li>
+                    <li><a href="vendor-memberships.html">Vendor Memberships</a></li>
                     <li><a href="about.html">About</a></li>
                     <li><a href="contact.html">Contact</a></li>
                 </ul>
@@ -287,14 +319,21 @@
             }
             empty.style.display = 'none';
             grid.style.display = 'grid';
-            grid.innerHTML = listings.map(function (l) {
+            grid.innerHTML = listings.map(function (l) { return cardHtml(l, false); }).join('');
+        }
+
+        function cardHtml(l, sponsored) {
                 var photoHtml = l.photo_data_url
                     ? '<img class="listing-photo" src="' + l.photo_data_url + '" alt="' + escapeHtml(l.business_name) + '" loading="lazy">'
                     : '<div class="listing-photo-placeholder"><span>' + escapeHtml(l.business_name.charAt(0)) + '</span></div>';
                 var rating = l.review_count
                     ? '<p class="listing-rating">' + VC.stars(l.avg_rating) + ' <span>' + Number(l.avg_rating).toFixed(1) + ' (' + l.review_count + ')</span></p>'
                     : '<p class="listing-rating listing-rating-none">No reviews yet</p>';
-                return '<a class="listing-card listing-card-link" href="vendor-profile.html?id=' + l.id + '">' +
+                var flags = '';
+                if (sponsored) flags += '<span class="badge-sponsored">Sponsored</span>';
+                if (l.is_founding) flags += '<span class="badge-founding">Founding Vendor</span>';
+                return '<a class="listing-card listing-card-link' + (sponsored ? ' listing-card-featured' : '') + '" href="vendor-profile.html?id=' + l.id + '">' +
+                    (flags ? '<div class="listing-flags">' + flags + '</div>' : '') +
                     photoHtml +
                     '<div class="listing-body">' +
                         '<span class="listing-category">' + escapeHtml(CATEGORY_LABELS[l.category] || l.category) + '</span>' +
@@ -306,7 +345,17 @@
                         '<span class="btn-card">View profile</span>' +
                     '</div>' +
                 '</a>';
-            }).join('');
+        }
+
+        // Sponsored placements: up to 5, shuffled so every paid vendor gets fair exposure.
+        function loadFeatured() {
+            fetch('/.netlify/functions/list-listings').then(function (r) { return r.json(); }).then(function (j) {
+                var f = (j.listings || []).filter(function (l) { return l.is_featured; });
+                if (!f.length) return;
+                for (var i = f.length - 1; i > 0; i--) { var k = Math.floor(Math.random() * (i + 1)); var t = f[i]; f[i] = f[k]; f[k] = t; }
+                document.getElementById('featuredGrid').innerHTML = f.slice(0, 5).map(function (l) { return cardHtml(l, true); }).join('');
+                document.getElementById('featuredVendors').hidden = false;
+            }).catch(function () {});
         }
 
         function loadDirectory() {
@@ -359,6 +408,7 @@
         };
 
         loadDirectory();
+        loadFeatured();
     })();
     </script>
 
