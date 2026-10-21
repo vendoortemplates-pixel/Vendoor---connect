@@ -46,7 +46,7 @@
 .table-scroll { overflow-x: auto; }
 .admin-empty { padding: 40px 0; color: var(--text-muted); font-size: 15px; }
 .status-pill { font-size: 12px; font-weight: 600; padding: 3px 9px; background: var(--ivory); border: 1px solid var(--border-light); }
-.summary-2 { margin-top: -24px; }
+.summary-2 { margin-top: -24px; grid-template-columns: repeat(5, 1fr); }
 .summary b { font-variant-numeric: lining-nums; }
 .admin-help { font-size: 14px; color: var(--text-muted); margin: 0 0 16px; line-height: 1.55; }
 .dispute-note { background: #fbf1ec; border-left: 3px solid var(--terracotta); padding: 10px 14px; font-size: 14px; color: var(--cocoa); margin: 10px 0; }
@@ -81,6 +81,7 @@
                     </div>
                 </li>
                 <li><a href="find-vendors.html">Find Vendors</a></li>
+                <li><a href="event-liaison.html">Event Liaison</a></li>
                 <li><a href="reviews.html">Reviews</a></li>
                 <li class="has-dropdown">
                     <a href="vendor-portal.html">For Vendors</a>
@@ -115,6 +116,7 @@
                 </ul>
             </li>
             <li><a href="find-vendors.html">Find Vendors</a></li>
+            <li><a href="event-liaison.html">Event Liaison</a></li>
             <li><a href="reviews.html">Reviews</a></li>
             <li class="drawer-has-submenu">
                 <button class="drawer-submenu-toggle" type="button">
@@ -158,6 +160,7 @@
             <div><b id="sRevenue">–</b><span id="sOrders">Orders</span></div>
         </div>
         <div class="summary summary-2">
+            <div class="attn"><b id="sLiaison">–</b><span>New liaison requests</span></div>
             <div class="attn"><b id="sInquiries">–</b><span>New membership enquiries</span></div>
             <div><b id="sFounding">–</b><span>Founding members (of 50)</span></div>
             <div><b id="sFeatured">–</b><span>Sponsored placements live</span></div>
@@ -171,6 +174,7 @@
             <button role="tab" data-view="orders" aria-selected="false">Orders</button>
             <button role="tab" data-view="listings" aria-selected="false">Vendors &amp; memberships</button>
             <button role="tab" data-view="inquiries" aria-selected="false">Membership enquiries</button>
+            <button role="tab" data-view="liaison" aria-selected="false">Liaison consultations</button>
         </div>
         <p class="error-msg" id="appError" role="alert"></p>
         <div id="panel"></div>
@@ -244,6 +248,7 @@
         if (view === 'orders') return api('admin?view=orders').then(renderOrders).catch(function (e) { showError(e.message); });
         if (view === 'listings') return api('admin?view=listings').then(renderListings).catch(function (e) { showError(e.message); });
         if (view === 'inquiries') return api('admin?view=inquiries').then(renderInquiries).catch(function (e) { showError(e.message); });
+        if (view === 'liaison') return api('admin?view=liaison').then(renderLiaison).catch(function (e) { showError(e.message); });
         api('admin?view=reviews&status=' + view).then(renderReviews).catch(function (e) { showError(e.message); });
     }
 
@@ -283,6 +288,7 @@
     }
     function fillSummary2(s) {
         $('sInquiries').textContent = s.new_inquiries;
+        $('sLiaison').textContent = s.new_liaison;
         $('sFounding').textContent = s.founding_members;
         $('sFeatured').textContent = s.featured_now;
         $('sDisputes').textContent = s.open_disputes;
@@ -368,6 +374,30 @@
             btn.addEventListener('click', function () {
                 btn.disabled = true;
                 api('admin', { method: 'POST', body: JSON.stringify({ action: 'inquiry-status', inquiryId: btn.closest('.mod-card').dataset.id, status: btn.dataset.st }) })
+                    .then(function () { load(); refreshCounts(); })
+                    .catch(function (e) { btn.disabled = false; showError(e.message); });
+            });
+        });
+    }
+
+    var SERVICE_LABELS = { 'pre-wedding': 'Pre-Wedding Liaison Service', 'wedding-day': 'Wedding Day Package', both: 'Pre-wedding + wedding day', unsure: 'Not sure yet' };
+    function renderLiaison(d) {
+        var rows = d.requests || [];
+        if (!rows.length) { $('panel').innerHTML = '<p class="admin-empty">No consultation requests yet. They arrive here (and in your Gmail) when someone uses the form on the Event Liaison page.</p>'; return; }
+        $('panel').innerHTML = '<p class="admin-help">Reply by email to book a consultation. Mark each request as you go so nothing slips.</p>' +
+            rows.map(function (r) {
+                var subject = encodeURIComponent('Your Vendoor Connect Event Liaison consultation');
+                var details = [r.event_type, r.event_date, r.location, r.guests ? r.guests + ' guests' : '', r.based ? 'Based in ' + r.based : ''].filter(Boolean).map(esc).join(' · ');
+                return '<div class="mod-card" data-id="' + r.id + '"><div class="top"><h3>' + esc(r.name) + '<small>' + esc(SERVICE_LABELS[r.service] || r.service) + '</small></h3><span class="status-pill">' + esc(r.status) + '</span></div>' +
+                    '<p class="meta">' + ['<a href="mailto:' + esc(r.email) + '?subject=' + subject + '">' + esc(r.email) + '</a>', esc(r.phone || ''), VC.date(r.created_at)].filter(Boolean).join(', ') + '</p>' +
+                    (details ? '<p class="meta">' + details + '</p>' : '') +
+                    (r.message ? '<p class="text">' + esc(r.message) + '</p>' : '') +
+                    '<div class="mod-actions">' + ['contacted', 'booked', 'closed', 'new'].filter(function (st) { return st !== r.status; }).map(function (st) { return '<button data-lst="' + st + '">Mark ' + st + '</button>'; }).join('') + '</div></div>';
+            }).join('');
+        $('panel').querySelectorAll('button[data-lst]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                btn.disabled = true;
+                api('admin', { method: 'POST', body: JSON.stringify({ action: 'liaison-status', requestId: btn.closest('.mod-card').dataset.id, status: btn.dataset.lst }) })
                     .then(function () { load(); refreshCounts(); })
                     .catch(function (e) { btn.disabled = false; showError(e.message); });
             });

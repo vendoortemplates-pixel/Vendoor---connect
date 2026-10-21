@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Liaison | Vendoor Connect</title>
+    <meta name="description" content="A dedicated event liaison who advocates for you, schedules every vendor appointment, negotiates on your behalf and looks after you on the wedding day.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- SITE HEADER -->
+    <header class="site-header">
+        <div class="brand-bar">
+            <a href="index.html" class="logo">
+                <img src="logo-wordmark.png" alt="Vendoor Connect Logo">
+            </a>
+        </div>
+        <nav>
+            <button class="menu-toggle" id="menuToggle" aria-label="Open menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li class="has-dropdown">
+                    <a href="templates.html">Templates</a>
+                    <div class="dropdown-menu">
+                        <a href="single-template.html?product=yoruba-wedding" class="dropdown-item">Yoruba Wedding Planner</a>
+                        <a href="single-template.html?product=igbo-wedding" class="dropdown-item">Igbo Wedding Planner</a>
+                        <a href="single-template.html?product=welcome-party" class="dropdown-item">Welcome Party Planner</a>
+                        <a href="custom-template.html" class="dropdown-item dropdown-item-custom">Customize Your Own Planner</a>
+                    </div>
+                </li>
+                <li><a href="find-vendors.html">Find Vendors</a></li>
+                <li><a href="event-liaison.html">Event Liaison</a></li>
+                <li><a href="reviews.html">Reviews</a></li>
+                <li class="has-dropdown">
+                    <a href="vendor-portal.html">For Vendors</a>
+                    <div class="dropdown-menu">
+                        <a href="vendor-portal.html?signup=1" class="dropdown-item">List Your Business Free</a>
+                        <a href="vendor-portal.html" class="dropdown-item">Vendor Dashboard</a>
+                        <a href="vendor-memberships.html" class="dropdown-item dropdown-item-custom">Memberships &amp; Promotion</a>
+                    </div>
+                </li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- MOBILE NAV DRAWER -->
+    <div class="mobile-drawer" id="mobileDrawer">
+        <button class="drawer-close" id="drawerClose" aria-label="Close menu">&times;</button>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li class="drawer-has-submenu">
+                <button class="drawer-submenu-toggle" type="button">
+                    Templates
+                    <span class="drawer-caret">&#9662;</span>
+                </button>
+                <ul class="drawer-submenu">
+                    <li><a href="templates.html">All Templates</a></li>
+                    <li><a href="single-template.html?product=yoruba-wedding">Yoruba Wedding Planner</a></li>
+                    <li><a href="single-template.html?product=igbo-wedding">Igbo Wedding Planner</a></li>
+                    <li><a href="single-template.html?product=welcome-party">Welcome Party Planner</a></li>
+                    <li><a href="custom-template.html">Customize Your Own Planner</a></li>
+                </ul>
+            </li>
+            <li><a href="find-vendors.html">Find Vendors</a></li>
+            <li><a href="event-liaison.html">Event Liaison</a></li>
+            <li><a href="reviews.html">Reviews</a></li>
+            <li class="drawer-has-submenu">
+                <button class="drawer-submenu-toggle" type="button">
+                    For Vendors
+                    <span class="drawer-caret">&#9662;</span>
+                </button>
+                <ul class="drawer-submenu">
+                    <li><a href="vendor-portal.html?signup=1">List Your Business Free</a></li>
+                    <li><a href="vendor-portal.html">Vendor Dashboard</a></li>
+                    <li><a href="vendor-memberships.html">Memberships &amp; Promotion</a></li>
+                </ul>
+            </li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </div>
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+
+
+    <!-- HERO -->
+    <section class="el-hero">
+        <div class="el-hero-inner">
+            <span class="el-eyebrow">Event Liaison</span>
+            <h1>Your advocate, from the first call to the last dance</h1>
+            <p class="el-hero-line">We manage the vendors, the appointments and the follow-ups, so you can stay present and enjoy every moment.</p>
+            <div class="el-hero-actions">
+                <a href="#consultation" class="btn">Book a consultation</a>
+                <a href="#services" class="btn-gold">See what's included</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- WHAT IS IT -->
+    <section class="el-intro">
+        <div class="el-intro-copy">
+            <span class="hm-eyebrow">The role</span>
+            <h2>What does an event liaison do?</h2>
+            <p>An event liaison is your dedicated point of contact, advocate and coordinator, throughout the planning process and on the day itself. We work alongside your planner, venue and vendors, but our focus is always you.</p>
+            <p>Instead of chasing replies, juggling WhatsApp threads and negotiating on your own, you have one trusted person keeping everything moving and making sure your wishes are heard.</p>
+        </div>
+        <ul class="el-roles">
+            <li><span>I</span><div><h3>Your advocate</h3><p>We speak up for you with vendors, the planner and everyone involved, so your vision and budget are respected.</p></div></li>
+            <li><span>II</span><div><h3>Your scheduler</h3><p>We arrange every vendor appointment, consultation, tasting and fitting, and handle the follow-ups.</p></div></li>
+            <li><span>III</span><div><h3>Your negotiator</h3><p>We compare quotes and negotiate on your behalf for fair prices and clear terms.</p></div></li>
+        </ul>
+    </section>
+
+    <!-- SERVICES -->
+    <section class="el-services" id="services">
+        <div class="hm-head hm-head-center">
+            <div>
+                <span class="hm-eyebrow">Services</span>
+                <h2>Support before the big day, and on it</h2>
+                <p>Choose one service or combine both. Every engagement is tailored to your celebration.</p>
+            </div>
+        </div>
+        <div class="el-packages">
+            <article class="el-package">
+                <span class="el-package-tag">Before the wedding</span>
+                <h3>Pre-Wedding Liaison Service</h3>
+                <p class="el-package-sub">Planning support, coordination and advocacy, from the first enquiry to the final week.</p>
+                <ul class="mem-list">
+                    <li>One central point of contact between you, your planner, venue, vendors and family representatives</li>
+                    <li>Scheduling all vendor enquiries, appointments, consultations and follow-ups</li>
+                    <li>Comparing vendors and quotes, and negotiating on your behalf</li>
+                    <li>Tracking deadlines, outstanding items and agreed next steps</li>
+                    <li>Coordinating aso-ebi, beauty and styling, accommodation and transport</li>
+                    <li>Support with logistics for guests travelling to Nigeria</li>
+                    <li>Attending planning meetings and vendor consultations with you</li>
+                    <li>Spotting problems early and resolving them with the right people</li>
+                </ul>
+                <p class="el-price">Pricing by consultation</p>
+            </article>
+            <article class="el-package el-package-dark">
+                <span class="el-package-tag">On the day</span>
+                <h3>Wedding Day Package</h3>
+                <p class="el-package-sub">A dedicated liaison team by your side, so you never have to manage a thing.</p>
+                <ul class="mem-list">
+                    <li>A liaison team working alongside your planner and vendors, focused on you</li>
+                    <li>Support through getting ready, photos, departure, arrival and every key moment</li>
+                    <li>Managing your personal timeline and movements throughout the day</li>
+                    <li>Coordinating photo timing, attire, makeup, gele and transport</li>
+                    <li>Handling questions from vendors, family and the wedding party, so they don't reach you</li>
+                    <li>Making sure you, and your closest family and friends, are fed, comfortable and looked after</li>
+                    <li>Resolving issues quietly with the planner or vendor before they become your problem</li>
+                </ul>
+                <p class="el-price">Pricing by consultation</p>
+            </article>
+        </div>
+    </section>
+
+    <!-- LIAISON + PLANNER -->
+    <section class="el-compare">
+        <div class="hm-head hm-head-center">
+            <div>
+                <span class="hm-eyebrow">Why both</span>
+                <h2>Why you need a liaison and a planner</h2>
+                <p>Your planner runs the event. Your liaison looks after you. Together, nothing is missed.</p>
+            </div>
+        </div>
+        <div class="el-compare-grid">
+            <div class="el-col">
+                <h3>Your planner</h3>
+                <ul>
+                    <li>Designs and produces the whole event</li>
+                    <li>Manages décor, the programme and the run of show</li>
+                    <li>Directs vendors and the venue on the day</li>
+                    <li>Is responsible for the event as a whole</li>
+                </ul>
+            </div>
+            <div class="el-col el-col-gold">
+                <h3>Your liaison</h3>
+                <ul>
+                    <li>Represents you and your family's wishes</li>
+                    <li>Schedules your vendor appointments and follow-ups</li>
+                    <li>Negotiates with vendors on your behalf</li>
+                    <li>Stays by your side on the day, focused only on you</li>
+                </ul>
+            </div>
+        </div>
+        <div class="el-benefits">
+            <div><h4>One point of contact</h4><p>No more chasing a dozen vendors. You get updates from one person.</p></div>
+            <div><h4>Someone on your side</h4><p>An advocate in every negotiation, so you get fair prices and clear terms.</p></div>
+            <div><h4>Time back</h4><p>We handle the calls, scheduling and follow-ups that take up your evenings.</p></div>
+            <div><h4>Perfect from abroad</h4><p>Planning a Nigerian wedding from overseas? We're your eyes, ears and voice on the ground.</p></div>
+            <div><h4>Nothing slips</h4><p>Deadlines, deposits and details are tracked, and problems are caught early.</p></div>
+            <div><h4>Present on the day</h4><p>You enjoy your wedding while we handle everything around you.</p></div>
+        </div>
+        <p class="el-note">Final decisions on vendors, contracts and payments always stay with you. A liaison works alongside your planner and doesn't replace one.</p>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="mem-steps-section">
+        <span class="section-eyebrow">How it works</span>
+        <h2>Simple, personal and tailored to you</h2>
+        <ol class="mem-steps">
+            <li><span>1</span><h3>Request a consultation</h3><p>Share a few details about your celebration in the consultation request at the bottom of this page.</p></li>
+            <li><span>2</span><h3>We talk it through</h3><p>We discuss your plans, your vendors and the support you need.</p></li>
+            <li><span>3</span><h3>Your tailored plan</h3><p>You receive a clear scope and pricing for your event.</p></li>
+            <li><span>4</span><h3>We take it from there</h3><p>We get to work, and you get to enjoy the journey.</p></li>
+        </ol>
+    </section>
+
+    <!-- CONSULTATION REQUEST -->
+    <section class="mem-enquire" id="consultation">
+        <div class="mem-enquire-copy">
+            <span class="section-eyebrow">Consultation</span>
+            <h2>Let's talk about your celebration</h2>
+            <p>Share a few details and we'll reach out to arrange your consultation. There's no obligation, and pricing is tailored to your event.</p>
+            <p class="form-note">Prefer email? Write to <a href="mailto:vendoor.templates@gmail.com">vendoor.templates@gmail.com</a>.</p>
+        </div>
+        <form class="contact-form mem-form" id="elForm" novalidate>
+            <p class="form-hidden"><label>Leave this empty: <input name="website" tabindex="-1" autocomplete="off"></label></p>
+            <label class="field-label" for="eName">Your name</label>
+            <input type="text" id="eName" name="name" required maxlength="100">
+            <label class="field-label" for="eEmail">Email</label>
+            <input type="email" id="eEmail" name="email" required maxlength="160">
+            <label class="field-label" for="ePhone">WhatsApp or phone (optional)</label>
+            <input type="tel" id="ePhone" name="phone" maxlength="40">
+            <label class="field-label" for="eService">I'm interested in</label>
+            <select id="eService" name="service">
+                <option value="both">Both: pre-wedding support and the wedding day</option>
+                <option value="pre-wedding">Pre-Wedding Liaison Service</option>
+                <option value="wedding-day">Wedding Day Package</option>
+                <option value="unsure">Not sure yet</option>
+            </select>
+            <div class="el-form-row">
+                <div><label class="field-label" for="eType">Type of event</label><input type="text" id="eType" name="eventType" maxlength="80" placeholder="e.g. Yoruba traditional wedding"></div>
+                <div><label class="field-label" for="eDate">Event date (if known)</label><input type="text" id="eDate" name="eventDate" maxlength="60" placeholder="e.g. May 2027"></div>
+            </div>
+            <div class="el-form-row">
+                <div><label class="field-label" for="eLoc">Event location</label><input type="text" id="eLoc" name="location" maxlength="120" placeholder="e.g. Lagos"></div>
+                <div><label class="field-label" for="eGuests">Guests (approx.)</label><input type="text" id="eGuests" name="guests" maxlength="40" placeholder="e.g. 300"></div>
+            </div>
+            <label class="field-label" for="eBased">Where are you based?</label>
+            <input type="text" id="eBased" name="based" maxlength="80" placeholder="e.g. Lagos, London, Houston">
+            <label class="field-label" for="eMsg">Tell us a little about your plans (optional)</label>
+            <textarea id="eMsg" name="message" rows="4" maxlength="2000" placeholder="Your planner, vendors booked so far, anything you'd like help with"></textarea>
+            <button type="submit" class="btn" id="elSubmit">Request a consultation</button>
+            <p class="form-status" id="elStatus" role="status"></p>
+        </form>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+
+            <div class="footer-brand">
+                <img src="logo.png" alt="Vendoor Connect" class="footer-logo">
+                <p>Discover • Review • Connect</p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Shop</h4>
+                <ul>
+                    <li><a href="templates.html">All Templates</a></li>
+                    <li><a href="single-template.html?product=yoruba-wedding">Yoruba Wedding Planner</a></li>
+                    <li><a href="single-template.html?product=igbo-wedding">Igbo Wedding Planner</a></li>
+                    <li><a href="single-template.html?product=welcome-party">Welcome Party Planner</a></li>
+                    <li><a href="custom-template.html">Custom Planner</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="find-vendors.html">Find Vendors</a></li>
+                    <li><a href="event-liaison.html">Event Liaison</a></li>
+                    <li><a href="reviews.html">Reviews</a></li>
+                    <li><a href="vendor-portal.html">Vendor Login</a></li>
+                    <li><a href="vendor-memberships.html">Vendor Memberships</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Connect With Us</h4>
+                <ul>
+                    <li><a href="https://www.instagram.com/vendoortemplates" target="_blank" rel="noopener" class="social-link"><svg class="icon-instagram" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>Instagram</a></li>
+                    <li><a href="mailto:vendoor.templates@gmail.com" class="social-link">vendoor.templates@gmail.com</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <p class="footer-legal"><a href="terms.html">Terms of sale</a><a href="refund-policy.html">Refund policy</a><a href="delivery-policy.html">Delivery policy</a><a href="privacy-policy.html">Privacy policy</a></p>
+        <p class="footer-bottom">&copy; 2026 Vendoor Connect. All rights reserved.</p>
+    </footer>
+
+    <script src="main.js"></script>
+    <script src="liaison.js"></script>
+</body>
+</html>

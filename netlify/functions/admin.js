@@ -7,6 +7,7 @@
 //   POST { action: 'founding-on'|'founding-off'|'feature'|'unfeature', listingId, days? }
 //   POST { action: 'inquiry-status', inquiryId, status }
 //   POST { action: 'resolve-dispute', reviewId }
+//   GET ?view=liaison; POST { action: 'liaison-status', requestId, status }
 const { getDb, rowsOf, json, parseBody, currentUser, isAdmin, FOUNDING_LIMIT } = require('../lib/common');
 const { sendOrderEmail } = require('../lib/email');
 
@@ -32,6 +33,7 @@ exports.handler = async (event, context) => {
             (SELECT COUNT(*)::int FROM membership_inquiries WHERE status = 'new') AS new_inquiries,
             (SELECT COUNT(*)::int FROM listings WHERE membership = 'founding') AS founding_members,
             (SELECT COUNT(*)::int FROM listings WHERE featured_until > NOW()) AS featured_now,
+            (SELECT COUNT(*)::int FROM liaison_requests WHERE status = 'new') AS new_liaison,
             (SELECT COUNT(*)::int FROM reviews WHERE status = 'approved' AND disputed_at IS NOT NULL AND dispute_resolved_at IS NULL) AS open_disputes
         `)[0];
         Object.keys(r).forEach(k => { r[k] = Number(r[k]); });
@@ -74,6 +76,12 @@ exports.handler = async (event, context) => {
           ORDER BY (i.status = 'new') DESC, i.created_at DESC LIMIT 300
         `);
         return json(200, { inquiries: rows });
+      }
+      if (view === 'liaison') {
+        const rows = rowsOf(await db.sql`
+          SELECT * FROM liaison_requests ORDER BY (status = 'new') DESC, created_at DESC LIMIT 300
+        `);
+        return json(200, { requests: rows });
       }
       return json(400, { error: 'Unknown view.' });
     }
@@ -132,6 +140,13 @@ exports.handler = async (event, context) => {
         const st = ['new', 'contacted', 'active', 'closed'].indexOf(data.status) !== -1 ? data.status : null;
         if (!inquiryId || !st) return json(400, { error: 'Invalid enquiry update.' });
         await db.sql`UPDATE membership_inquiries SET status = ${st} WHERE id = ${inquiryId}`;
+        return json(200, { ok: true });
+      }
+      if (data.action === 'liaison-status') {
+        const rid = parseInt(data.requestId, 10);
+        const st = ['new', 'contacted', 'booked', 'closed'].indexOf(data.status) !== -1 ? data.status : null;
+        if (!rid || !st) return json(400, { error: 'Invalid update.' });
+        await db.sql`UPDATE liaison_requests SET status = ${st} WHERE id = ${rid}`;
         return json(200, { ok: true });
       }
       if (reviewId && data.action === 'resolve-dispute') {

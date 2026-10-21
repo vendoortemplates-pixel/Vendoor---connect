@@ -45,7 +45,11 @@ async function ensureSchema(base) {
     () => base.sql`CREATE TABLE IF NOT EXISTS membership_inquiries (
         id SERIAL PRIMARY KEY, business_name TEXT NOT NULL, contact_name TEXT, email TEXT NOT NULL, phone TEXT,
         interest TEXT NOT NULL, listing_id INTEGER, message TEXT, status TEXT NOT NULL DEFAULT 'new', ip_hash TEXT,
-        created_at TIMESTAMP NOT NULL DEFAULT NOW())`
+        created_at TIMESTAMP NOT NULL DEFAULT NOW())`,
+    () => base.sql`CREATE TABLE IF NOT EXISTS liaison_requests (
+        id SERIAL PRIMARY KEY, name TEXT NOT NULL, email TEXT NOT NULL, phone TEXT, service TEXT NOT NULL,
+        event_type TEXT, event_date TEXT, location TEXT, guests TEXT, based TEXT, message TEXT,
+        status TEXT NOT NULL DEFAULT 'new', ip_hash TEXT, created_at TIMESTAMP NOT NULL DEFAULT NOW())`
   ];
   const probe = await base.sql`
     SELECT
@@ -56,11 +60,11 @@ async function ensureSchema(base) {
       (SELECT COUNT(*)::int FROM information_schema.columns WHERE table_name = 'reviews' AND column_name = 'review_type') AS t,
       (SELECT COUNT(*)::int FROM information_schema.columns WHERE table_name = 'listings' AND column_name IN ('membership','membership_until','featured_until')) AS m,
       (SELECT COUNT(*)::int FROM information_schema.columns WHERE table_name = 'reviews' AND column_name IN ('dispute_reason','disputed_at','dispute_resolved_at')) AS d,
-      (SELECT COUNT(*)::int FROM information_schema.tables WHERE table_name IN ('listing_stats','membership_inquiries')) AS s
+      (SELECT COUNT(*)::int FROM information_schema.tables WHERE table_name IN ('listing_stats','membership_inquiries','liaison_requests')) AS s
   `;
   const p = rowsOf(probe)[0] || {};
   if (Number(p.r) === 7 && Number(p.l) === 3 && Number(p.o) === 1 && Number(p.e) === 2 && Number(p.t) === 1
-      && Number(p.m) === 3 && Number(p.d) === 3 && Number(p.s) === 2) return;
+      && Number(p.m) === 3 && Number(p.d) === 3 && Number(p.s) === 3) return;
   for (const step of steps) {
     try { await step(); } catch (e) { console.error('ensureSchema step failed:', e && e.message); }
   }
