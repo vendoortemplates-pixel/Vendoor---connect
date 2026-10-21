@@ -95,7 +95,7 @@
         <div class="hero-copy">
             <span class="hm-hero-eyebrow">For life's most meaningful celebrations</span>
             <h1>Every celebration, <span class="nowrap">beautifully planned</span></h1>
-            <p>Trusted vendors reviewed by real clients, beautifully designed planners, and a dedicated event liaison to advocate for you, all in one place.</p>
+            <p>Find vendors other clients genuinely recommend, plan with planners made for our traditions, and have a dedicated event liaison in your corner.</p>
             <div class="hero-actions">
                 <a href="templates.html" class="btn">Browse templates</a>
                 <a href="find-vendors.html" class="btn-outline">Find vendors</a>
@@ -348,7 +348,7 @@
                 var who = platform ? esc(r.reviewer_name) + (r.event_type ? ', ' + esc(r.event_type) : '')
                     : esc(r.reviewer_name) + ' on ' + (r.vendor_id ? '<a href="vendor-profile.html?id=' + r.vendor_id + '">' + esc(r.vendor_name) + '</a>' : esc(r.vendor_name));
                 return '<figure class="home-review">' + VC.stars(r.rating) +
-                    '<blockquote>' + esc(r.review_text.length > 260 ? r.review_text.slice(0, 257) + '…' : r.review_text) + '</blockquote>' +
+                    '<blockquote>' + esc(r.review_text.length > 260 ? r.review_text.slice(0, 257) + '...' : r.review_text) + '</blockquote>' +
                     '<figcaption>' + who + '</figcaption></figure>';
             }).join('');
             return true;
@@ -362,8 +362,8 @@
     </script>
 
     <!-- NETLIFY IDENTITY HANDOFF
-         Netlify's emails link to the site root with #confirmation_token=… (new
-         vendor) or #recovery_token=… (password reset). Finish that here, then
+         Netlify's emails link to the site root with #confirmation_token=... (new
+         vendor) or #recovery_token=... (password reset). Finish that here, then
          send the vendor to their dashboard. -->
     <script>
     (function () {
@@ -377,7 +377,7 @@
         var banner = document.createElement('div');
         banner.className = 'identity-banner';
         banner.setAttribute('role', 'status');
-        banner.textContent = kind === 'confirm' ? 'Confirming your vendor account…' : 'Opening your password reset…';
+        banner.textContent = kind === 'confirm' ? 'Confirming your vendor account...' : 'Opening your password reset...';
         document.body.insertBefore(banner, document.body.firstChild);
 
         import('https://cdn.jsdelivr.net/npm/gotrue-js@0.9.29/+esm').then(function (mod) {

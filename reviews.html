@@ -122,11 +122,11 @@
                     <option value="other">Other</option>
                 </select>
             </div>
-            <p class="feed-status" id="feedStatus">Loading reviews…</p>
+            <p class="feed-status" id="feedStatus">Loading reviews...</p>
             <div id="feedList"></div>
             <div class="feed-empty" id="feedEmpty" hidden>
                 <h3>No reviews here yet</h3>
-                <p>Hired a vendor for a wedding, introduction or party? Your review helps the next couple choose well.</p>
+                <p>Hired a vendor for a wedding, introduction or party? Your review helps the next person choose well.</p>
                 <a href="#write" class="btn">Write the first review</a>
             </div>
         </div>
@@ -367,7 +367,7 @@
             if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(payload.reviewerEmail)) return showError('Enter a valid email address. It is never shown publicly.');
 
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Submitting…';
+            submitBtn.textContent = 'Submitting...';
             VC.getJSON('/.netlify/functions/submit-review', {
                 method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
             }).then(function () {
@@ -427,14 +427,14 @@
                 empty.querySelector('h3').textContent = feedType === 'platform' ? 'No reviews of Vendoor Connect yet' : 'No reviews here yet';
                 empty.querySelector('p').textContent = feedType === 'platform'
                     ? 'Bought a template or used the site? Tell others how Vendoor Connect helped with your planning.'
-                    : 'Hired a vendor for a wedding, introduction or party? Your review helps the next couple choose well.';
+                    : 'Hired a vendor for a wedding, introduction or party? Your review helps the next person choose well.';
             }
         }
         catSelect.addEventListener('change', render);
 
         function loadFeed() {
             status.hidden = false;
-            status.textContent = 'Loading reviews…';
+            status.textContent = 'Loading reviews...';
             list.innerHTML = '';
             empty.hidden = true;
             var platform = feedType === 'platform';

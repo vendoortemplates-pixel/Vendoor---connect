@@ -244,7 +244,7 @@
 
     function load() {
         showError('');
-        $('panel').innerHTML = '<p class="admin-empty">Loading…</p>';
+        $('panel').innerHTML = '<p class="admin-empty">Loading...</p>';
         if (view === 'orders') return api('admin?view=orders').then(renderOrders).catch(function (e) { showError(e.message); });
         if (view === 'listings') return api('admin?view=listings').then(renderListings).catch(function (e) { showError(e.message); });
         if (view === 'inquiries') return api('admin?view=inquiries').then(renderInquiries).catch(function (e) { showError(e.message); });
@@ -311,7 +311,7 @@
             }).join('') + '</tbody></table></div>';
         $('panel').querySelectorAll('button[data-ref]').forEach(function (btn) {
             btn.addEventListener('click', function () {
-                btn.disabled = true; btn.textContent = 'Sending…';
+                btn.disabled = true; btn.textContent = 'Sending...';
                 api('admin', { method: 'POST', body: JSON.stringify({ action: 'resend-email', reference: btn.dataset.ref }) })
                     .then(function (r) { btn.textContent = r.hasFile ? 'Sent with download' : 'Sent'; })
                     .catch(function (e) { btn.disabled = false; btn.textContent = 'Try again'; showError(e.message); });

@@ -362,7 +362,7 @@
 
             <!-- LISTINGS TAB -->
             <div id="tabListings">
-                <p class="loading-note" id="loadingNote">Loading your listings…</p>
+                <p class="loading-note" id="loadingNote">Loading your listings...</p>
                 <div id="emptyState" class="empty-state" style="display:none;">
                     <h3>Create your first listing</h3>
                     <p>Add your business name, city, starting price and a photo of your work. It appears in the vendor directory as soon as you save it.</p>
@@ -436,7 +436,7 @@
                     <strong>Ask your clients for a review.</strong> Send them this link. It opens the review form with your business already filled in.
                     <input type="text" id="shareLink" readonly>
                 </div>
-                <p class="loading-note" id="reviewsLoading">Loading reviews…</p>
+                <p class="loading-note" id="reviewsLoading">Loading reviews...</p>
                 <div id="reviewsEmpty" class="empty-state" style="display:none;">
                     <h3>No reviews yet</h3>
                     <p>Reviews appear here once a client submits one and our team approves it. You can reply publicly to every review.</p>
@@ -560,7 +560,7 @@
         $('authSuccess').classList.remove('show');
         btn.disabled = true;
         var label = btn.textContent;
-        btn.textContent = authMode === 'signup' ? 'Creating account…' : 'Logging in…';
+        btn.textContent = authMode === 'signup' ? 'Creating account...' : 'Logging in...';
         var action = authMode === 'signup' ? identity.signup(email, password) : identity.login(email, password, true);
         Promise.resolve(action).then(function () {
             if (authMode === 'signup') {
@@ -571,7 +571,7 @@
             } else {
                 showDashboard();
             }
-        }).catch(authFail).then(function () { btn.disabled = false; if (btn.textContent.indexOf('…') !== -1) btn.textContent = label; });
+        }).catch(authFail).then(function () { btn.disabled = false; if (btn.textContent.indexOf('...') !== -1) btn.textContent = label; });
     });
 
     $('forgotLink').addEventListener('click', function (e) {
@@ -585,7 +585,7 @@
         }).catch(authFail);
     });
 
-    // ----- PASSWORD RESET (arrives via index.html#recovery_token=…) -----
+    // ----- PASSWORD RESET (arrives via index.html#recovery_token=...) -----
     var params = new URLSearchParams(location.search);
     $('resetForm').addEventListener('submit', function (e) {
         e.preventDefault();
@@ -696,7 +696,7 @@
         };
         if (editingId) payload.id = editingId;
         var btn = $('saveListingBtn');
-        btn.disabled = true; btn.textContent = 'Saving…';
+        btn.disabled = true; btn.textContent = 'Saving...';
         api(editingId ? 'update-listing' : 'create-listing', { method: 'POST', body: JSON.stringify(payload) })
             .then(function () {
                 $('listingFormOverlay').classList.remove('show');
@@ -713,7 +713,7 @@
     // ----- LISTINGS -----
     function loadListings() {
         $('loadingNote').style.display = 'block';
-        $('loadingNote').textContent = 'Loading your listings…';
+        $('loadingNote').textContent = 'Loading your listings...';
         $('emptyState').style.display = 'none';
         $('listingsGrid').style.display = 'none';
         api('my-listings', { method: 'GET' }).then(function (d) {
@@ -844,7 +844,7 @@
                     e.preventDefault();
                     var id = f.closest('.dash-review').dataset.id;
                     var saved = f.querySelector('.reply-saved');
-                    saved.textContent = 'Saving…';
+                    saved.textContent = 'Saving...';
                     api('vendor-reply', { method: 'POST', body: JSON.stringify({ reviewId: id, reply: f.querySelector('textarea').value }) })
                         .then(function () { saved.textContent = 'Reply saved. It shows on your public profile.'; f.querySelector('button').textContent = 'Update reply'; })
                         .catch(function (err) { saved.textContent = err.message; });
@@ -855,7 +855,7 @@
                     e.preventDefault();
                     var id = f.closest('.dash-review').dataset.id;
                     var saved = f.querySelector('.reply-saved');
-                    saved.textContent = 'Sending…';
+                    saved.textContent = 'Sending...';
                     api('review-dispute', { method: 'POST', body: JSON.stringify({ reviewId: id, reason: f.querySelector('textarea').value }) })
                         .then(function () { f.closest('.dispute-box').outerHTML = '<p class="dispute-status">Dispute received. We are looking into this review and will email you.</p>'; })
                         .catch(function (err) { saved.textContent = err.message; });
