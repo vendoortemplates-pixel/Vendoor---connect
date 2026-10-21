@@ -407,6 +407,9 @@
             if (btn) btn.click();
         };
 
+        var startCat = new URLSearchParams(location.search).get('category');
+        var startBtn = startCat && document.querySelector('#directoryFilters .filter-btn[data-category="' + startCat + '"]');
+        if (startBtn) { filterButtons.forEach(function (b) { b.classList.remove('active'); }); startBtn.classList.add('active'); currentCategory = startCat; }
         loadDirectory();
         loadFeatured();
     })();
