@@ -375,6 +375,8 @@
             if (btn) btn.click();
         };
 
+        var startQ = new URLSearchParams(location.search).get('q');
+        if (startQ) { searchInput.value = startQ; setTimeout(function () { var d = document.getElementById('directory'); if (d) d.scrollIntoView(); }, 50); }
         var startCat = new URLSearchParams(location.search).get('category');
         var startBtn = startCat && document.querySelector('#directoryFilters .filter-btn[data-category="' + startCat + '"]');
         if (startBtn) { filterButtons.forEach(function (b) { b.classList.remove('active'); }); startBtn.classList.add('active'); currentCategory = startCat; }
