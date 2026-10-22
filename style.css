@@ -2916,3 +2916,61 @@ footer { margin-top: 0; }
 .v2-forvendors-row { border-top: none; padding-top: 0; }
 .v3-search { max-width: 860px; }
 @media (max-width: 1100px) and (min-width: 901px) { .v3-hero-grid { grid-template-columns: 7fr 5fr; column-gap: 40px; } .v3-hero-actions .btn, .v3-hero-actions .btn-outline { padding: 14px 18px; font-size: 14px; } }
+
+/* =====================================================================
+   v3 ROLLOUT: same warmth, weave and calm spacing on every page
+   ===================================================================== */
+/* Page intros on sand, finished with the woven edge */
+.page-header, .mem-hero, .el-hero { background: var(--sand); border-bottom: none; position: relative; padding-bottom: 64px; }
+.page-header::after, .mem-hero::after, .el-hero::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 10px;
+  background: repeating-linear-gradient(90deg, #C97A5A 0 18px, #C8A96A 18px 24px, #5B4636 24px 54px, #EFE6D8 54px 58px, #C97A5A 58px 70px, #46362A 70px 78px, #C8A96A 78px 100px); }
+.page-header h1, .mem-hero h1, .el-hero h1 { font-size: clamp(40px, 5.2vw, 66px); line-height: 1.02; letter-spacing: -0.8px; }
+.about-hero h1 { font-size: clamp(44px, 6vw, 76px); }
+
+/* Event liaison intro: warm, like the homepage */
+.el-hero { padding-top: 84px; padding-bottom: 92px; }
+.el-hero h1 { color: var(--cocoa); font-weight: 500; }
+.el-hero-line { color: #6E5D50; font-style: normal; font-family: var(--font-body); font-size: 18.5px; font-weight: 300; line-height: 1.7; max-width: 50ch; }
+.el-hero .btn-gold { color: var(--cocoa); border-color: var(--cocoa); }
+.el-hero .btn-gold:hover { background: var(--cocoa); color: #fff; }
+
+/* Woven edge above every footer */
+footer { position: relative; }
+footer::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 10px;
+  background: repeating-linear-gradient(90deg, #C97A5A 0 18px, #C8A96A 18px 24px, #5B4636 24px 54px, #EFE6D8 54px 58px, #C97A5A 58px 70px, #46362A 70px 78px, #C8A96A 78px 100px); }
+.v2-forvendors + .v2-weave { display: none; }
+
+/* Fewer lines: space and soft panels instead */
+.mem-list li, .el-col li { border-top: none !important; padding-top: 7px; padding-bottom: 7px; }
+.mem-list li::before { top: 16px; }
+.el-col li::before { top: 16px; }
+.value-card, .how-reviews-grid > div, .el-benefits > div { border-top: none; background: var(--sand); padding: 28px 30px; border-radius: 3px; }
+.values-grid, .how-reviews-grid, .el-benefits { gap: 18px; }
+.el-roles li, .el-roles li:last-child { border: none; padding: 18px 0; }
+.el-roles { display: grid; gap: 4px; }
+.mem-steps { border-top: none; gap: 18px; }
+.mem-steps li, .mem-steps li + li { border: none !important; background: var(--white); padding: 28px 28px !important; border-radius: 3px; }
+.mem-steps-section { background: var(--sand); }
+.el-compare-grid { border: none; gap: 18px; }
+.el-col { background: var(--white); border-radius: 3px; }
+.el-col + .el-col { border-left: none !important; border-top: none !important; }
+.el-col-gold { background: var(--mahogany); }
+.el-col-gold h3 { color: var(--gold); }
+.el-col-gold li { color: #EDE2D5; }
+.el-compare { background: var(--ivory); }
+.el-package { border: none; border-radius: 3px; }
+.el-price { border-top: none; padding-top: 10px; }
+.el-package-dark { background: var(--mahogany); }
+.mem-plan { border: none; border-radius: 3px; box-shadow: 0 14px 34px rgba(70,54,42,.07); }
+.mem-plan-featured { border: 2px solid var(--gold); }
+.mem-option { border-top: none; padding-top: 12px; }
+.mem-faq details, .mem-faq details:last-child { border: none; background: var(--sand); border-radius: 3px; padding: 18px 22px; margin-bottom: 10px; }
+.directory-head { border-top: none; }
+.dash-stats span { border: none; }
+
+/* Find vendors search: same as the homepage */
+.directory-search { gap: 0; padding-top: 40px; }
+.directory-search input { flex: 1 1 420px; max-width: 640px; border: 1px solid var(--border-light); border-radius: 4px 0 0 4px; padding: 18px 20px; font-size: 16px; box-shadow: 0 10px 30px rgba(70,54,42,.07); }
+.directory-search select { border-radius: 0 4px 4px 0; border-left: none; padding: 18px 16px; box-shadow: 0 10px 30px rgba(70,54,42,.07); }
+@media (max-width: 640px) { .directory-search input { border-radius: 4px; flex-basis: 100%; } .directory-search select { border-radius: 4px; border-left: 1px solid var(--border-light); margin-top: 10px; } }
+@media (max-width: 700px) { .el-services { padding-bottom: 40px; } .el-compare { padding-top: 40px; } }
