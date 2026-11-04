@@ -29,7 +29,8 @@ exports.handler = async (event, context) => {
             (SELECT COUNT(*)::int FROM reviews WHERE status = 'approved') AS approved_reviews,
             (SELECT COUNT(*)::int FROM listings) AS listings,
             (SELECT COUNT(*)::int FROM orders) AS orders,
-            (SELECT COALESCE(SUM(amount_kobo), 0)::bigint FROM orders) AS revenue_kobo,
+            ((SELECT COALESCE(SUM(amount_kobo), 0)::bigint FROM orders) + (SELECT COALESCE(SUM(amount_kobo), 0)::bigint FROM package_orders)) AS revenue_kobo,
+            (SELECT COUNT(*)::int FROM package_orders) AS package_orders,
             (SELECT COUNT(*)::int FROM membership_inquiries WHERE status = 'new') AS new_inquiries,
             (SELECT COUNT(*)::int FROM listings WHERE membership = 'founding') AS founding_members,
             (SELECT COUNT(*)::int FROM listings WHERE featured_until > NOW()) AS featured_now,
@@ -57,7 +58,12 @@ exports.handler = async (event, context) => {
                  download_count, email_sent_at, email_had_file, created_at
           FROM orders ORDER BY created_at DESC LIMIT 500
         `);
-        return json(200, { orders: rows });
+        const packages = rowsOf(await db.sql`
+          SELECT p.reference, p.package, p.email, p.amount_kobo, p.paid_at, p.active_until, p.created_at, l.business_name
+          FROM package_orders p LEFT JOIN listings l ON l.id = p.listing_id
+          ORDER BY p.created_at DESC LIMIT 500
+        `);
+        return json(200, { orders: rows, packages });
       }
       if (view === 'listings') {
         const rows = rowsOf(await db.sql`
@@ -114,9 +120,9 @@ exports.handler = async (event, context) => {
         return json(200, { ok: true });
       }
       if (listingId && data.action === 'founding-on') {
-        const n = rowsOf(await db.sql`SELECT COUNT(*)::int AS n FROM listings WHERE membership = 'founding' AND id <> ${listingId}`)[0];
+        const n = rowsOf(await db.sql`SELECT COUNT(*)::int AS n FROM listings WHERE membership = 'founding' AND (membership_until IS NULL OR membership_until > NOW()) AND id <> ${listingId}`)[0];
         if (Number(n.n) >= FOUNDING_LIMIT) return json(400, { error: 'All ' + FOUNDING_LIMIT + ' founding spots are taken.' });
-        await db.sql`UPDATE listings SET membership = 'founding', membership_until = NOW() + INTERVAL '12 months' WHERE id = ${listingId}`;
+        await db.sql`UPDATE listings SET membership = 'founding', membership_reminded = NULL, membership_until = NOW() + INTERVAL '12 months' WHERE id = ${listingId}`;
         return json(200, { ok: true });
       }
       if (listingId && data.action === 'founding-off') {
@@ -126,7 +132,7 @@ exports.handler = async (event, context) => {
       if (listingId && data.action === 'feature') {
         const days = Math.min(Math.max(parseInt(data.days, 10) || 30, 1), 366);
         await db.sql`
-          UPDATE listings SET featured_until = GREATEST(COALESCE(featured_until, NOW()), NOW()) + (${days} || ' days')::interval
+          UPDATE listings SET featured_reminded = NULL, featured_until = GREATEST(COALESCE(featured_until, NOW()), NOW()) + (${days} || ' days')::interval
           WHERE id = ${listingId}
         `;
         return json(200, { ok: true });

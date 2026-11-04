@@ -18,7 +18,7 @@ exports.handler = async (event, context) => {
   try {
     if (event.httpMethod === 'GET') {
       const r = rowsOf(await db.sql`
-        SELECT COUNT(*)::int AS n FROM listings WHERE membership = 'founding'
+        SELECT COUNT(*)::int AS n FROM listings WHERE membership = 'founding' AND (membership_until IS NULL OR membership_until > NOW())
       `)[0] || { n: 0 };
       const taken = Number(r.n);
       return json(200, { foundingLimit: FOUNDING_LIMIT, foundingTaken: taken, foundingLeft: Math.max(0, FOUNDING_LIMIT - taken) });

@@ -98,8 +98,10 @@
         </p>
         <p class="confirmation-ref" id="confirmationRef"></p>
         <a href="#" class="btn-gold" id="downloadButton" style="display:none; margin-bottom: 16px;">Download your template</a>
+        <div class="thanks-downloads" id="downloadList" style="display:none;"></div>
         <br>
         <a href="templates.html" class="btn">Continue browsing</a>
+        <p class="thanks-review">Lost your link later? <a href="delivery-policy.html#resend">Get your downloads sent again</a>.</p>
         <p class="thanks-review">Enjoying Vendoor Connect? <a href="reviews.html?about=vendoorconnect#write">Leave us a review</a></p>
     </section>
 
@@ -194,7 +196,20 @@
                 heading.textContent = 'Thank you for your purchase';
                 var tName = data.templateName || name;
                 var mailNote = data.emailed ? ' We\'ve also emailed this to you; check your spam folder if you don\'t see it.' : '';
-                if (data.downloadUrl) {
+                var its = data.items || [];
+                if (its.length > 1) {
+                    var ready = its.filter(function (i) { return i.downloadUrl; });
+                    var later = its.filter(function (i) { return !i.downloadUrl; });
+                    var list = document.getElementById('downloadList');
+                    list.innerHTML = ready.map(function (i) {
+                        var a = document.createElement('a');
+                        a.className = 'btn-gold'; a.href = i.downloadUrl; a.textContent = 'Download ' + i.name;
+                        return a.outerHTML;
+                    }).join('');
+                    list.style.display = ready.length ? 'flex' : 'none';
+                    messageEl.textContent = (ready.length ? 'Your planners are ready. Download each one below.' : 'Your payment is confirmed.') +
+                        (later.length ? ' Your ' + later.map(function (i) { return i.name; }).join(' and ') + (later.length > 1 ? ' are' : ' is') + ' being prepared and will be emailed to you within 24 hours.' : '') + mailNote;
+                } else if (data.downloadUrl) {
                     messageEl.textContent = 'Your ' + tName + ' is ready. Download it below.' + mailNote;
                     downloadBtn.href = data.downloadUrl;
                     downloadBtn.style.display = 'inline-block';

@@ -3,6 +3,12 @@
 // Replies go to the owner's Gmail; the owner also gets a copy (BCC).
 const { getDb, rowsOf } = require('./common');
 const { fileFor } = require('./deliverables');
+const VENDOOR = require('../../catalog.js');
+
+function orderItems(order) {
+  const list = order && order.items ? String(order.items).split(',') : [order && order.product_slug];
+  return list.filter(x => x && VENDOOR.CATALOG[x]).map(slug => ({ slug, name: VENDOOR.CATALOG[slug].name, hasFile: !!fileFor(slug) }));
+}
 
 const SITE = 'https://vendoorconnect.com';
 const OWNER = 'vendoor.templates@gmail.com';
@@ -14,18 +20,28 @@ function esc(s) {
 function naira(kobo) { return '₦' + (Number(kobo) / 100).toLocaleString('en-NG'); }
 
 function buildEmail(order, hasFile) {
+  const items = orderItems(order);
+  const multi = items.length > 1;
   const name = order.template_name || 'planning template';
-  const link = SITE + '/.netlify/functions/download?reference=' + encodeURIComponent(order.reference);
-  const subject = hasFile ? 'Your ' + name + ' is ready to download' : 'Thank you for your order: ' + name;
+  const base = SITE + '/.netlify/functions/download?reference=' + encodeURIComponent(order.reference);
+  const linkFor = it => multi ? base + '&item=' + encodeURIComponent(it.slug) : base;
+  const link = base;
+  const subject = hasFile ? (multi ? 'Your planners are ready to download' : 'Your ' + name + ' is ready to download') : 'Thank you for your order: ' + name;
+  const buttons = items.filter(it => it.hasFile).map(it =>
+    `<p style="margin:0 0 12px"><a href="${linkFor(it)}" style="display:inline-block;background:#C97A5A;color:#fff;text-decoration:none;font-weight:600;padding:14px 28px;border-radius:2px">Download ${multi ? esc(it.name) : 'your template'}</a></p>`).join('');
+  const waiting = items.filter(it => !it.hasFile);
+  const partNote = items.some(it => it.hasFile) && waiting.length
+    ? `<p style="margin:0 0 20px;color:#5B4636;line-height:1.7">Your <strong>${esc(waiting.map(w => w.name).join(' and '))}</strong> ${waiting.length > 1 ? 'are' : 'is'} being prepared. We'll email ${waiting.length > 1 ? 'them' : 'it'} to you within <strong>24 hours</strong>.</p>`
+    : '';
 
-  const steps = hasFile
-    ? `<p style="margin:0 0 22px"><a href="${link}" style="display:inline-block;background:#C97A5A;color:#fff;text-decoration:none;font-weight:600;padding:14px 28px;border-radius:2px">Download your template</a></p>
+  const steps = hasFile || items.some(it => it.hasFile)
+    ? `<div style="margin:0 0 22px">${buttons}</div>${partNote}
        <h2 style="font-family:Georgia,serif;font-size:18px;color:#5B4636;margin:0 0 10px">How to use it</h2>
        <ol style="padding-left:20px;margin:0 0 20px;color:#5B4636;line-height:1.7">
          <li>Click <strong>Download your template</strong> above. It saves a PDF file to your phone or computer.</li>
          <li>Open the PDF. On a phone it opens in your Files or Books app; on a computer, in any PDF reader.</li>
          <li>Fill it in digitally with a PDF app (like Adobe Acrobat Reader or GoodNotes), or print it at home or at a print shop.</li>
-         <li>Save the file somewhere safe. Your link works up to 15 times, and you can always reply to this email if you need it again.</li>
+         <li>Save the file somewhere safe. Your link works up to 15 times. If you lose this email, you can get your links again anytime at <a href="${SITE}/delivery-policy.html#resend" style="color:#C97A5A">vendoorconnect.com/delivery-policy.html</a>.</li>
        </ol>`
     : `<p style="margin:0 0 20px;color:#5B4636;line-height:1.7">Your template is being prepared. We'll email it to you within <strong>24 hours</strong>, along with simple steps for downloading, printing and filling it in. There's nothing else you need to do.</p>`;
 
@@ -37,7 +53,7 @@ function buildEmail(order, hasFile) {
       <p style="margin:0 0 22px;color:#5B4636;line-height:1.7">Your payment for the <strong>${esc(name)}</strong> is confirmed.</p>
       ${steps}
       <table style="width:100%;border-top:1px solid #ECE3D8;padding-top:14px;font-size:14px;color:#8A7C6F" cellpadding="4">
-        <tr><td>Template</td><td style="text-align:right;color:#5B4636">${esc(name)}</td></tr>
+        <tr><td>${multi ? 'Templates' : 'Template'}</td><td style="text-align:right;color:#5B4636">${esc(name)}</td></tr>
         <tr><td>Amount paid</td><td style="text-align:right;color:#5B4636">${naira(order.amount_kobo)}</td></tr>
         <tr><td>Order reference</td><td style="text-align:right;color:#5B4636">${esc(order.reference)}</td></tr>
       </table>
@@ -50,7 +66,7 @@ function buildEmail(order, hasFile) {
   const text = [
     'Thank you for your order',
     'Your payment for the ' + name + ' is confirmed.',
-    hasFile ? 'Download your template: ' + link + '\n\nHow to use it:\n1. Open the link to save the PDF.\n2. Open it in any PDF app.\n3. Fill it in digitally or print it.\n4. Save the file somewhere safe. The link works up to 15 times.'
+    items.some(it => it.hasFile) ? items.filter(it => it.hasFile).map(it => 'Download ' + it.name + ': ' + linkFor(it)).join('\n') + '\n\nHow to use it:\n1. Open the link to save the PDF.\n2. Open it in any PDF app.\n3. Fill it in digitally or print it.\n4. Save the file somewhere safe. The link works up to 15 times.'
             : 'Your template is being prepared and will be emailed to you within 24 hours.',
     'Amount paid: ' + naira(order.amount_kobo),
     'Order reference: ' + order.reference,
@@ -81,7 +97,8 @@ async function sendOrderEmail(order, force) {
   if (!order || !order.email) return { ok: false, error: 'No buyer email on this order.' };
   if (!process.env.RESEND_API_KEY) return { ok: false, error: 'Email sending is not set up yet.' };
   const db = getDb();
-  const hasFile = !!fileFor(order.product_slug);
+  const its = orderItems(order);
+  const hasFile = its.length > 0 && its.every(it => it.hasFile);
   if (!force) {
     // Claim the send atomically so the webhook and the thank-you page can't both send it.
     const claimed = rowsOf(await db.sql`
@@ -119,4 +136,83 @@ async function notifyOwner(subject, lines) {
   } catch (e) { return { ok: false, error: e && e.message }; }
 }
 
-module.exports = { sendOrderEmail, buildEmail, notifyOwner };
+// ----- Vendor package emails -----
+// stage: 'confirmed' | 'soon' | 'last' | 'ended'
+function fmtDate(d) {
+  const dt = new Date(d);
+  return isNaN(dt) ? '' : dt.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Africa/Lagos' });
+}
+function buildPackageEmail(stage, info) {
+  const pkg = esc(info.packageName), biz = esc(info.businessName), until = fmtDate(info.until);
+  const price = '₦' + Number(info.price).toLocaleString('en-NG');
+  const copy = {
+    confirmed: {
+      subject: 'Your ' + info.packageName + ' is live',
+      title: 'You\'re all set',
+      body: `Thank you. Your payment is confirmed and <strong>${pkg}</strong> is now live for <strong>${biz}</strong> until <strong>${until}</strong>.` +
+        (info.instagram ? ' We\'ll be in touch on WhatsApp or email to plan your Instagram feature.' : '') +
+        ` It won't renew or charge you again by itself. We'll email you a few days before it ends so you can decide.`,
+      button: null
+    },
+    soon: {
+      subject: info.packageName + ' ends on ' + until,
+      title: 'A quick heads-up',
+      body: `<strong>${pkg}</strong> for <strong>${biz}</strong> ends on <strong>${until}</strong>. To keep it going, renew below. The extra ${esc(info.term)} are added on top of your current end date, so you won't lose any days.`,
+      button: 'Renew for ' + price
+    },
+    last: {
+      subject: 'Last day: ' + info.packageName + ' ends soon',
+      title: 'Ends in about a day',
+      body: `<strong>${pkg}</strong> for <strong>${biz}</strong> ends on <strong>${until}</strong>. If you'd like to keep it, renew below and it carries on without a break.`,
+      button: 'Renew for ' + price
+    },
+    ended: {
+      subject: info.packageName + ' has ended',
+      title: 'Your package has ended',
+      body: `<strong>${pkg}</strong> for <strong>${biz}</strong> ended on <strong>${until}</strong>. Your free listing is still live in the directory. Whenever you're ready, you can switch it back on in one tap.`,
+      button: 'Switch it back on for ' + price
+    }
+  }[stage];
+
+  const btn = copy.button
+    ? `<p style="margin:0 0 18px"><a href="${info.renewUrl}" style="display:inline-block;background:#C97A5A;color:#fff;text-decoration:none;font-weight:600;padding:14px 28px;border-radius:2px">${esc(copy.button)}</a></p>
+       <p style="margin:0 0 18px;font-size:14px;color:#8A7C6F;line-height:1.6">The button opens a secure Paystack checkout (card, bank transfer or USSD). You don't need to log in.</p>`
+    : `<p style="margin:0 0 18px"><a href="${SITE}/vendor-portal.html" style="color:#C97A5A">Open your vendor dashboard</a></p>`;
+
+  const html = `<!doctype html><html><body style="margin:0;background:#F8F5EF;font-family:Arial,Helvetica,sans-serif">
+  <div style="max-width:560px;margin:0 auto;padding:32px 20px">
+    <p style="text-align:center;font-family:Georgia,serif;font-size:20px;letter-spacing:2px;color:#C8A96A;margin:0 0 24px">VENDOOR CONNECT</p>
+    <div style="background:#fff;border:1px solid #ECE3D8;padding:32px 28px">
+      <h1 style="font-family:Georgia,serif;font-size:24px;color:#5B4636;margin:0 0 12px">${copy.title}</h1>
+      <p style="margin:0 0 22px;color:#5B4636;line-height:1.7">${copy.body}</p>
+      ${btn}
+      ${info.reference ? `<p style="margin:0;font-size:14px;color:#8A7C6F">Payment reference: ${esc(info.reference)}</p>` : ''}
+      <p style="margin:18px 0 0;font-size:14px;color:#8A7C6F;line-height:1.6">Questions? Just reply to this email.</p>
+    </div>
+    <p style="text-align:center;font-size:12px;color:#8A7C6F;margin:20px 0 0">Vendoor Connect · <a href="${SITE}" style="color:#8A7C6F">vendoorconnect.com</a></p>
+  </div></body></html>`;
+  const text = copy.body.replace(/<[^>]+>/g, '') + '\n\n' +
+    (copy.button ? copy.button + ': ' + info.renewUrl : 'Your dashboard: ' + SITE + '/vendor-portal.html') +
+    '\n\nQuestions? Just reply to this email.';
+  return { subject: copy.subject, html, text };
+}
+
+async function sendPackageEmail(stage, info) {
+  if (!info.to) return { ok: false, error: 'No vendor email.' };
+  const msg = buildPackageEmail(stage, info);
+  const key = process.env.RESEND_API_KEY;
+  if (!key) return { ok: false, error: 'RESEND_API_KEY is not set' };
+  const payload = { from: FROM, to: [info.to], reply_to: OWNER, subject: msg.subject, html: msg.html, text: msg.text };
+  if (stage === 'confirmed') payload.bcc = [OWNER];
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + key, 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) return { ok: false, error: 'Resend ' + res.status + ': ' + (await res.text().catch(() => '')).slice(0, 300) };
+    return { ok: true };
+  } catch (e) { return { ok: false, error: e && e.message }; }
+}
+
+module.exports = { sendOrderEmail, buildEmail, notifyOwner, sendPackageEmail, buildPackageEmail };

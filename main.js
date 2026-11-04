@@ -90,3 +90,54 @@ if (searchInput) {
     var btn = document.querySelector('.filter-btn[data-cat="' + cat + '"]');
     if (btn) filterTemplates(cat, btn);
 })();
+
+// ===== TEMPLATE CART =====
+// Kept in this browser only (localStorage). Each planner can be in the cart
+// once. Prices are always re-checked on the server after payment.
+window.VCCart = (function () {
+    var KEY = 'vc_cart';
+    function get() {
+        try { var v = JSON.parse(localStorage.getItem(KEY) || '[]'); return Array.isArray(v) ? v : []; } catch (e) { return []; }
+    }
+    function save(list) {
+        try { localStorage.setItem(KEY, JSON.stringify(list)); } catch (e) {}
+        renderNav();
+    }
+    function add(slug) { var l = get(); if (l.indexOf(slug) === -1) l.push(slug); save(l); }
+    function remove(slug) { save(get().filter(function (s) { return s !== slug; })); }
+    function clear() { save([]); }
+    function has(slug) { return get().indexOf(slug) !== -1; }
+    function renderNav() {
+        var n = get().length;
+        var nav = document.querySelector('header nav');
+        if (!nav) return;
+        var pill = document.getElementById('navCart');
+        if (!n) { if (pill) pill.remove(); return; }
+        if (!pill) {
+            pill = document.createElement('a');
+            pill.id = 'navCart';
+            pill.className = 'nav-cart';
+            pill.href = 'cart.html';
+            nav.appendChild(pill);
+        }
+        pill.innerHTML = 'Cart <span>' + n + '</span>';
+        pill.setAttribute('aria-label', 'Your cart, ' + n + (n === 1 ? ' item' : ' items'));
+    }
+    renderNav();
+    window.addEventListener('storage', function (e) { if (e.key === KEY) renderNav(); });
+    return { get: get, add: add, remove: remove, clear: clear, has: has };
+})();
+
+// ===== "MESSAGE US" ON WHATSAPP =====
+(function () {
+    var NUMBER = '2348139189496'; // 0813 918 9496
+    if (/admin\.html$/.test(location.pathname)) return;
+    var a = document.createElement('a');
+    a.className = 'wa-float';
+    a.href = 'https://wa.me/' + NUMBER + '?text=' + encodeURIComponent('Hello Vendoor Connect, ');
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.setAttribute('aria-label', 'Message us on WhatsApp');
+    a.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 21l2.1-5.4A8.4 8.4 0 1 1 21 11.5z"/></svg><span>Message us</span>';
+    document.body.appendChild(a);
+})();

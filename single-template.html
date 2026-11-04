@@ -124,6 +124,7 @@
             <button class="btn-buy" id="buyButton" type="button">
                 <span id="buyButtonLabel">Buy Now</span>
             </button>
+            <button class="btn-add-cart" id="addCartButton" type="button">Add to cart</button>
 
             <p class="buy-policy-note">Sold by Vendoor Connect. Digital file: instant download, or emailed within 24 hours. See our <a href="delivery-policy.html">delivery</a> and <a href="refund-policy.html">refund</a> policies.</p>
 
@@ -276,6 +277,20 @@
             });
             handler.openIframe();
         });
+
+        // ----- ADD TO CART (buy several planners in one checkout) -----
+        var addCart = document.getElementById('addCartButton');
+        function cartState() {
+            var inCart = window.VCCart && VCCart.has(slug);
+            addCart.textContent = inCart ? 'In your cart. View cart' : 'Add to cart';
+            addCart.classList.toggle('in-cart', !!inCart);
+        }
+        addCart.addEventListener('click', function () {
+            if (VCCart.has(slug)) { window.location.href = 'cart.html'; return; }
+            VCCart.add(slug);
+            cartState();
+        });
+        window.addEventListener('load', cartState);
 
         // ----- LIVE PREVIEW MODAL -----
         var previewOverlay = document.getElementById('previewModalOverlay');

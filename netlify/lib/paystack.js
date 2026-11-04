@@ -22,22 +22,33 @@ async function verifyAndRecord(reference) {
   const tx = data.data;
   const fields = (tx.metadata && tx.metadata.custom_fields) || [];
   const field = name => { const f = fields.filter(x => x.variable_name === name)[0]; return f ? String(f.value) : null; };
-  const slug = field('product_slug');
-  const product = slug && VENDOOR.CATALOG[slug];
-  if (!product) return { ok: false, code: 'unknown_product', error: 'This payment is not for a template we sell.' };
-  if (tx.currency !== 'NGN' || Number(tx.amount) < product.price * 100) {
-    console.error('verify: amount mismatch', reference, tx.amount, tx.currency, slug);
+  // Cart checkouts send product_slugs ("a,b,c"); single "Buy now" sends product_slug.
+  const list = (field('product_slugs') || field('product_slug') || '').split(',').map(x => x.trim()).filter(Boolean);
+  const slugs = list.filter((x, i) => list.indexOf(x) === i);
+  if (!slugs.length || slugs.some(x => !VENDOOR.CATALOG[x])) return { ok: false, code: 'unknown_product', error: 'This payment is not for a template we sell.' };
+  const total = slugs.reduce((sum, x) => sum + VENDOOR.CATALOG[x].price, 0);
+  if (tx.currency !== 'NGN' || Number(tx.amount) < total * 100) {
+    console.error('verify: amount mismatch', reference, tx.amount, tx.currency, slugs.join(','));
     return { ok: false, code: 'amount_mismatch', error: 'The amount paid does not match the template price. Please contact us.' };
   }
+  const slug = slugs[0];
+  const names = slugs.map(x => VENDOOR.CATALOG[x].name).join(' + ');
+  const items = slugs.length > 1 ? slugs.join(',') : null;
 
   const email = tx.customer && tx.customer.email ? String(tx.customer.email).toLowerCase() : null;
   await db.sql`
-    INSERT INTO orders (reference, product_slug, template_name, email, amount_kobo, currency, paid_at)
-    VALUES (${tx.reference}, ${slug}, ${product.name}, ${email}, ${Number(tx.amount)}, ${tx.currency}, ${tx.paid_at || tx.paidAt || null})
+    INSERT INTO orders (reference, product_slug, template_name, email, amount_kobo, currency, paid_at, items)
+    VALUES (${tx.reference}, ${slug}, ${names}, ${email}, ${Number(tx.amount)}, ${tx.currency}, ${tx.paid_at || tx.paidAt || null}, ${items})
     ON CONFLICT (reference) DO NOTHING
   `;
   const order = rowsOf(await db.sql`SELECT * FROM orders WHERE reference = ${tx.reference}`)[0];
   return { ok: true, order };
 }
 
-module.exports = { verifyAndRecord, VENDOOR };
+// The templates in an order (one for "Buy now", several for a cart).
+function itemsOf(order) {
+  const list = order && order.items ? String(order.items).split(',') : [order && order.product_slug];
+  return list.filter(x => x && VENDOOR.CATALOG[x]);
+}
+
+module.exports = { verifyAndRecord, itemsOf, VENDOOR };

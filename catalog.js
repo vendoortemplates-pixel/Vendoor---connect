@@ -32,6 +32,15 @@
       }
     }
   };
+  // Vendor packages. Paid once, run for `days`, never charge again by
+  // themselves. The server reads prices from here, never from the browser.
+  // kind: 'founding' sets the Founding Vendor badge, 'featured' sets a
+  // sponsored placement.
+  VENDOOR.PACKAGES = {
+    founding: { name: 'Founding Vendor Membership', price: 30000, days: 365, kind: 'founding', term: '12 months' },
+    spotlight: { name: 'Homepage Spotlight', price: 15000, days: 30, kind: 'featured', term: '30 days' },
+    spotlight_instagram: { name: 'Website + Instagram Feature', price: 25000, days: 30, kind: 'featured', term: '30 days' }
+  };
   Object.keys(VENDOOR.CATALOG).forEach(function (slug) {
     VENDOOR.CATALOG[slug].slug = slug;
     VENDOOR.CATALOG[slug].image = 'images/covers/' + slug + '.svg';

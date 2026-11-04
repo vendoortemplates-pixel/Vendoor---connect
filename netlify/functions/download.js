@@ -1,7 +1,7 @@
 // Serves a purchased template file — only for a verified order reference.
 const fs = require('fs');
 const { getDb, json, clean } = require('../lib/common');
-const { verifyAndRecord } = require('../lib/paystack');
+const { verifyAndRecord, itemsOf } = require('../lib/paystack');
 const { fileFor } = require('../lib/deliverables');
 
 const MAX_DOWNLOADS = 15;
@@ -13,10 +13,13 @@ exports.handler = async (event) => {
   try {
     const r = await verifyAndRecord(reference);
     if (!r.ok) return json(403, { error: r.error });
-    if (Number(r.order.download_count) >= MAX_DOWNLOADS) {
+    const items = itemsOf(r.order);
+    const want = clean((event.queryStringParameters || {}).item, 60);
+    const slug = items.indexOf(want) !== -1 ? want : items[0];
+    if (Number(r.order.download_count) >= MAX_DOWNLOADS * Math.max(1, items.length)) {
       return json(403, { error: 'This download link has reached its limit. Please contact us and we will email your file.' });
     }
-    const file = fileFor(r.order.product_slug);
+    const file = fileFor(slug);
     if (!file) return json(404, { error: 'Your file is being prepared and will be emailed to you within 24 hours.' });
     const buf = fs.readFileSync(file.full);
     if (buf.length > MAX_BYTES) {

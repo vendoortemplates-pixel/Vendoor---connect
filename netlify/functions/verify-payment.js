@@ -1,7 +1,7 @@
 // Called by thank-you.html after checkout. Verifies with Paystack, records the
 // order, and tells the page whether an instant download is available.
 const { json, clean } = require('../lib/common');
-const { verifyAndRecord } = require('../lib/paystack');
+const { verifyAndRecord, itemsOf, VENDOOR } = require('../lib/paystack');
 const { fileFor } = require('../lib/deliverables');
 const { sendOrderEmail } = require('../lib/email');
 
@@ -11,7 +11,12 @@ exports.handler = async (event) => {
   try {
     const r = await verifyAndRecord(reference);
     if (!r.ok) return json(200, { ok: false, code: r.code, error: r.error });
-    const file = fileFor(r.order.product_slug);
+    const base = '/.netlify/functions/download?reference=' + encodeURIComponent(r.order.reference);
+    const items = itemsOf(r.order).map(slug => ({
+      slug, name: VENDOOR.CATALOG[slug].name,
+      downloadUrl: fileFor(slug) ? base + '&item=' + encodeURIComponent(slug) : null
+    }));
+    const file = items[0] && items[0].downloadUrl;
     // Backup for the webhook: send the confirmation email if it hasn't gone yet.
     let emailed = false;
     try { const e = await sendOrderEmail(r.order, false); emailed = !!(e && e.ok); } catch (e) { console.error('verify-payment email error:', e); }
@@ -22,7 +27,8 @@ exports.handler = async (event) => {
       productSlug: r.order.product_slug,
       templateName: r.order.template_name,
       amount: Number(r.order.amount_kobo),
-      downloadUrl: file ? '/.netlify/functions/download?reference=' + encodeURIComponent(r.order.reference) : null
+      items,
+      downloadUrl: file || null
     });
   } catch (err) {
     console.error('verify-payment error:', err);

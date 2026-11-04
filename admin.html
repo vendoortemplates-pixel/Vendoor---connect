@@ -49,6 +49,8 @@
 .summary-2 { margin-top: -24px; grid-template-columns: repeat(5, 1fr); }
 .summary b { font-variant-numeric: lining-nums; }
 .admin-help { font-size: 14px; color: var(--text-muted); margin: 0 0 16px; line-height: 1.55; }
+.admin-subhead { font-family: var(--font-heading, Georgia, serif); font-size: 20px; color: var(--cocoa, #5B4636); margin: 28px 0 10px; }
+.admin-subhead:first-child { margin-top: 0; }
 .dispute-note { background: #fbf1ec; border-left: 3px solid var(--terracotta); padding: 10px 14px; font-size: 14px; color: var(--cocoa); margin: 10px 0; }
 .mod-actions-col { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
 .admin-table small { color: var(--text-muted); font-size: 12px; }
@@ -181,6 +183,7 @@
 </main>
 
 <script src="main.js"></script>
+<script src="catalog.js"></script>
 <script src="vc.js"></script>
 <script type="module">
 (async function () {
@@ -216,7 +219,7 @@
             $('sApproved').textContent = s.approved_reviews;
             $('sListings').textContent = s.listings;
             $('sRevenue').textContent = VC.naira(s.revenue_kobo / 100);
-            $('sOrders').textContent = s.orders + (s.orders === 1 ? ' order' : ' orders') + ' paid';
+            $('sOrders').textContent = s.orders + (s.orders === 1 ? ' template order' : ' template orders') + ', ' + s.package_orders + (s.package_orders === 1 ? ' vendor package' : ' vendor packages');
             fillSummary2(s);
             load();
         }).catch(function (err) {
@@ -296,10 +299,23 @@
         api('admin?view=summary').then(function (d) { $('sPending').textContent = d.summary.pending_reviews; $('sApproved').textContent = d.summary.approved_reviews; fillSummary2(d.summary); });
     }
 
+    var PKG_NAMES = (window.VENDOOR && window.VENDOOR.PACKAGES) || {};
+    function packagesTable(rows) {
+        if (!rows || !rows.length) return '';
+        return '<h3 class="admin-subhead">Vendor packages</h3><p class="admin-help">These switch on by themselves once Paystack confirms the payment, and vendors get reminder emails before they end.</p>' +
+            '<div class="table-scroll"><table class="admin-table"><thead><tr><th>Date</th><th>Business</th><th>Package</th><th>Amount</th><th>Live until</th><th>Vendor email</th><th>Reference</th></tr></thead><tbody>' +
+            rows.map(function (p) {
+                var name = PKG_NAMES[p.package] ? PKG_NAMES[p.package].name : p.package;
+                return '<tr><td>' + VC.date(p.paid_at || p.created_at) + '</td><td>' + esc(p.business_name || 'Deleted listing') + '</td><td>' + esc(name) + '</td>' +
+                    '<td>' + VC.naira(p.amount_kobo / 100) + '</td><td>' + (p.active_until ? VC.date(p.active_until) : 'Not applied') + '</td>' +
+                    '<td><a href="mailto:' + esc(p.email) + '">' + esc(p.email) + '</a></td><td>' + esc(p.reference) + '</td></tr>';
+            }).join('') + '</tbody></table></div>';
+    }
     function renderOrders(d) {
         var rows = d.orders || [];
-        if (!rows.length) { $('panel').innerHTML = '<p class="admin-empty">No paid orders yet. Every payment Paystack confirms will be listed here, and buyers are emailed automatically.</p>'; return; }
-        $('panel').innerHTML = '<div class="table-scroll"><table class="admin-table"><thead><tr><th>Date</th><th>Template</th><th>Buyer</th><th>Amount</th><th>Downloads</th><th>Email</th><th>Reference</th><th></th></tr></thead><tbody>' +
+        var pk = packagesTable(d.packages);
+        if (!rows.length) { $('panel').innerHTML = '<p class="admin-empty">No template orders yet. Every payment Paystack confirms will be listed here, and buyers are emailed automatically.</p>' + pk; return; }
+        $('panel').innerHTML = '<h3 class="admin-subhead">Template orders</h3><div class="table-scroll"><table class="admin-table"><thead><tr><th>Date</th><th>Template</th><th>Buyer</th><th>Amount</th><th>Downloads</th><th>Email</th><th>Reference</th><th></th></tr></thead><tbody>' +
             rows.map(function (o) {
                 return '<tr><td>' + VC.date(o.paid_at || o.created_at) + '</td><td>' + esc(o.template_name || o.product_slug) + '</td>' +
                     '<td><a href="mailto:' + esc(o.email) + '?subject=' + encodeURIComponent('Your ' + (o.template_name || 'Vendoor Connect') + ' template') + '">' + esc(o.email) + '</a></td>' +
@@ -307,7 +323,7 @@
                     '<td>' + (o.email_sent_at ? (o.email_had_file ? 'Sent with download' : 'Sent, file to follow') : 'Not sent') + '</td>' +
                     '<td>' + esc(o.reference) + '</td>' +
                     '<td class="mod-actions"><button data-ref="' + esc(o.reference) + '">' + (o.email_sent_at ? 'Resend email' : 'Send email') + '</button></td></tr>';
-            }).join('') + '</tbody></table></div>';
+            }).join('') + '</tbody></table></div>' + pk;
         $('panel').querySelectorAll('button[data-ref]').forEach(function (btn) {
             btn.addEventListener('click', function () {
                 btn.disabled = true; btn.textContent = 'Sending...';
@@ -322,7 +338,7 @@
         var rows = d.listings || [];
         if (!rows.length) { $('panel').innerHTML = '<p class="admin-empty">No vendors have listed yet.</p>'; return; }
         var now = new Date();
-        $('panel').innerHTML = '<p class="admin-help">Switch on a membership or sponsored placement after the vendor has paid. Founding memberships run 12 months from today; each click on <em>Feature 30 days</em> adds 30 days.</p>' +
+        $('panel').innerHTML = '<p class="admin-help">Packages vendors pay for online switch on by themselves. Use these buttons only for something arranged by hand (a gift, or a payment made outside the site). Founding memberships run 12 months from today; each click on <em>Feature 30 days</em> adds 30 days.</p>' +
             '<div class="table-scroll"><table class="admin-table"><thead><tr><th>Business</th><th>City</th><th>Account email</th><th>Last 30 days</th><th>Membership</th><th>Sponsored</th><th>Status</th><th></th></tr></thead><tbody>' +
             rows.map(function (l) {
                 var hidden = l.status === 'hidden';

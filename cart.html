@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your cart | Vendoor Connect</title>
+    <meta name="robots" content="noindex">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- SITE HEADER -->
+    <header class="site-header">
+        <div class="brand-bar">
+            <a href="index.html" class="logo">
+                <img src="logo-horizontal.png" alt="Vendoor Connect" width="437" height="75">
+            </a>
+        </div>
+        <nav>
+            <button class="menu-toggle" id="menuToggle" aria-label="Open menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul>
+                <li class="has-dropdown">
+                    <a href="templates.html">Templates</a>
+                    <div class="dropdown-menu">
+                        <a href="single-template.html?product=yoruba-wedding" class="dropdown-item">Yoruba Wedding Planner</a>
+                        <a href="single-template.html?product=igbo-wedding" class="dropdown-item">Igbo Wedding Planner</a>
+                        <a href="single-template.html?product=welcome-party" class="dropdown-item">Welcome Party Planner</a>
+                        <a href="custom-template.html" class="dropdown-item dropdown-item-custom">Customize Your Own Planner</a>
+                    </div>
+                </li>
+                <li><a href="find-vendors.html">Find vendors</a></li>
+                <li><a href="event-liaison.html">Event liaison</a></li>
+                <li><a href="reviews.html">Reviews</a></li>
+                <li class="has-dropdown">
+                    <a href="vendor-portal.html">For vendors</a>
+                    <div class="dropdown-menu">
+                        <a href="vendor-portal.html?signup=1" class="dropdown-item">List your business free</a>
+                        <a href="vendor-portal.html" class="dropdown-item">Vendor dashboard</a>
+                        <a href="vendor-memberships.html" class="dropdown-item dropdown-item-custom">Memberships &amp; promotion</a>
+                    </div>
+                </li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- MOBILE NAV DRAWER -->
+    <div class="mobile-drawer" id="mobileDrawer">
+        <button class="drawer-close" id="drawerClose" aria-label="Close menu">&times;</button>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li class="drawer-has-submenu">
+                <button class="drawer-submenu-toggle" type="button">
+                    Templates
+                    <span class="drawer-caret">&#9662;</span>
+                </button>
+                <ul class="drawer-submenu">
+                    <li><a href="templates.html">All templates</a></li>
+                    <li><a href="single-template.html?product=yoruba-wedding">Yoruba Wedding Planner</a></li>
+                    <li><a href="single-template.html?product=igbo-wedding">Igbo Wedding Planner</a></li>
+                    <li><a href="single-template.html?product=welcome-party">Welcome Party Planner</a></li>
+                    <li><a href="custom-template.html">Customize Your Own Planner</a></li>
+                </ul>
+            </li>
+            <li><a href="find-vendors.html">Find vendors</a></li>
+            <li><a href="event-liaison.html">Event liaison</a></li>
+            <li><a href="reviews.html">Reviews</a></li>
+            <li class="drawer-has-submenu">
+                <button class="drawer-submenu-toggle" type="button">
+                    For vendors
+                    <span class="drawer-caret">&#9662;</span>
+                </button>
+                <ul class="drawer-submenu">
+                    <li><a href="vendor-portal.html?signup=1">List your business free</a></li>
+                    <li><a href="vendor-portal.html">Vendor dashboard</a></li>
+                    <li><a href="vendor-memberships.html">Memberships &amp; promotion</a></li>
+                </ul>
+            </li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </div>
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+
+    <!-- CART -->
+    <section class="cart-section">
+        <h1>Your cart</h1>
+        <p class="cart-sub" id="cartSub">Your planners, ready to check out together.</p>
+        <div id="cartBody"></div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+
+            <div class="footer-brand">
+                <img src="logo-horizontal.png" alt="Vendoor Connect" class="footer-logo" width="437" height="75">
+                <p>Discover • Review • Connect</p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Shop</h4>
+                <ul>
+                    <li><a href="templates.html">All templates</a></li>
+                    <li><a href="single-template.html?product=yoruba-wedding">Yoruba Wedding Planner</a></li>
+                    <li><a href="single-template.html?product=igbo-wedding">Igbo Wedding Planner</a></li>
+                    <li><a href="single-template.html?product=welcome-party">Welcome Party Planner</a></li>
+                    <li><a href="custom-template.html">Custom planner</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="find-vendors.html">Find vendors</a></li>
+                    <li><a href="event-liaison.html">Event liaison</a></li>
+                    <li><a href="reviews.html">Reviews</a></li>
+                    <li><a href="vendor-portal.html">Vendor login</a></li>
+                    <li><a href="vendor-memberships.html">Vendor memberships</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Connect with us</h4>
+                <ul>
+                    <li><a href="https://www.instagram.com/vendoortemplates" target="_blank" rel="noopener" class="social-link"><svg class="icon-instagram" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>Instagram</a></li>
+                    <li><a href="mailto:vendoor.templates@gmail.com" class="social-link">vendoor.templates@gmail.com</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <p class="footer-legal"><a href="terms.html">Terms of sale</a><a href="refund-policy.html">Refund policy</a><a href="delivery-policy.html">Delivery policy</a><a href="privacy-policy.html">Privacy policy</a></p>
+        <p class="footer-bottom">&copy; 2026 Vendoor Connect. All rights reserved.</p>
+    </footer>
+
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <script src="catalog.js"></script>
+    <script src="vc.js"></script>
+    <script src="main.js"></script>
+    <script>
+    (function () {
+        var CATALOG = window.VENDOOR.CATALOG;
+        var body = document.getElementById('cartBody');
+        var esc = VC.esc, naira = VC.naira;
+
+        function items() { return VCCart.get().filter(function (s) { return CATALOG[s]; }); }
+        function others(list) { return Object.keys(CATALOG).filter(function (s) { return list.indexOf(s) === -1; }); }
+
+        function render() {
+            var list = items();
+            if (!list.length) {
+                document.getElementById('cartSub').textContent = '';
+                body.innerHTML = '<div class="cart-empty"><p>Your cart is empty.</p><a href="templates.html" class="btn">Browse planners</a></div>';
+                return;
+            }
+            var total = list.reduce(function (n, s) { return n + CATALOG[s].price; }, 0);
+            var more = others(list);
+            body.innerHTML = '<div class="cart-layout"><div>' +
+                list.map(function (s) {
+                    var p = CATALOG[s];
+                    return '<div class="cart-item"><img src="' + p.image + '" alt="">' +
+                        '<div><h3><a href="single-template.html?product=' + s + '">' + esc(p.name) + '</a></h3><p>Digital planner (PDF)</p></div>' +
+                        '<div><div class="cart-item-price">' + naira(p.price) + '</div><button type="button" class="cart-remove" data-slug="' + s + '">Remove</button></div></div>';
+                }).join('') +
+                (more.length ? '<p class="cart-more">Planning more than one celebration? Add the ' +
+                    more.map(function (s) { return '<a href="single-template.html?product=' + s + '">' + esc(CATALOG[s].name) + '</a>'; }).join(' or ') + '.</p>' : '') +
+                '</div><aside class="cart-summary"><h2>Order summary</h2>' +
+                '<div class="cart-total"><span>' + list.length + (list.length === 1 ? ' planner' : ' planners') + '</span><strong>' + naira(total) + '</strong></div>' +
+                '<label class="field-label" for="cartEmail">Email for your receipt and downloads</label>' +
+                '<input type="email" id="cartEmail" class="buyer-email-input" placeholder="Your email address" autocomplete="email">' +
+                '<p class="form-error" id="cartError" role="alert" style="display:none;"></p>' +
+                '<button class="btn-buy" id="cartPay" type="button">Pay ' + naira(total) + ' securely</button>' +
+                '<p class="cart-small">Card, bank transfer or USSD through Paystack. Your downloads appear straight after payment and are emailed to you. See our <a href="delivery-policy.html">delivery</a> and <a href="refund-policy.html">refund</a> policies.</p>' +
+                '</aside></div>';
+
+            body.querySelectorAll('.cart-remove').forEach(function (b) {
+                b.addEventListener('click', function () { VCCart.remove(b.dataset.slug); render(); });
+            });
+            var email = document.getElementById('cartEmail');
+            try { email.value = localStorage.getItem('vc_email') || ''; } catch (e) {}
+            document.getElementById('cartPay').addEventListener('click', function () { pay(list, total); });
+        }
+
+        function showError(msg) {
+            var el = document.getElementById('cartError');
+            el.textContent = msg; el.style.display = msg ? 'block' : 'none';
+        }
+        function newReference() {
+            var a = new Uint8Array(8);
+            (window.crypto || window.msCrypto).getRandomValues(a);
+            return 'VC-' + Date.now().toString(36).toUpperCase() + '-' + Array.prototype.map.call(a, function (b) { return ('0' + b.toString(16)).slice(-2); }).join('').toUpperCase();
+        }
+        function pay(list, total) {
+            var emailInput = document.getElementById('cartEmail');
+            var email = emailInput.value.trim();
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+                showError('Enter your email address so we can send your receipt and planners.');
+                emailInput.focus();
+                return;
+            }
+            if (typeof PaystackPop === 'undefined') {
+                showError('The secure checkout could not load. Check your connection and refresh the page.');
+                return;
+            }
+            showError('');
+            try { localStorage.setItem('vc_email', email); } catch (e) {}
+            var names = list.map(function (s) { return CATALOG[s].name; }).join(' + ');
+            PaystackPop.setup({
+                key: window.VENDOOR.PAYSTACK_PUBLIC_KEY,
+                email: email,
+                amount: total * 100,
+                currency: 'NGN',
+                ref: newReference(),
+                metadata: {
+                    custom_fields: [
+                        { display_name: 'Templates', variable_name: 'template_name', value: names },
+                        { display_name: 'Product Slugs', variable_name: 'product_slugs', value: list.join(',') }
+                    ]
+                },
+                callback: function (response) {
+                    VCCart.clear();
+                    window.location.href = 'thank-you.html?ref=' + encodeURIComponent(response.reference);
+                },
+                onClose: function () {
+                    showError('Checkout closed. You were not charged. Your cart is saved whenever you are ready.');
+                }
+            }).openIframe();
+        }
+
+        render();
+    })();
+    </script>
+
+</body>
+</html>

@@ -16,6 +16,10 @@
 [functions.admin]
   included_files = ["deliverables/**"]
 
+# Every morning at 9am Lagos time: renewal reminders for vendor packages.
+[functions.package-reminders]
+  schedule = "0 8 * * *"
+
 # Keep purchased files and server code from being fetched directly.
 [[redirects]]
   from = "/deliverables/*"

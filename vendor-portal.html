@@ -281,6 +281,8 @@
 
 <!-- Vendor Portal: real accounts via Netlify Identity, listings in the Netlify Database. -->
 
+<div class="pkg-banner" id="pkgBanner" role="status" hidden></div>
+
 <!-- ===== LOGIN / SIGNUP VIEW ===== -->
 <div id="loginView">
     <section class="page-header">
@@ -494,6 +496,7 @@
     </footer>
 
 <script src="main.js"></script>
+<script src="catalog.js"></script>
 <script src="vc.js"></script>
 <script type="module">
 // gotrue-js (Netlify Identity's client) — used directly for this custom-branded form.
@@ -709,6 +712,92 @@
     });
 
     // ----- LISTINGS -----
+    // ----- PACKAGES (pay once, runs for a set time, never renews by itself) -----
+    var PACKAGES = window.VENDOOR.PACKAGES;
+    var foundingLeft = null;
+    var wantPackage = PACKAGES[params.get('buy')] ? params.get('buy') : null;
+    VC.getJSON('/.netlify/functions/membership-inquiry').then(function (j) {
+        if (typeof j.foundingLeft === 'number') { foundingLeft = j.foundingLeft; if (myListings.length) renderListings(); }
+    }).catch(function () {});
+
+    function pkgButton(listingId, key, label) {
+        var p = PACKAGES[key];
+        return '<button type="button" class="pkg-buy" data-id="' + listingId + '" data-pkg="' + key + '">' +
+            '<span>' + esc(label || p.name) + '</span><strong>' + VC.naira(p.price) + ' <em>/ ' + esc(p.term) + '</em></strong></button>';
+    }
+    function packageBox(l, isFounding) {
+        if (l.status === 'hidden') return '';
+        var rows = [];
+        if (l.is_featured) {
+            var cur = PACKAGES[l.featured_package] ? l.featured_package : 'spotlight';
+            rows.push('<p class="pkg-live">' + esc(PACKAGES[cur].name) + ' is live until <strong>' + esc(VC.date(l.featured_until)) + '</strong></p>');
+            rows.push(pkgButton(l.id, cur, 'Add 30 more days'));
+            if (cur === 'spotlight') rows.push(pkgButton(l.id, 'spotlight_instagram', 'Add 30 days with Instagram'));
+        } else {
+            rows.push(pkgButton(l.id, 'spotlight'));
+            rows.push(pkgButton(l.id, 'spotlight_instagram'));
+        }
+        if (isFounding) rows.push(pkgButton(l.id, 'founding', 'Add 12 more months as a Founding Vendor'));
+        else if (foundingLeft !== 0) rows.push(pkgButton(l.id, 'founding', 'Become a Founding Vendor' + (foundingLeft ? ' (' + foundingLeft + ' spots left)' : '')));
+        return '<div class="pkg-box"><h4>Get seen by more clients</h4>' + rows.join('') +
+            '<p class="pkg-note">Pay once with card, transfer or USSD. It switches on straight away and never charges you again by itself. We\'ll email you before it ends. <a href="vendor-memberships.html" target="_blank" rel="noopener">What\'s included</a></p>' +
+            '<p class="error-msg pkg-error" role="alert"></p></div>';
+    }
+    function buyPackage(btn) {
+        var box = btn.closest('.pkg-box');
+        var err = box.querySelector('.pkg-error');
+        err.classList.remove('show');
+        box.querySelectorAll('.pkg-buy').forEach(function (b) { b.disabled = true; });
+        btn.querySelector('span').textContent = 'Opening secure checkout...';
+        api('package-checkout', { method: 'POST', body: JSON.stringify({ listingId: btn.dataset.id, package: btn.dataset.pkg }) })
+            .then(function (d) { window.location.href = d.url; })
+            .catch(function (e) {
+                err.textContent = e.message; err.classList.add('show');
+                renderListings();
+                var again = $('listingsGrid').querySelector('.pkg-buy[data-id="' + btn.dataset.id + '"]');
+                if (again) { var e2 = again.closest('.pkg-box').querySelector('.pkg-error'); e2.textContent = e.message; e2.classList.add('show'); }
+            });
+    }
+    function banner(html, kind) {
+        var b = $('pkgBanner');
+        b.className = 'pkg-banner' + (kind ? ' pkg-banner-' + kind : '');
+        b.innerHTML = '<div>' + html + '</div><button type="button" aria-label="Close">&times;</button>';
+        b.hidden = false;
+        b.querySelector('button').addEventListener('click', function () { b.hidden = true; });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    // Back from Paystack: confirm the payment and show what switched on.
+    (function () {
+        var ref = params.get('reference') || params.get('trxref');
+        var renewError = params.get('renew_error');
+        if (params.get('package_paid') && ref) {
+            banner('Confirming your payment...', '');
+            var tries = 0;
+            (function check() {
+                VC.getJSON('/.netlify/functions/package-verify?reference=' + encodeURIComponent(ref)).then(function (d) {
+                    if (d.ok) {
+                        banner('<strong>Payment confirmed.</strong> ' + esc(d.packageName) + (d.businessName ? ' for ' + esc(d.businessName) : '') +
+                            ' is live until <strong>' + esc(VC.date(d.until)) + '</strong>. We\'ve emailed you a receipt.', 'ok');
+                        if (identity.currentUser()) loadListings();
+                    } else if (++tries < 4) setTimeout(check, 2500);
+                    else banner('We couldn\'t confirm this payment yet. If money left your account, don\'t pay again: reply to your Paystack receipt or email vendoor.templates@gmail.com with reference <strong>' + esc(ref) + '</strong> and we\'ll sort it out.', 'warn');
+                }).catch(function () {
+                    if (++tries < 4) setTimeout(check, 2500);
+                    else banner('We couldn\'t reach our server to confirm your payment. Refresh this page in a minute. Your reference is <strong>' + esc(ref) + '</strong>.', 'warn');
+                });
+            })();
+        } else if (renewError) {
+            var msg = {
+                expired: 'That renew link has expired. Log in below and choose your package on your listing.',
+                missing: 'We couldn\'t find that listing. Log in to see your listings.',
+                full: 'All founding spots are taken, so this membership can\'t be renewed. Homepage Spotlight is still available on your listing.',
+                failed: 'The secure checkout couldn\'t open just now. Log in below and try again from your listing.'
+            }[renewError] || 'Something went wrong. Log in below and try again from your listing.';
+            banner(msg, 'warn');
+        }
+        if (ref || renewError) history.replaceState(null, '', location.pathname + (params.get('buy') ? '?buy=' + encodeURIComponent(params.get('buy')) : ''));
+    })();
+
     function loadListings() {
         $('loadingNote').style.display = 'block';
         $('loadingNote').textContent = 'Loading your listings...';
@@ -747,7 +836,7 @@
             var isFounding = l.membership === 'founding' && (!l.membership_until || new Date(l.membership_until) > new Date());
             var plan = '';
             if (isFounding) plan += '<p class="dash-plan"><span class="badge-founding">Founding Vendor</span>' + (l.membership_until ? ' until ' + esc(VC.date(l.membership_until)) : '') + '</p>';
-            if (l.is_featured) plan += '<p class="dash-plan"><span class="badge-sponsored">Sponsored</span> featured until ' + esc(VC.date(l.featured_until)) + '</p>';
+            if (l.is_featured) plan += '<p class="dash-plan"><span class="badge-sponsored">Sponsored</span></p>';
             var stats = '<div class="dash-stats" title="Last 30 days">' +
                 '<span><strong>' + Number(l.views_30d || 0) + '</strong>profile views</span>' +
                 '<span><strong>' + Number(l.whatsapp_30d || 0) + '</strong>WhatsApp clicks</span>' +
@@ -763,14 +852,27 @@
                     '<span class="listing-price">From ' + VC.naira(l.price) + '</span>' +
                     stats +
                     '<div class="listing-links"><a href="vendor-profile.html?id=' + l.id + '" target="_blank" rel="noopener">View public profile</a></div>' +
+                    packageBox(l, isFounding) +
                     '<div class="listing-actions">' +
                         '<button class="btn-edit" data-id="' + l.id + '">Edit</button>' +
                         '<button class="btn-delete" data-id="' + l.id + '">Delete</button>' +
                     '</div>' +
                 '</div></div>';
         }).join('');
-        var anyFounding = myListings.some(function (l) { return l.membership === 'founding'; });
-        $('dashGrow').style.display = anyFounding ? 'none' : 'flex';
+        // Packages now live on each listing card, so the separate prompt is no longer needed.
+        $('dashGrow').style.display = 'none';
+
+        grid.querySelectorAll('.pkg-buy').forEach(function (btn) {
+            btn.addEventListener('click', function () { buyPackage(btn); });
+        });
+        if (wantPackage) {
+            var target = grid.querySelector('.pkg-buy[data-pkg="' + wantPackage + '"]');
+            wantPackage = null;
+            if (target) {
+                target.classList.add('pkg-highlight');
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
 
         grid.querySelectorAll('.btn-edit').forEach(function (btn) {
             btn.addEventListener('click', function () {
