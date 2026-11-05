@@ -213,7 +213,7 @@
             </div>
         </div>
         <div class="v2-wrap lx-picks" id="homeVendorsWrap" hidden>
-            <div class="lx-row-head lx-row-head-sm"><h3>Vendors to know</h3><a href="find-vendors.html" class="lx-link">See all vendors</a></div>
+            <div class="lx-row-head lx-row-head-sm"><h3>Featured vendors</h3><a href="find-vendors.html" class="lx-link">See all vendors</a></div>
             <div class="listings-grid hm-vendor-grid" id="homeVendors"></div>
         </div>
     </section>
@@ -308,8 +308,9 @@
             // Paid Sponsored spots first, then founding members (rotated fairly), then top rated.
             var sponsored = shuffle(all.filter(function (l) { return l.is_featured; }));
             var founding = shuffle(all.filter(function (l) { return l.is_founding && !l.is_featured; }));
-            var rest = all.filter(function (l) { return !l.is_featured && !l.is_founding; });
-            var top = sponsored.concat(founding, rest).slice(0, 3);
+            // Only paid placements (Homepage Spotlight, Founding members) appear here.
+            // Free listings live in the directory, so this stays hidden until someone pays.
+            var top = sponsored.concat(founding).slice(0, 3);
             if (!top.length) return;
             document.getElementById('homeVendorsWrap').hidden = false;
             document.getElementById('homeVendors').innerHTML = top.map(function (l) {
