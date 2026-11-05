@@ -1,6 +1,6 @@
 // Public: APPROVED reviews only. ?vendor_id=123 for one vendor; ?limit=6 for
 // the homepage; ?type=platform for reviews of Vendoor Connect itself. Reviewer emails and IP hashes are never returned.
-const { getDb, rowsOf, json } = require('../lib/common');
+const { getDb, rowsOf, json, PUBLIC_CACHE } = require('../lib/common');
 
 exports.handler = async (event) => {
   const p = event.queryStringParameters || {};
@@ -23,7 +23,7 @@ exports.handler = async (event) => {
     const summary = reviews.length
       ? { count: reviews.length, average: Math.round(reviews.reduce((a, r) => a + Number(r.rating), 0) / reviews.length * 10) / 10 }
       : { count: 0, average: 0 };
-    return json(200, { reviews, summary });
+    return json(200, { reviews, summary }, PUBLIC_CACHE);
   } catch (err) {
     console.error('get-reviews error:', err);
     return json(500, { error: 'Something went wrong loading reviews.' });

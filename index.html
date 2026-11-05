@@ -3,7 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vendoor Connect</title>
+    <title>Vendoor Connect | Nigerian event vendors, honest reviews and wedding planners</title>
+    <meta name="description" content="Find Nigerian event vendors other clients genuinely recommend, read honest reviews, download planners made for Yoruba and Igbo weddings, and book an event liaison.">
+    <link rel="canonical" href="https://vendoorconnect.com/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Vendoor Connect">
+    <meta property="og:title" content="Vendoor Connect | Nigerian event vendors, honest reviews and wedding planners">
+    <meta property="og:description" content="Find Nigerian event vendors other clients genuinely recommend, read honest reviews, download planners made for Yoruba and Igbo weddings, and book an event liaison.">
+    <meta property="og:url" content="https://vendoorconnect.com/">
+    <meta property="og:image" content="https://vendoorconnect.com/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#F3E7DA">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -94,7 +110,7 @@
         <div class="v2-wrap v3-hero-grid">
             <h1 class="v3-hero-title"><span>Every celebration,</span> <span class="v3-indent">beautifully planned.</span></h1>
             <div class="v3-hero-copy">
-                <p>Find vendors other clients genuinely recommend, plan with planners made for our traditions, and have a dedicated event liaison in your corner.</p>
+                <p>Find vendors other clients genuinely recommend, use planners made for our traditions, and have a dedicated event liaison in your corner.</p>
                 <div class="v3-hero-actions">
                     <a href="templates.html" class="btn">Browse templates</a>
                     <a href="find-vendors.html" class="btn-outline">Find vendors</a>
@@ -286,6 +302,7 @@
                 <h4>Connect with us</h4>
                 <ul>
                     <li><a href="https://www.instagram.com/vendoortemplates" target="_blank" rel="noopener" class="social-link"><svg class="icon-instagram" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>Instagram</a></li>
+                    <li><a href="https://wa.me/2348139189496" target="_blank" rel="noopener" class="social-link">WhatsApp 0813 918 9496</a></li>
                     <li><a href="mailto:vendoor.templates@gmail.com" class="social-link">vendoor.templates@gmail.com</a></li>
                 </ul>
             </div>
@@ -314,8 +331,8 @@
             if (!top.length) return;
             document.getElementById('homeVendors').innerHTML = top.map(function (l) {
                 var flags = (l.is_featured ? '<span class="badge-sponsored">Sponsored</span>' : '') + (l.is_founding ? '<span class="badge-founding">Founding Vendor</span>' : '');
-                var photo = l.photo_data_url
-                    ? '<img class="listing-photo" src="' + l.photo_data_url + '" alt="' + esc(l.business_name) + '" loading="lazy">'
+                var photo = l.photo_url
+                    ? '<img class="listing-photo" src="' + l.photo_url + '" alt="' + esc(l.business_name) + '" loading="lazy">'
                     : '<div class="listing-photo-placeholder"><span>' + esc(l.business_name.charAt(0)) + '</span></div>';
                 var rating = l.review_count
                     ? '<p class="listing-rating">' + VC.stars(l.avg_rating) + ' <span>' + Number(l.avg_rating).toFixed(1) + ' (' + l.review_count + ')</span></p>'

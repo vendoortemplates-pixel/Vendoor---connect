@@ -141,3 +141,43 @@ window.VCCart = (function () {
     a.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 21l2.1-5.4A8.4 8.4 0 1 1 21 11.5z"/></svg><span>Message us</span>';
     document.body.appendChild(a);
 })();
+
+// ===== SITE FORMS (contact, custom planner, vendor requests) =====
+// <form data-vc-form="contact|custom|vendor-request" data-success="...">
+// Sends to /.netlify/functions/send-message and thanks the person on the page.
+(function () {
+    document.querySelectorAll('form[data-vc-form]').forEach(function (form) {
+        var btn = form.querySelector('button[type="submit"]');
+        var label = btn ? btn.textContent : '';
+        var status = document.createElement('p');
+        status.className = 'form-status';
+        status.setAttribute('role', 'status');
+        form.appendChild(status);
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            var data = { kind: form.getAttribute('data-vc-form') };
+            new FormData(form).forEach(function (v, k) { data[k] = typeof v === 'string' ? v.trim() : v; });
+            var missing = Array.prototype.filter.call(form.querySelectorAll('[required]'), function (el) { return !el.value.trim(); })[0];
+            if (missing) { status.className = 'form-status form-status-error'; status.textContent = 'Please fill in ' + (missing.getAttribute('data-label') || 'the highlighted field') + '.'; missing.focus(); return; }
+            if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(data.email)) { status.className = 'form-status form-status-error'; status.textContent = 'Please check your email address.'; return; }
+            if (btn) { btn.disabled = true; btn.textContent = 'Sending...'; }
+            status.textContent = '';
+            fetch('/.netlify/functions/send-message', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+                .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { if (!r.ok) throw new Error(j.error || 'Something went wrong. Please try again.'); return j; }); })
+                .then(function () {
+                    var first = (data.name || '').split(' ')[0];
+                    var done = document.createElement('div');
+                    done.className = 'form-done';
+                    done.setAttribute('tabindex', '-1');
+                    done.innerHTML = '<h3>Thank you' + (first ? ', ' + first.replace(/[<>&"]/g, '') : '') + '.</h3><p>' + (form.getAttribute('data-success') || 'Your message is with us. We\'ll reply by email soon.') + '</p>';
+                    form.replaceWith(done);
+                    done.focus();
+                })
+                .catch(function (err) {
+                    status.className = 'form-status form-status-error';
+                    status.textContent = err.message;
+                    if (btn) { btn.disabled = false; btn.textContent = label; }
+                });
+        });
+    });
+})();

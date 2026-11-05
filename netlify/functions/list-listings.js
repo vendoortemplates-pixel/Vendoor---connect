@@ -1,7 +1,7 @@
 // Public: vendor directory. Optional ?category=, ?q= (name/description/city),
 // ?city=, ?sort=newest|rating. Founding members are listed first (priority
 // placement); is_featured marks paid Sponsored placements. Never exposes vendor_email / vendor_id.
-const { getDb, rowsOf, json, clean } = require('../lib/common');
+const { getDb, rowsOf, json, clean, PUBLIC_CACHE, photoUrl } = require('../lib/common');
 
 exports.handler = async (event) => {
   const p = event.queryStringParameters || {};
@@ -16,7 +16,7 @@ exports.handler = async (event) => {
     const db = getDb();
     const result = await db.sql`
       SELECT l.id, l.business_name, l.category, l.city, l.price, l.description, l.portfolio,
-             l.instagram, l.photo_data_url, l.created_at,
+             l.instagram, (l.photo_data_url IS NOT NULL AND l.photo_data_url <> '') AS has_photo, l.updated_at, l.created_at,
              (l.membership = 'founding' AND (l.membership_until IS NULL OR l.membership_until > NOW())) AS is_founding,
              (l.featured_until IS NOT NULL AND l.featured_until > NOW()) AS is_featured,
              COALESCE(r.avg_rating, 0) AS avg_rating, COALESCE(r.review_count, 0) AS review_count
@@ -30,12 +30,13 @@ exports.handler = async (event) => {
         AND (${city} = '' OR l.city ILIKE ${cityLike})
         AND (${q} = '' OR l.business_name ILIKE ${like} OR l.description ILIKE ${like} OR l.city ILIKE ${like})
       ORDER BY (l.membership = 'founding' AND (l.membership_until IS NULL OR l.membership_until > NOW())) DESC NULLS LAST, l.created_at DESC
+      LIMIT 1000
     `;
-    let listings = rowsOf(result).map(l => Object.assign(l, { avg_rating: Number(l.avg_rating), review_count: Number(l.review_count), is_founding: !!l.is_founding, is_featured: !!l.is_featured }));
+    let listings = rowsOf(result).map(l => Object.assign(l, { photo_url: photoUrl(l), has_photo: undefined, updated_at: undefined, avg_rating: Number(l.avg_rating), review_count: Number(l.review_count), is_founding: !!l.is_founding, is_featured: !!l.is_featured }));
     if (byRating) {
       listings.sort((a, b) => (b.is_founding - a.is_founding) || (b.avg_rating - a.avg_rating) || (b.review_count - a.review_count));
     }
-    return json(200, { listings });
+    return json(200, { listings }, PUBLIC_CACHE);
   } catch (err) {
     console.error('list-listings error:', err);
     return json(500, { error: 'Something went wrong loading vendors.' });

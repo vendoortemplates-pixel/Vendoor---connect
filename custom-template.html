@@ -3,7 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Custom Templates | Vendoor Connect</title>
+    <title>Custom Planner | Vendoor Connect</title>
+    <meta name="description" content="Tell us about your celebration and we will design a planner around it: any culture, any event, your traditions.">
+    <link rel="canonical" href="https://vendoorconnect.com/custom-template.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Vendoor Connect">
+    <meta property="og:title" content="Custom Planner | Vendoor Connect">
+    <meta property="og:description" content="Tell us about your celebration and we will design a planner around it: any culture, any event, your traditions.">
+    <meta property="og:url" content="https://vendoorconnect.com/custom-template.html">
+    <meta property="og:image" content="https://vendoorconnect.com/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#F3E7DA">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -91,8 +107,8 @@
 
     <!-- PAGE HEADER -->
     <section class="page-header">
-        <h1>Customize Your Own Planner</h1>
-        <p>Can't find the perfect fit? Tell us about your celebration and we will design a planning template tailored to it.</p>
+        <h1>A planner made for your celebration</h1>
+        <p>Planning a Hausa wedding, a 60th birthday or something we don't sell yet? Tell us about it and we'll design a planner around your celebration.</p>
     </section>
 
     <!-- HOW IT WORKS -->
@@ -107,12 +123,12 @@
             <div class="process-step">
                 <span class="process-number">2</span>
                 <h3>We review it within 24 to 48 hours</h3>
-                <p>Our team looks over your request and reaches out by email to confirm the details.</p>
+                <p>We read your request and email you to confirm the details and the price.</p>
             </div>
             <div class="process-step">
                 <span class="process-number">3</span>
                 <h3>We schedule a call</h3>
-                <p>A quick call to walk through exactly what you need, so the template fits your celebration perfectly.</p>
+                <p>A short call to go through the sections, traditions and details you want included.</p>
             </div>
             <div class="process-step">
                 <span class="process-number">4</span>
@@ -125,39 +141,37 @@
     <!-- CUSTOM REQUEST FORM -->
     <div class="review-form-block">
         <h2>Tell us about your celebration</h2>
-        <form class="contact-form" name="custom-template-request" method="POST" data-netlify="true" netlify-honeypot="bot-field">
-            <input type="hidden" name="form-name" value="custom-template-request">
-            <p class="form-hidden">
-                <label>Don't fill this out if you're human: <input name="bot-field"></label>
-            </p>
-
-            <input type="text" name="name" placeholder="Your name" required>
-            <input type="email" name="email" placeholder="Your email" required>
-            <select name="event-type" required>
+        <form class="contact-form" data-vc-form="custom" data-success="We have your request and will email you within 24 to 48 hours to talk through your planner." novalidate>
+            <p class="form-hidden"><label>Leave this empty: <input name="website" tabindex="-1" autocomplete="off"></label></p>
+            <input type="text" name="name" placeholder="Your name" autocomplete="name" required data-label="your name">
+            <input type="email" name="email" placeholder="Your email" autocomplete="email" required data-label="your email">
+            <input type="tel" name="phone" placeholder="WhatsApp number (optional)" autocomplete="tel">
+            <select name="eventType" required data-label="what you are celebrating">
                 <option value="">What are you celebrating?</option>
-                <option value="yoruba-wedding">Yoruba wedding</option>
-                <option value="igbo-wedding">Igbo wedding</option>
-                <option value="other-traditional">Another traditional wedding (Hausa, Edo, Efik and more)</option>
-                <option value="welcome-party">Wedding welcome party</option>
-                <option value="white-wedding">White wedding</option>
-                <option value="introduction">Introduction / engagement</option>
-                <option value="bridal-shower">Bridal shower or bachelorette</option>
-                <option value="birthday">Birthday or anniversary</option>
-                <option value="other">Something else</option>
+                <option>Yoruba wedding</option>
+                <option>Igbo wedding</option>
+                <option>Another traditional wedding (Hausa, Edo, Efik and more)</option>
+                <option>Wedding welcome party</option>
+                <option>White wedding</option>
+                <option>Introduction or engagement</option>
+                <option>Bridal shower or bachelorette</option>
+                <option>Birthday or anniversary</option>
+                <option>Something else</option>
             </select>
-            <input type="date" name="event-date" placeholder="Approximate event date">
+            <label class="form-field-label" for="ctDate">Event date, if you know it</label>
+            <input type="date" id="ctDate" name="eventDate">
             <select name="budget">
-                <option value="">Budget range (optional)</option>
-                <option value="under-20k">Under ₦20,000</option>
-                <option value="20k-50k">₦20,000 to ₦50,000</option>
-                <option value="50k-100k">₦50,000 to ₦100,000</option>
-                <option value="100k-plus">₦100,000 and above</option>
-                <option value="not-sure">Not sure yet</option>
+                <option value="">Budget for your planner (optional)</option>
+                <option>Under ₦20,000</option>
+                <option>₦20,000 to ₦50,000</option>
+                <option>₦50,000 to ₦100,000</option>
+                <option>₦100,000 and above</option>
+                <option>Not sure yet</option>
             </select>
-            <textarea name="details" placeholder="Tell us more, if you'd like (optional)"></textarea>
+            <textarea name="message" placeholder="Anything else we should know? Your traditions, colours, the sections you need (optional)"></textarea>
             <button type="submit" class="btn">Send my request</button>
         </form>
-        <p class="form-note">Prefer to talk it through instead? Email us at <a href="mailto:Vendoor.templates@gmail.com">Vendoor.templates@gmail.com</a> and we will set up a quick call.</p>
+        <p class="form-note">Prefer to talk it through? <a href="https://wa.me/2348139189496?text=Hello%20Vendoor%20Connect%2C%20I%27d%20like%20a%20custom%20planner" target="_blank" rel="noopener">Message us on WhatsApp</a> or email <a href="mailto:vendoor.templates@gmail.com">vendoor.templates@gmail.com</a>.</p>
     </div>
 
     <!-- FOOTER -->
@@ -198,6 +212,7 @@
                 <h4>Connect with us</h4>
                 <ul>
                     <li><a href="https://www.instagram.com/vendoortemplates" target="_blank" rel="noopener" class="social-link"><svg class="icon-instagram" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>Instagram</a></li>
+                    <li><a href="https://wa.me/2348139189496" target="_blank" rel="noopener" class="social-link">WhatsApp 0813 918 9496</a></li>
                     <li><a href="mailto:vendoor.templates@gmail.com" class="social-link">vendoor.templates@gmail.com</a></li>
                 </ul>
             </div>

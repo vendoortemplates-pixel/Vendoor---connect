@@ -2,7 +2,7 @@
 //   GET  -> { foundingLimit, foundingTaken, foundingLeft }
 //   POST { businessName, contactName, email, phone, interest, message, website(honeypot) }
 // Memberships are activated by hand from admin.html once payment is confirmed.
-const { getDb, rowsOf, json, parseBody, clean, ipHash, currentUser, FOUNDING_LIMIT } = require('../lib/common');
+const { getDb, rowsOf, json, parseBody, clean, ipHash, currentUser, FOUNDING_LIMIT, PUBLIC_CACHE } = require('../lib/common');
 const { notifyOwner } = require('../lib/email');
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -21,7 +21,7 @@ exports.handler = async (event, context) => {
         SELECT COUNT(*)::int AS n FROM listings WHERE membership = 'founding' AND (membership_until IS NULL OR membership_until > NOW())
       `)[0] || { n: 0 };
       const taken = Number(r.n);
-      return json(200, { foundingLimit: FOUNDING_LIMIT, foundingTaken: taken, foundingLeft: Math.max(0, FOUNDING_LIMIT - taken) });
+      return json(200, { foundingLimit: FOUNDING_LIMIT, foundingTaken: taken, foundingLeft: Math.max(0, FOUNDING_LIMIT - taken) }, PUBLIC_CACHE);
     }
     if (event.httpMethod !== 'POST') return json(405, { error: 'Method Not Allowed' });
 

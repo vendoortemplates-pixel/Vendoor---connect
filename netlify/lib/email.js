@@ -119,7 +119,7 @@ async function sendOrderEmail(order, force) {
 }
 
 // Short heads-up to the owner's inbox (new membership enquiry, review dispute).
-async function notifyOwner(subject, lines) {
+async function notifyOwner(subject, lines, replyTo) {
   const key = process.env.RESEND_API_KEY;
   if (!key) return { ok: false, error: 'RESEND_API_KEY is not set' };
   const text = lines.join('\n');
@@ -130,7 +130,7 @@ async function notifyOwner(subject, lines) {
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: { Authorization: 'Bearer ' + key, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ from: FROM, to: [OWNER], subject, html, text })
+      body: JSON.stringify(Object.assign({ from: FROM, to: [OWNER], subject, html, text }, replyTo ? { reply_to: replyTo } : {}))
     });
     return { ok: res.ok };
   } catch (e) { return { ok: false, error: e && e.message }; }

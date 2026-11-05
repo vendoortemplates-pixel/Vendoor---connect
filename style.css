@@ -3037,3 +3037,40 @@ footer::before { content: ''; position: absolute; left: 0; right: 0; top: 0; hei
 .wa-float:hover { background: var(--terracotta); transform: translateY(-1px); }
 @media (max-width: 480px) { .wa-float { right: 14px; bottom: 14px; padding: 12px; } .wa-float span { display: none; } }
 @media print { .wa-float { display: none; } }
+.form-done { padding: 28px 0 8px; outline: none; }
+.form-done h3 { font-family: var(--font-heading); font-weight: 500; font-size: 28px; color: var(--cocoa); margin: 0 0 8px; }
+.form-done p { color: var(--text-muted); font-size: 16px; line-height: 1.65; margin: 0; max-width: 46ch; }
+.form-field-label { display: block; font-size: 13px; font-weight: 500; color: var(--cocoa); margin: 4px 0 6px; }
+
+/* ===== Launch polish (Nov 2026) ===== */
+/* Founding badge: plain label, no sparkle */
+.badge-founding::before { content: none; }
+/* Featured vendors line up with the directory below */
+.featured-vendors { max-width: none; padding: 48px max(24px, calc((100vw - 1180px) / 2)) 24px; }
+.form-intro { color: var(--text-muted); margin: -4px 0 18px; font-size: 15.5px; line-height: 1.6; max-width: 46ch; }
+/* Category filters: one swipeable row on phones */
+@media (max-width: 640px) {
+  .filters { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: 8px; margin-right: 0; scroll-padding-left: 24px; }
+  .filters::-webkit-scrollbar { display: none; }
+  .filters .filter-btn { flex: 0 0 auto; }
+}
+/* Editorial feature lists instead of boxed panels */
+.value-card, .how-reviews-grid > div, .el-benefits > div { background: none; border: none; border-radius: 0; padding: 0; position: relative; }
+.value-card::before, .how-reviews-grid > div::before, .el-benefits > div::before { content: ''; display: block; width: 28px; height: 2px; background: var(--gold); margin-bottom: 16px; }
+.values-grid, .how-reviews-grid, .el-benefits { gap: 40px 64px; }
+.el-benefits { grid-template-columns: repeat(3, 1fr); }
+.value-card h3, .how-reviews-grid h3, .el-benefits h4 { font-size: 23px; font-weight: 500; margin: 0 0 8px; }
+.value-card p, .how-reviews-grid p, .el-benefits p { font-size: 15.5px; line-height: 1.65; max-width: 44ch; }
+.mem-steps { gap: 40px; }
+.mem-steps li, .mem-steps li + li { background: none; padding: 0 !important; display: block; }
+.mem-steps li span { display: block; font-family: var(--font-heading); font-size: 44px; font-weight: 500; line-height: 1; color: var(--terracotta); margin: 0 0 14px; }
+.mem-steps li span::after { content: none; }
+.mem-steps h3 { font-size: 23px; font-weight: 500; }
+@media (max-width: 900px) { .el-benefits { grid-template-columns: 1fr 1fr; } .mem-steps { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .values-grid, .how-reviews-grid, .el-benefits, .mem-steps { grid-template-columns: 1fr; gap: 32px; } }
+.confirmation-section .section-eyebrow { display: none; }
+@media (max-width: 768px) { .contact-section { align-items: stretch; } .contact-form-wrap, .contact-info-wrap { width: 100%; } }
+/* About: the turning point in the founder story, set quietly in the heading serif */
+.story-content p.story-turn, .story-turn { font-family: var(--font-heading); font-size: 26px; font-weight: 500; line-height: 1.3; color: var(--cocoa); margin: 30px 0 14px; }
+@media (max-width: 600px) { .story-content p.story-turn { font-size: 23px; } }
+.story-content .story-signoff em { color: var(--terracotta); font-size: 23px; font-weight: 600; margin-top: 6px; }

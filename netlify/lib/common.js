@@ -57,7 +57,10 @@ async function ensureSchema(base) {
         id SERIAL PRIMARY KEY, reference TEXT NOT NULL UNIQUE, listing_id INTEGER, package TEXT NOT NULL, email TEXT,
         amount_kobo INTEGER NOT NULL, paid_at TIMESTAMP, active_until TIMESTAMP, created_at TIMESTAMP NOT NULL DEFAULT NOW())`,
     () => base.sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS items TEXT`,
-    () => base.sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS resent_at TIMESTAMP`
+    () => base.sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS resent_at TIMESTAMP`,
+    () => base.sql`CREATE TABLE IF NOT EXISTS messages (
+        id SERIAL PRIMARY KEY, kind TEXT NOT NULL, name TEXT NOT NULL, email TEXT NOT NULL, phone TEXT, subject TEXT,
+        details TEXT, message TEXT, status TEXT NOT NULL DEFAULT 'new', ip_hash TEXT, created_at TIMESTAMP NOT NULL DEFAULT NOW())`
   ];
   const probe = await base.sql`
     SELECT
@@ -70,13 +73,13 @@ async function ensureSchema(base) {
       (SELECT COUNT(*)::int FROM information_schema.columns WHERE table_name = 'reviews' AND column_name IN ('dispute_reason','disputed_at','dispute_resolved_at')) AS d,
       (SELECT COUNT(*)::int FROM information_schema.tables WHERE table_name IN ('listing_stats','membership_inquiries','liaison_requests')) AS s,
       (SELECT COUNT(*)::int FROM information_schema.columns WHERE table_name = 'listings' AND column_name IN ('featured_package','featured_reminded','membership_reminded')) AS fp,
-      (SELECT COUNT(*)::int FROM information_schema.tables WHERE table_name = 'package_orders') AS po,
+      (SELECT COUNT(*)::int FROM information_schema.tables WHERE table_name IN ('package_orders','messages')) AS po,
       (SELECT COUNT(*)::int FROM information_schema.columns WHERE table_name = 'orders' AND column_name IN ('items','resent_at')) AS oi
   `;
   const p = rowsOf(probe)[0] || {};
   if (Number(p.r) === 7 && Number(p.l) === 3 && Number(p.o) === 1 && Number(p.e) === 2 && Number(p.t) === 1
       && Number(p.m) === 3 && Number(p.d) === 3 && Number(p.s) === 3
-      && Number(p.fp) === 3 && Number(p.po) === 1 && Number(p.oi) === 2) return;
+      && Number(p.fp) === 3 && Number(p.po) === 2 && Number(p.oi) === 2) return;
   for (const step of steps) {
     try { await step(); } catch (e) { console.error('ensureSchema step failed:', e && e.message); }
   }
@@ -116,6 +119,22 @@ function json(statusCode, body, extraHeaders) {
     headers: Object.assign({ 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }, extraHeaders || {}),
     body: JSON.stringify(body)
   };
+}
+
+// Public read endpoints: let Netlify's CDN serve one cached copy per URL for a
+// minute (and a slightly stale copy while it refreshes), so a rush of visitors
+// costs a handful of database queries instead of one per visitor.
+const PUBLIC_CACHE = {
+  'Cache-Control': 'public, max-age=0, must-revalidate',
+  'Netlify-CDN-Cache-Control': 'public, durable, s-maxage=60, stale-while-revalidate=300',
+  'Netlify-Vary': 'query'
+};
+
+// Listing photos are served by listing-photo, never inlined in list responses.
+function photoUrl(l) {
+  if (!l || !l.has_photo) return null;
+  const v = l.updated_at ? new Date(l.updated_at).getTime() : 0;
+  return '/.netlify/functions/listing-photo?id=' + l.id + '&v=' + v;
 }
 
 function parseBody(event) {
@@ -185,4 +204,4 @@ const FOUNDING_LIMIT = 50;
 const FEATURED_LIMIT = 5;
 const STAT_KINDS = ['view', 'whatsapp', 'instagram', 'website'];
 
-module.exports = { FEATURED_LIMIT, FOUNDING_LIMIT, STAT_KINDS, getDb, rowsOf, json, parseBody, currentUser, isAdmin, clean, safeUrl, normalizePhone, ipHash, CATEGORIES, validPhoto };
+module.exports = { PUBLIC_CACHE, photoUrl, FEATURED_LIMIT, FOUNDING_LIMIT, STAT_KINDS, getDb, rowsOf, json, parseBody, currentUser, isAdmin, clean, safeUrl, normalizePhone, ipHash, CATEGORIES, validPhoto };

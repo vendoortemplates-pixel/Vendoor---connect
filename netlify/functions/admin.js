@@ -35,6 +35,7 @@ exports.handler = async (event, context) => {
             (SELECT COUNT(*)::int FROM listings WHERE membership = 'founding') AS founding_members,
             (SELECT COUNT(*)::int FROM listings WHERE featured_until > NOW()) AS featured_now,
             (SELECT COUNT(*)::int FROM liaison_requests WHERE status = 'new') AS new_liaison,
+            (SELECT COUNT(*)::int FROM messages WHERE status = 'new') AS new_messages,
             (SELECT COUNT(*)::int FROM reviews WHERE status = 'approved' AND disputed_at IS NOT NULL AND dispute_resolved_at IS NULL) AS open_disputes
         `)[0];
         Object.keys(r).forEach(k => { r[k] = Number(r[k]); });
@@ -82,6 +83,13 @@ exports.handler = async (event, context) => {
           ORDER BY (i.status = 'new') DESC, i.created_at DESC LIMIT 300
         `);
         return json(200, { inquiries: rows });
+      }
+      if (view === 'messages') {
+        const rows = rowsOf(await db.sql`
+          SELECT id, kind, name, email, phone, subject, details, message, status, created_at FROM messages
+          ORDER BY (status = 'new') DESC, created_at DESC LIMIT 300
+        `);
+        return json(200, { messages: rows });
       }
       if (view === 'liaison') {
         const rows = rowsOf(await db.sql`
@@ -153,6 +161,13 @@ exports.handler = async (event, context) => {
         const st = ['new', 'contacted', 'booked', 'closed'].indexOf(data.status) !== -1 ? data.status : null;
         if (!rid || !st) return json(400, { error: 'Invalid update.' });
         await db.sql`UPDATE liaison_requests SET status = ${st} WHERE id = ${rid}`;
+        return json(200, { ok: true });
+      }
+      if (data.action === 'message-status') {
+        const mid = parseInt(data.messageId, 10);
+        const st = ['new', 'replied', 'closed'].indexOf(data.status) !== -1 ? data.status : null;
+        if (!mid || !st) return json(400, { error: 'Invalid update.' });
+        await db.sql`UPDATE messages SET status = ${st} WHERE id = ${mid}`;
         return json(200, { ok: true });
       }
       if (reviewId && data.action === 'resolve-dispute') {

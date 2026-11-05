@@ -5,6 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
 <title>Admin | Vendoor Connect</title>
+    <meta name="description" content="Admin">
+    <meta name="robots" content="noindex">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Vendoor Connect">
+    <meta property="og:title" content="Admin | Vendoor Connect">
+    <meta property="og:description" content="Admin">
+    <meta property="og:url" content="https://vendoorconnect.com/admin.html">
+    <meta property="og:image" content="https://vendoorconnect.com/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#F3E7DA">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -46,7 +62,7 @@
 .table-scroll { overflow-x: auto; }
 .admin-empty { padding: 40px 0; color: var(--text-muted); font-size: 15px; }
 .status-pill { font-size: 12px; font-weight: 600; padding: 3px 9px; background: var(--ivory); border: 1px solid var(--border-light); }
-.summary-2 { margin-top: -24px; grid-template-columns: repeat(5, 1fr); }
+.summary-2 { margin-top: -24px; grid-template-columns: repeat(6, 1fr); }
 .summary b { font-variant-numeric: lining-nums; }
 .admin-help { font-size: 14px; color: var(--text-muted); margin: 0 0 16px; line-height: 1.55; }
 .admin-subhead { font-family: var(--font-heading, Georgia, serif); font-size: 20px; color: var(--cocoa, #5B4636); margin: 28px 0 10px; }
@@ -166,6 +182,7 @@
             <div><b id="sFounding">–</b><span>Founding members (of 50)</span></div>
             <div><b id="sFeatured">–</b><span>Sponsored placements live</span></div>
             <div class="attn"><b id="sDisputes">–</b><span>Open review disputes</span></div>
+            <div class="attn"><b id="sMessages">–</b><span>New messages</span></div>
         </div>
         <div class="admin-tabs" role="tablist">
             <button role="tab" data-view="pending" aria-selected="true">Waiting for approval</button>
@@ -176,6 +193,7 @@
             <button role="tab" data-view="listings" aria-selected="false">Vendors &amp; memberships</button>
             <button role="tab" data-view="inquiries" aria-selected="false">Membership enquiries</button>
             <button role="tab" data-view="liaison" aria-selected="false">Liaison consultations</button>
+            <button role="tab" data-view="messages" aria-selected="false">Messages</button>
         </div>
         <p class="error-msg" id="appError" role="alert"></p>
         <div id="panel"></div>
@@ -250,6 +268,7 @@
         if (view === 'orders') return api('admin?view=orders').then(renderOrders).catch(function (e) { showError(e.message); });
         if (view === 'listings') return api('admin?view=listings').then(renderListings).catch(function (e) { showError(e.message); });
         if (view === 'inquiries') return api('admin?view=inquiries').then(renderInquiries).catch(function (e) { showError(e.message); });
+        if (view === 'messages') return api('admin?view=messages').then(renderMessages).catch(function (e) { showError(e.message); });
         if (view === 'liaison') return api('admin?view=liaison').then(renderLiaison).catch(function (e) { showError(e.message); });
         api('admin?view=reviews&status=' + view).then(renderReviews).catch(function (e) { showError(e.message); });
     }
@@ -294,6 +313,7 @@
         $('sFounding').textContent = s.founding_members;
         $('sFeatured').textContent = s.featured_now;
         $('sDisputes').textContent = s.open_disputes;
+        $('sMessages').textContent = s.new_messages;
     }
     function refreshCounts() {
         api('admin?view=summary').then(function (d) { $('sPending').textContent = d.summary.pending_reviews; $('sApproved').textContent = d.summary.approved_reviews; fillSummary2(d.summary); });
@@ -413,6 +433,29 @@
             btn.addEventListener('click', function () {
                 btn.disabled = true;
                 api('admin', { method: 'POST', body: JSON.stringify({ action: 'liaison-status', requestId: btn.closest('.mod-card').dataset.id, status: btn.dataset.lst }) })
+                    .then(function () { load(); refreshCounts(); })
+                    .catch(function (e) { btn.disabled = false; showError(e.message); });
+            });
+        });
+    }
+
+    var MSG_KINDS = { contact: 'Contact form', custom: 'Custom planner request', 'vendor-request': 'Looking for a vendor' };
+    function renderMessages(d) {
+        var rows = d.messages || [];
+        if (!rows.length) { $('panel').innerHTML = '<p class="admin-empty">No messages yet. Messages from the Contact page, custom planner requests and vendor requests arrive here and in your Gmail.</p>'; return; }
+        $('panel').innerHTML = '<p class="admin-help">Each message is also in your Gmail. Replying there goes straight to the person. Mark them here as you go.</p>' +
+            rows.map(function (m) {
+                var subj = encodeURIComponent('Re: ' + (m.subject || MSG_KINDS[m.kind] || 'your message'));
+                return '<div class="mod-card" data-id="' + m.id + '"><div class="top"><h3>' + esc(m.name) + '<small>' + esc(MSG_KINDS[m.kind] || m.kind) + (m.subject ? ': ' + esc(m.subject) : '') + '</small></h3><span class="status-pill">' + esc(m.status) + '</span></div>' +
+                    '<p class="meta">' + ['<a href="mailto:' + esc(m.email) + '?subject=' + subj + '">' + esc(m.email) + '</a>', esc(m.phone || ''), VC.date(m.created_at)].filter(Boolean).join(', ') + '</p>' +
+                    (m.details ? '<p class="meta">' + esc(m.details).replace(/\n/g, ' · ') + '</p>' : '') +
+                    (m.message ? '<p class="text">' + esc(m.message) + '</p>' : '') +
+                    '<div class="mod-actions">' + ['replied', 'closed', 'new'].filter(function (st) { return st !== m.status; }).map(function (st) { return '<button data-mst="' + st + '">Mark ' + st + '</button>'; }).join('') + '</div></div>';
+            }).join('');
+        $('panel').querySelectorAll('button[data-mst]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                btn.disabled = true;
+                api('admin', { method: 'POST', body: JSON.stringify({ action: 'message-status', messageId: btn.closest('.mod-card').dataset.id, status: btn.dataset.mst }) })
                     .then(function () { load(); refreshCounts(); })
                     .catch(function (e) { btn.disabled = false; showError(e.message); });
             });
