@@ -3132,3 +3132,80 @@ footer::before { content: ''; position: absolute; left: 0; right: 0; top: 0; hei
 .v4-fv-points strong { display: block; font-family: var(--font-heading); font-size: 23px; font-weight: 500; color: var(--cocoa); margin-bottom: 4px; }
 .v4-fv-points span { color: var(--text-muted); font-size: 15px; line-height: 1.6; }
 @media (max-width: 900px) { .v4-forvendors { padding: 80px 0; } .v4-fv-card { grid-template-columns: 1fr; gap: 40px; } .v4-fv-copy h2 { font-size: 38px; } }
+
+/* ===== Homepage, editorial (luxury) layout ===== */
+.lx-link { display: inline-block; color: var(--cocoa); font-size: 15px; font-weight: 500; text-decoration: none; padding-bottom: 3px; border-bottom: 1px solid currentColor; transition: color .2s, border-color .2s; }
+.lx-link:hover { color: var(--terracotta); }
+.lx-link-strong { font-size: 16px; }
+.lx-hero-actions { display: flex; align-items: center; gap: 30px; flex-wrap: wrap; }
+
+/* Planners: a boutique shelf */
+.lx-planners { padding: 128px 0 120px; background: #FBF8F3; }
+.lx-row-head { display: grid; grid-template-columns: auto 1fr auto; align-items: baseline; gap: 32px; margin-bottom: 56px; }
+.lx-row-head h2, .lx-row-head h3 { font-family: var(--font-heading); font-weight: 500; font-size: 44px; color: var(--cocoa); margin: 0; letter-spacing: -.3px; }
+.lx-row-head p { margin: 0; color: var(--text-muted); font-size: 16px; }
+.lx-row-head-sm h3 { font-size: 30px; }
+.lx-shelf { display: grid; grid-template-columns: repeat(4, 1fr); gap: 36px; }
+.lx-item { display: grid; grid-template-columns: 1fr auto; row-gap: 18px; text-decoration: none; color: var(--cocoa); }
+.lx-item-img { grid-column: 1 / -1; display: block; background: #F1E8DC; aspect-ratio: 4 / 5; overflow: hidden; }
+.lx-item-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .8s cubic-bezier(.2,.7,.2,1); }
+.lx-item:hover .lx-item-img img { transform: scale(1.04); }
+.lx-item-name { font-family: var(--font-heading); font-size: 22px; font-weight: 500; }
+.lx-item-price { font-size: 14.5px; color: var(--text-muted); align-self: center; }
+
+/* Event liaison: one centred statement */
+.lx-liaison { position: relative; background: #4A3729; padding: 150px 24px 140px; text-align: center; }
+.lx-liaison-inner { max-width: 860px; margin: 0 auto; }
+.lx-liaison h2 { font-family: var(--font-heading); font-style: italic; font-weight: 500; font-size: 56px; line-height: 1.12; color: #FBF5EC; margin: 0 0 30px; letter-spacing: -.3px; }
+.lx-liaison p { color: #D6C7B7; font-size: 17.5px; line-height: 1.8; font-weight: 300; max-width: 56ch; margin: 0 auto 30px; }
+.lx-liaison-paths { display: flex; justify-content: center; align-items: center; gap: 16px; margin: 0 0 44px; color: var(--gold); }
+.lx-liaison-paths a { color: #FBF5EC; text-decoration: none; font-size: 15.5px; border-bottom: 1px solid var(--gold); padding-bottom: 3px; }
+.lx-liaison-paths a:hover { color: var(--gold); }
+.btn.lx-btn-light { background: #FBF5EC; color: var(--cocoa); }
+.btn.lx-btn-light:hover { background: var(--gold); color: var(--cocoa); }
+
+/* Vendors: asymmetric, with categories set as type */
+.lx-vendors { padding: 136px 0 120px; background: #FBF8F3; }
+.lx-vendors-grid { display: grid; grid-template-columns: 5fr 6fr; gap: 110px; align-items: start; }
+.lx-vendors-intro h2 { font-family: var(--font-heading); font-weight: 500; font-size: 52px; line-height: 1.06; color: var(--cocoa); margin: 0 0 24px; letter-spacing: -.3px; }
+.lx-vendors-intro p { color: var(--text-muted); font-size: 17px; line-height: 1.8; margin: 0 0 40px; max-width: 42ch; }
+.lx-search { display: flex; align-items: center; border-bottom: 1px solid var(--cocoa); max-width: 440px; }
+.lx-search input { flex: 1; min-width: 0; border: none; background: transparent; outline: none; padding: 14px 0; font: inherit; font-size: 17px; color: var(--cocoa); }
+.lx-search input::placeholder { color: #A39383; }
+.lx-search button { background: none; border: none; font: inherit; font-size: 15px; font-weight: 500; color: var(--cocoa); cursor: pointer; padding: 14px 0 14px 16px; }
+.lx-search button:hover { color: var(--terracotta); }
+.lx-search:focus-within { border-bottom-color: var(--terracotta); }
+.lx-cats { display: flex; flex-direction: column; border-top: 1px solid var(--border-light); }
+.lx-cats a { display: flex; justify-content: space-between; align-items: baseline; padding: 14px 0; border-bottom: 1px solid var(--border-light); font-family: var(--font-heading); font-size: 34px; font-weight: 500; color: var(--cocoa); text-decoration: none; transition: color .25s, padding-left .3s; }
+.lx-cats a::after { content: '\2192'; font-family: var(--font-body); font-size: 18px; opacity: 0; transform: translateX(-8px); transition: opacity .25s, transform .3s; }
+.lx-cats a:hover { color: var(--terracotta); padding-left: 10px; }
+.lx-cats a:hover::after { opacity: 1; transform: none; }
+.lx-picks { margin-top: 110px; }
+
+/* Reviews: quieter */
+.v2-reviews { background: #F3E9DD; }
+.v2-reviews .home-reviews-actions .btn-outline { background: none; border: none; padding: 0 0 3px; border-bottom: 1px solid currentColor; border-radius: 0; color: var(--cocoa); }
+
+/* For vendors: a single line */
+.lx-forvendors { padding: 70px 0; background: #FBF8F3; border-top: 1px solid var(--border-light); }
+.lx-fv-row { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 48px; }
+.lx-fv-row h2 { font-family: var(--font-heading); font-weight: 500; font-size: 32px; color: var(--cocoa); margin: 0; }
+.lx-fv-row p { margin: 0; color: var(--text-muted); font-size: 16px; line-height: 1.6; }
+
+@media (max-width: 1000px) {
+  .lx-shelf { grid-template-columns: repeat(2, 1fr); gap: 28px 20px; }
+  .lx-vendors-grid { grid-template-columns: 1fr; gap: 56px; }
+  .lx-row-head { grid-template-columns: 1fr auto; } .lx-row-head p { grid-column: 1 / -1; grid-row: 2; }
+  .lx-fv-row { grid-template-columns: 1fr; gap: 14px; }
+}
+@media (max-width: 640px) {
+  .lx-planners, .lx-vendors { padding: 84px 0; }
+  .lx-row-head { margin-bottom: 36px; } .lx-row-head h2 { font-size: 34px; }
+  .lx-item-name { font-size: 18px; } .lx-item-price { font-size: 13px; grid-column: 1 / -1; margin-top: -12px; }
+  .lx-liaison { padding: 100px 22px 96px; } .lx-liaison h2 { font-size: 36px; }
+  .lx-vendors-intro h2 { font-size: 38px; }
+  .lx-cats a { font-size: 27px; padding: 12px 0; }
+  .lx-hero-actions { gap: 22px; }
+}
+
+.lx-cats a { text-align: left; }
