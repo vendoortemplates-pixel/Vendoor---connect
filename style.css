@@ -3074,3 +3074,61 @@ footer::before { content: ''; position: absolute; left: 0; right: 0; top: 0; hei
 .story-content p.story-turn, .story-turn { font-family: var(--font-heading); font-size: 26px; font-weight: 500; line-height: 1.3; color: var(--cocoa); margin: 30px 0 14px; }
 @media (max-width: 600px) { .story-content p.story-turn { font-size: 23px; } }
 .story-content .story-signoff em { color: var(--terracotta); font-size: 23px; font-weight: 600; margin-top: 6px; }
+
+/* ===== Homepage v4: liaison, vendors, for vendors ===== */
+/* Event liaison: warm, open, two clear paths without boxes */
+.v4-liaison { position: relative; background: #4A3729; padding: 116px 0 110px; }
+.v4-liaison-grid { display: grid; grid-template-columns: 6fr 5fr; gap: 88px; align-items: start; }
+.v4-liaison h2 { font-family: var(--font-heading); font-weight: 500; font-size: 48px; line-height: 1.08; color: #FBF5EC; margin: 0 0 22px; max-width: 16ch; }
+.v4-liaison-copy > p { color: #DCCDBD; font-size: 17px; line-height: 1.8; font-weight: 300; margin: 0 0 22px; max-width: 50ch; }
+.v4-liaison-copy .v4-liaison-quote { font-family: var(--font-heading); font-style: italic; font-size: 25px; line-height: 1.4; color: var(--gold); font-weight: 500; margin: 30px 0 34px; max-width: 30ch; }
+.v4-liaison-actions { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+.v4-liaison-note { color: #BCA995; font-size: 14.5px; }
+.v4-paths { display: grid; gap: 0; padding-top: 6px; }
+.v4-path { display: block; text-decoration: none; padding: 30px 0 32px; border-top: 1px solid rgba(200,169,106,.35); transition: padding-left .25s; }
+.v4-path:last-child { border-bottom: 1px solid rgba(200,169,106,.35); }
+.v4-path:hover { padding-left: 8px; }
+.v4-path-when { display: block; font-size: 14px; color: var(--gold); margin-bottom: 8px; }
+.v4-path h3 { font-family: var(--font-heading); font-size: 29px; font-weight: 500; color: #FBF5EC; margin: 0 0 10px; }
+.v4-path p { color: #CDBEAE; font-size: 15.5px; line-height: 1.75; margin: 0 0 14px; font-weight: 300; }
+.v4-path-more { color: #FBF5EC; font-size: 14.5px; font-weight: 500; border-bottom: 1px solid var(--gold); padding-bottom: 2px; }
+@media (max-width: 900px) { .v4-liaison { padding: 84px 0 80px; } .v4-liaison-grid { grid-template-columns: 1fr; gap: 40px; } .v4-liaison h2 { font-size: 38px; } .v4-liaison-copy .v4-liaison-quote { font-size: 22px; } }
+
+/* Vendors: search first, then inviting category tiles */
+.v4-vendors { padding: 112px 0 104px; }
+.v4-vendors-top { max-width: 860px; }
+.v4-vendors-head h2 { font-family: var(--font-heading); font-size: 48px; font-weight: 500; color: var(--cocoa); line-height: 1.08; margin: 0 0 16px; }
+.v4-vendors-head p { color: var(--text-muted); font-size: 17px; line-height: 1.75; margin: 0 0 30px; max-width: 60ch; }
+.v4-search { max-width: none; }
+.v4-trust { margin: 14px 0 0; font-size: 14.5px; color: var(--text-muted); }
+.v4-trust a { color: var(--cocoa); border-bottom: 1px solid var(--gold); text-decoration: none; margin-left: 4px; }
+.v4-browse-title { font-family: var(--font-heading); font-size: 27px; font-weight: 500; color: var(--cocoa); margin: 64px 0 20px; }
+.v4-cats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.v4-cat { position: relative; display: flex; flex-direction: column; justify-content: flex-end; min-height: 128px; padding: 22px 22px 20px; border-radius: 4px; text-decoration: none; overflow: hidden; transition: transform .25s, box-shadow .25s; }
+.v4-cat::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 4px; background: repeating-linear-gradient(90deg, #C97A5A 0 14px, #C8A96A 14px 19px, #5B4636 19px 40px, #EFE6D8 40px 43px); opacity: .9; }
+.v4-cat::after { content: '\2192'; position: absolute; right: 20px; bottom: 18px; font-size: 18px; opacity: .55; transition: transform .25s, opacity .25s; }
+.v4-cat:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(70,54,42,.12); }
+.v4-cat:hover::after { transform: translateX(4px); opacity: 1; }
+.v4-cat-name { font-family: var(--font-heading); font-size: 25px; font-weight: 500; line-height: 1.1; }
+.v4-cat-sub { font-size: 14px; margin-top: 4px; opacity: .8; }
+.v4-cat-a { background: #F3E7DA; color: var(--cocoa); }
+.v4-cat-b { background: #EBD3C3; color: #5A3A2C; }
+.v4-cat-c { background: #EFE3C8; color: #5B4636; }
+.v4-cat-d { background: #5B4636; color: #FBF5EC; }
+.v4-picks-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+.v4-picks .hm-vendor-grid { margin-top: 4px; }
+@media (max-width: 900px) { .v4-cats { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) { .v4-vendors { padding: 76px 0; } .v4-vendors-head h2 { font-size: 36px; } .v4-cat { min-height: 104px; padding: 18px 16px 16px; } .v4-cat-name { font-size: 21px; } .v4-browse-title { margin-top: 48px; } }
+
+/* For vendors: calm, light, easy to scan */
+.v4-forvendors { background: var(--ivory); padding: 104px 0 110px; }
+.v4-fv-card { display: grid; grid-template-columns: 6fr 5fr; gap: 80px; align-items: center; }
+.v4-fv-copy h2 { font-family: var(--font-heading); font-size: 48px; font-weight: 500; color: var(--cocoa); line-height: 1.08; margin: 0 0 18px; }
+.v4-fv-copy p { color: var(--text-muted); font-size: 17px; line-height: 1.75; margin: 0 0 30px; max-width: 46ch; }
+.v4-fv-actions { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+.v4-fv-points { list-style: none; margin: 0; padding: 0; }
+.v4-fv-points li { padding: 22px 0 22px 22px; border-left: 2px solid var(--gold); margin-bottom: 14px; background: linear-gradient(90deg, rgba(200,169,106,.08), transparent 70%); }
+.v4-fv-points li:last-child { margin-bottom: 0; }
+.v4-fv-points strong { display: block; font-family: var(--font-heading); font-size: 23px; font-weight: 500; color: var(--cocoa); margin-bottom: 4px; }
+.v4-fv-points span { color: var(--text-muted); font-size: 15px; line-height: 1.6; }
+@media (max-width: 900px) { .v4-forvendors { padding: 80px 0; } .v4-fv-card { grid-template-columns: 1fr; gap: 40px; } .v4-fv-copy h2 { font-size: 38px; } }
