@@ -127,12 +127,12 @@
     <!-- LIVE VENDOR DIRECTORY -->
     <section class="directory-head" id="directory">
         <h2>The vendor directory</h2>
-        <p>Search by name, service or city, or filter by category.</p>
+        <p>Search by name or service, or filter by category.</p>
     </section>
 
     <section class="search-section directory-search">
         <label class="sr-only" for="directorySearch">Search vendors</label>
-        <input type="text" id="directorySearch" placeholder="Search by name, service or city (e.g. Lagos)">
+        <input type="text" id="directorySearch" placeholder="Search by name or service (e.g. photographer)">
         <label class="sr-only" for="directorySort">Sort vendors</label>
         <select id="directorySort">
             <option value="newest">Newest first</option>
@@ -144,12 +144,20 @@
         <button class="filter-btn active" data-category="">All</button>
         <button class="filter-btn" data-category="photography">Photography</button>
         <button class="filter-btn" data-category="catering">Catering</button>
-        <button class="filter-btn" data-category="decor">Decor &amp; Florals</button>
-        <button class="filter-btn" data-category="mc">MCs &amp; Entertainers</button>
-        <button class="filter-btn" data-category="makeup">Makeup &amp; Hair</button>
-        <button class="filter-btn" data-category="venue">Venues</button>
-        <button class="filter-btn" data-category="fashion">Aso-ebi &amp; Fashion</button>
+        <button class="filter-btn" data-category="drinks">Drinks &amp; bar</button>
         <button class="filter-btn" data-category="cakes">Cakes</button>
+        <button class="filter-btn" data-category="decor">Decor &amp; florals</button>
+        <button class="filter-btn" data-category="venue">Venues</button>
+        <button class="filter-btn" data-category="rentals">Rentals</button>
+        <button class="filter-btn" data-category="mc">MCs</button>
+        <button class="filter-btn" data-category="music">DJs &amp; bands</button>
+        <button class="filter-btn" data-category="makeup">Makeup &amp; gele</button>
+        <button class="filter-btn" data-category="hair">Hair</button>
+        <button class="filter-btn" data-category="nails">Nails &amp; lashes</button>
+        <button class="filter-btn" data-category="fashion">Aso-ebi &amp; fashion</button>
+        <button class="filter-btn" data-category="transport">Car hire</button>
+        <button class="filter-btn" data-category="assistant">Personal assistants</button>
+        <button class="filter-btn" data-category="ushers">Ushers</button>
         <button class="filter-btn" data-category="planning">Event planners</button>
     </section>
 
@@ -158,7 +166,7 @@
         <div class="listings-grid" id="directoryGrid"></div>
         <div class="directory-empty" id="directoryEmpty" style="display:none;">
             <h3>No vendors listed here yet</h3>
-            <p>We're growing the directory city by city. Tell us who you need and we'll personally point you to vendors we know. Run an events business? List it free and be one of our first 50 founding vendors.</p>
+            <p>We're growing the directory city by city. Tell us who you need and we'll personally point you to vendors we know. Run an events, beauty or hospitality business? List it free and be one of our first 50 founding vendors.</p>
             <a href="#get-notified" class="btn">Tell us who you need</a> <a href="vendor-portal.html?signup=1" class="btn-outline">List your business free</a>
         </div>
     </section>
@@ -177,13 +185,21 @@
                 <select name="category" required data-label="the kind of vendor you need">
                     <option value="">What kind of vendor?</option>
                     <option>Photographer or videographer</option>
-                    <option>Caterer</option>
-                    <option>Decorator or florist</option>
-                    <option>MC or entertainer</option>
-                    <option>Makeup artist or gele stylist</option>
-                    <option>Venue or event centre</option>
-                    <option>Aso-ebi or fashion</option>
+                    <option>Caterer or small chops</option>
+                    <option>Drinks or bartender</option>
                     <option>Cakes and desserts</option>
+                    <option>Decorator or florist</option>
+                    <option>Venue or event centre</option>
+                    <option>Rentals, tents and chairs</option>
+                    <option>MC or entertainer</option>
+                    <option>DJ or live band</option>
+                    <option>Makeup artist or gele stylist</option>
+                    <option>Hair stylist</option>
+                    <option>Nails and lashes</option>
+                    <option>Aso-ebi or fashion</option>
+                    <option>Car hire</option>
+                    <option>Personal assistant</option>
+                    <option>Ushers and event staff</option>
                     <option>Event planner</option>
                     <option>Something else</option>
                 </select>
@@ -263,18 +279,7 @@
 
     <script>
     (function () {
-        var CATEGORY_LABELS = {
-            photography: 'Photographers & Videographers',
-            catering: 'Caterers',
-            decor: 'Decorators & Florists',
-            mc: 'MCs & Entertainers',
-            makeup: 'Makeup Artists & Hair',
-            venue: 'Venues & Event Centers',
-            fashion: 'Aso-ebi & Fashion',
-            cakes: 'Cakes & Confectionery',
-            planning: 'Event Planners',
-            other: 'Other'
-        };
+        var CATEGORY_LABELS = window.VC.CATEGORY_LABELS;
 
         var grid = document.getElementById('directoryGrid');
         var loading = document.getElementById('directoryLoading');

@@ -5,9 +5,9 @@ const { notifyOwner } = require('../lib/email');
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const SERVICES = {
-  'pre-wedding': 'Pre-Wedding Liaison Service',
-  'wedding-day': 'Wedding Day Package',
-  both: 'Both: pre-wedding support and the wedding day',
+  'pre-wedding': 'Before the Event Service',
+  'wedding-day': 'Event Day Package',
+  both: 'Both: before the event and on the event day',
   unsure: 'Not sure yet'
 };
 

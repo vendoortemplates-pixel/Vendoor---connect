@@ -450,7 +450,7 @@
         });
     }
 
-    var SERVICE_LABELS = { 'pre-wedding': 'Pre-Wedding Liaison Service', 'wedding-day': 'Wedding Day Package', both: 'Pre-wedding + wedding day', unsure: 'Not sure yet' };
+    var SERVICE_LABELS = { 'pre-wedding': 'Before the Event Service', 'wedding-day': 'Event Day Package', both: 'Before the event + event day', unsure: 'Not sure yet' };
     function renderLiaison(d) {
         var rows = d.requests || [];
         if (!rows.length) { $('panel').innerHTML = '<p class="admin-empty">No consultation requests yet. They arrive here (and in your Gmail) when someone uses the form on the Event Liaison page.</p>'; return; }

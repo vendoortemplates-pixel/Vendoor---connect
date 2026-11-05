@@ -3209,3 +3209,9 @@ footer::before { content: ''; position: absolute; left: 0; right: 0; top: 0; hei
 }
 
 .lx-cats a { text-align: left; }
+
+/* Homepage categories: two columns once the list grew */
+.lx-cats { display: grid; grid-template-columns: 1fr 1fr; column-gap: 40px; border-top: 0; }
+.lx-cats a { font-size: 25px; padding: 12px 0; border-top: 0; }
+.lx-cats a.lx-cats-all { font-family: var(--font-body); font-size: 15px; font-weight: 600; color: var(--terracotta); align-items: center; }
+@media (max-width: 760px) { .lx-cats { column-gap: 22px; } .lx-cats a { font-size: 20px; padding: 11px 0; } }

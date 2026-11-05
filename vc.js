@@ -1,9 +1,24 @@
 // ===== VENDOOR CONNECT — shared helpers for every page =====
 (function () {
   var CATEGORY_LABELS = {
-    photography: 'Photographers & Videographers', catering: 'Caterers', decor: 'Decorators & Florists',
-    mc: 'MCs & Entertainers', makeup: 'Makeup Artists & Hair', venue: 'Venues & Event Centers',
-    fashion: 'Aso-ebi & Fashion', cakes: 'Cakes & Confectionery', planning: 'Event Planners', other: 'Other'
+    photography: 'Photographers & Videographers',
+    catering: 'Caterers & Small Chops',
+    drinks: 'Drinks & Bartenders',
+    cakes: 'Cakes & Confectionery',
+    decor: 'Decorators & Florists',
+    venue: 'Venues & Event Centers',
+    rentals: 'Rentals, Tents & Chairs',
+    mc: 'MCs & Entertainers',
+    music: 'DJs & Live Bands',
+    makeup: 'Makeup & Gele',
+    hair: 'Hair Stylists',
+    nails: 'Nails & Lashes',
+    fashion: 'Aso-ebi & Fashion',
+    transport: 'Car Hire & Transport',
+    assistant: 'Personal Assistants',
+    ushers: 'Ushers & Event Staff',
+    planning: 'Event Planners',
+    other: 'Other'
   };
   function esc(str) {
     return String(str == null ? '' : str).replace(/[&<>"']/g, function (c) {

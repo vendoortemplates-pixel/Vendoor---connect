@@ -193,7 +193,7 @@ function ipHash(event) {
   return crypto.createHash('sha256').update('vendoor:' + ip.trim()).digest('hex').slice(0, 32);
 }
 
-const CATEGORIES = ['photography', 'catering', 'decor', 'mc', 'makeup', 'venue', 'fashion', 'cakes', 'planning', 'other'];
+const CATEGORIES = ['photography', 'catering', 'drinks', 'cakes', 'decor', 'venue', 'rentals', 'mc', 'music', 'makeup', 'hair', 'nails', 'fashion', 'transport', 'assistant', 'ushers', 'planning', 'other'];
 
 // Max size of a stored vendor photo (client resizes to ~480px JPEG, ~40-80KB).
 const MAX_PHOTO_CHARS = 400000;
