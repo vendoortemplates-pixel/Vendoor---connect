@@ -67,6 +67,8 @@
 .admin-help { font-size: 14px; color: var(--text-muted); margin: 0 0 16px; line-height: 1.55; }
 .admin-subhead { font-family: var(--font-heading, Georgia, serif); font-size: 20px; color: var(--cocoa, #5B4636); margin: 28px 0 10px; }
 .admin-subhead:first-child { margin-top: 0; }
+.ask-box { margin: 12px 0 0; }
+.ask-box textarea { width: 100%; min-height: 90px; padding: 12px 14px; border: 1px solid var(--border-light); font: inherit; font-size: 14.5px; color: var(--cocoa); border-radius: 2px; }
 .vis-range { display: flex; gap: 8px; margin: 0 0 18px; }
 .vis-range button { background: var(--white); border: 1px solid var(--border-light); padding: 8px 14px; font: inherit; font-size: 13px; color: var(--cocoa); cursor: pointer; border-radius: 2px; }
 .vis-range button[aria-pressed="true"] { background: var(--cocoa); color: var(--ivory); border-color: var(--cocoa); }
@@ -302,7 +304,7 @@
             var isPlatform = r.review_type === 'platform';
             var vendor = isPlatform ? 'Vendoor Connect' : (r.vendor_id ? '<a href="vendor-profile.html?id=' + r.vendor_id + '" target="_blank">' + esc(r.vendor_name) + '</a>' : esc(r.vendor_name));
             var buttons = view === 'pending'
-                ? '<button class="approve" data-act="approve">Approve and publish</button><button class="reject" data-act="reject">Reject</button>'
+                ? '<button class="approve" data-act="approve">Approve and publish</button><button data-act="ask">Ask for more details</button><button class="reject" data-act="reject">Reject</button>'
                 : view === 'disputed'
                     ? '<button class="approve" data-act="resolve-dispute">Keep review (close dispute)</button><button class="reject" data-act="reject">Unpublish review</button>'
                 : view === 'approved'
@@ -311,6 +313,8 @@
             return '<div class="mod-card" data-id="' + r.id + '"><div class="top"><h3>' + vendor + '<small>' + (isPlatform ? 'Review of our platform' : (r.vendor_id ? 'Listed vendor' : 'Not listed')) + '</small></h3>' + VC.stars(r.rating) + '</div>' +
                 '<p class="meta">' + [esc(r.reviewer_name), '<a href="mailto:' + esc(r.reviewer_email) + '">' + esc(r.reviewer_email || '') + '</a>', esc(VC.CATEGORY_LABELS[r.vendor_category] || ''), esc(r.event_type || ''), VC.date(r.created_at)].filter(Boolean).join(', ') + '</p>' +
                 '<p class="text">' + esc(r.review_text) + '</p>' +
+                (r.info_requested_at ? '<p class="dispute-note"><strong>You asked for more details ' + VC.date(r.info_requested_at) + ':</strong> ' + esc(r.info_note || '') + '<br><small>Their reply goes to your Gmail.</small></p>' : '') +
+                (view === 'pending' ? '<div class="ask-box" hidden><textarea maxlength="1500" placeholder="What would you like to check? For example: Could you tell us roughly when you used this vendor?"></textarea><div class="mod-actions"><button class="approve" data-act="send-ask">Send email to reviewer</button><button data-act="cancel-ask">Cancel</button></div></div>' : '') +
                 (r.disputed_at && !r.dispute_resolved_at ? '<p class="dispute-note"><strong>Disputed by the vendor ' + VC.date(r.disputed_at) + ':</strong> ' + esc(r.dispute_reason || '') + '</p>' : '') +
                 '<div class="mod-actions">' + buttons + '</div></div>';
         }).join('');
@@ -318,6 +322,18 @@
             btn.addEventListener('click', function () {
                 var card = btn.closest('.mod-card');
                 var act = btn.dataset.act;
+                var box = card.querySelector('.ask-box');
+                if (act === 'ask') { box.hidden = false; box.querySelector('textarea').focus(); return; }
+                if (act === 'cancel-ask') { box.hidden = true; return; }
+                if (act === 'send-ask') {
+                    var note = box.querySelector('textarea').value.trim();
+                    if (note.length < 5) { showError('Write the question you want to ask the reviewer.'); return; }
+                    btn.disabled = true; btn.textContent = 'Sending...';
+                    api('admin', { method: 'POST', body: JSON.stringify({ action: 'ask-info', reviewId: card.dataset.id, note: note }) })
+                        .then(function () { load(); })
+                        .catch(function (e) { btn.disabled = false; btn.textContent = 'Send email to reviewer'; showError(e.message); });
+                    return;
+                }
                 if (act === 'delete' && !btn.classList.contains('sure')) { btn.classList.add('sure'); btn.textContent = 'Click again to delete'; return; }
                 card.style.opacity = '.5';
                 api('admin', { method: 'POST', body: JSON.stringify({ action: act, reviewId: card.dataset.id }) })

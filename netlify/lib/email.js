@@ -263,4 +263,69 @@ async function sendVendorWelcome(email) {
   }
 }
 
-module.exports = { sendVendorWelcome, buildWelcomeEmail, sendOrderEmail, buildEmail, notifyOwner, sendPackageEmail, buildPackageEmail };
+// ----- Review emails (reviewers never need an account) -----
+function reviewShell(title, bodyHtml, button, noFooter) {
+  const btn = button ? `<p style="margin:24px 0"><a href="${button.url}" style="display:inline-block;background:#C97A5A;color:#fff;text-decoration:none;font-weight:bold;font-size:15px;padding:14px 28px;border-radius:2px">${esc(button.text)}</a></p>` : '';
+  return `<!doctype html><html><body style="margin:0;background:#F8F5EF;font-family:Arial,Helvetica,sans-serif">
+  <div style="max-width:560px;margin:0 auto;padding:32px 20px">
+    <p style="text-align:center;margin:0 0 6px"><img src="${SITE}/icon-192.png" width="56" height="56" alt="" style="display:inline-block;border:0"></p>
+    <p style="text-align:center;font-family:Georgia,serif;font-size:18px;letter-spacing:3px;color:#B08A4F;margin:0 0 24px">VENDOOR CONNECT</p>
+    <div style="background:#fff;border:1px solid #ECE3D8;padding:34px 30px">
+      <h1 style="font-family:Georgia,serif;font-weight:normal;font-size:25px;line-height:1.25;color:#5B4636;margin:0 0 14px">${title}</h1>
+      ${bodyHtml}${btn}
+      ${noFooter ? '' : '<p style="margin:18px 0 0;font-size:14px;line-height:1.6;color:#8A7C6F">Questions? Just reply to this email.</p>'}
+    </div>
+    <p style="text-align:center;font-size:12px;color:#8A7C6F;margin:20px 0 0">Vendoor Connect &middot; <a href="${SITE}" style="color:#8A7C6F">vendoorconnect.com</a></p>
+  </div></body></html>`;
+}
+const RP = 'margin:0 0 14px;font-size:15px;line-height:1.7;color:#5B4636';
+function reviewAbout(r) { return r.review_type === 'platform' ? 'Vendoor Connect' : (r.vendor_name || 'the vendor'); }
+function quoteBox(r) {
+  const stars = '&#9733;'.repeat(Math.max(1, Math.min(5, Number(r.rating) || 0)));
+  return `<div style="border-left:3px solid #C8A96A;background:#FBF7F1;padding:14px 18px;margin:0 0 18px"><p style="margin:0 0 6px;color:#C8A96A;font-size:15px">${stars}</p><p style="margin:0;font-size:14.5px;line-height:1.7;color:#5B4636;font-style:italic">${esc(String(r.review_text || '').slice(0, 600))}</p></div>`;
+}
+async function sendResend(payload) {
+  const key = process.env.RESEND_API_KEY;
+  if (!key) return { ok: false, error: 'RESEND_API_KEY is not set' };
+  try {
+    const res = await fetch('https://api.resend.com/emails', { method: 'POST', headers: { Authorization: 'Bearer ' + key, 'Content-Type': 'application/json' }, body: JSON.stringify(Object.assign({ from: FROM, reply_to: OWNER }, payload)) });
+    if (!res.ok) return { ok: false, error: 'Resend ' + res.status };
+    return { ok: true };
+  } catch (e) { return { ok: false, error: e && e.message }; }
+}
+function reviewLink(r) {
+  return r.review_type === 'platform' ? SITE + '/reviews.html?about=vendoorconnect'
+    : (r.vendor_id ? SITE + '/vendor-profile.html?id=' + r.vendor_id : SITE + '/reviews.html');
+}
+// stage: 'received' | 'published' | 'info'
+async function sendReviewerEmail(stage, r, note) {
+  if (!r || !r.reviewer_email) return { ok: false };
+  const first = esc(String(r.reviewer_name || '').split(' ')[0]);
+  const about = esc(reviewAbout(r));
+  let subject, html;
+  if (stage === 'received') {
+    subject = 'Thank you for your review of ' + reviewAbout(r);
+    html = reviewShell('Thank you' + (first ? ', ' + first : ''),
+      `<p style="${RP}">We've received your review of <strong>${about}</strong>. A real person on our team reads every review before it goes live, usually within 48 hours, and we'll email you as soon as it's published.</p>${quoteBox(r)}<p style="${RP}">Honest reviews like yours help the next family choose with confidence. Thank you for taking the time.</p>`);
+  } else if (stage === 'published') {
+    subject = 'Your review of ' + reviewAbout(r) + ' is live';
+    html = reviewShell('Your review is live',
+      `<p style="${RP}">Thank you${first ? ', ' + first : ''}. Your review of <strong>${about}</strong> is now published on Vendoor Connect.</p>${quoteBox(r)}`,
+      { text: 'See your review', url: reviewLink(r) });
+  } else {
+    subject = 'A quick question about your review of ' + reviewAbout(r);
+    html = reviewShell('A quick question about your review',
+      `<p style="${RP}">Hi${first ? ' ' + first : ''}, thank you for reviewing <strong>${about}</strong>. Before we publish it, we'd like to check one thing with you:</p><div style="background:#FBF7F1;padding:14px 18px;margin:0 0 18px;font-size:15px;line-height:1.7;color:#5B4636">${esc(note || '').replace(/\n/g, '<br>')}</div><p style="${RP}"><strong>Just reply to this email</strong> and we'll take it from there. Here's the review you sent:</p>${quoteBox(r)}`, null, true);
+  }
+  return sendResend({ to: [r.reviewer_email], subject, html });
+}
+// Tells a listed vendor that a new review of their business is live.
+async function sendVendorNewReviewEmail(vendorEmail, r) {
+  if (!vendorEmail) return { ok: false };
+  return sendResend({ to: [vendorEmail], subject: 'You have a new review on Vendoor Connect',
+    html: reviewShell('You have a new review',
+      `<p style="${RP}">A client has reviewed <strong>${esc(r.vendor_name)}</strong> on Vendoor Connect. It's now live on your profile.</p>${quoteBox(r)}<p style="${RP}">A short, thoughtful reply shows future clients how you treat people. You can reply from your vendor dashboard.</p>`,
+      { text: 'Reply from my dashboard', url: SITE + '/vendor-portal.html' }) });
+}
+
+module.exports = { sendReviewerEmail, sendVendorNewReviewEmail, sendVendorWelcome, buildWelcomeEmail, sendOrderEmail, buildEmail, notifyOwner, sendPackageEmail, buildPackageEmail };

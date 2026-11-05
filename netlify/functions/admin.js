@@ -9,7 +9,7 @@
 //   POST { action: 'resolve-dispute', reviewId }
 //   GET ?view=liaison; POST { action: 'liaison-status', requestId, status }
 const { getDb, rowsOf, json, parseBody, currentUser, isAdmin, FOUNDING_LIMIT } = require('../lib/common');
-const { sendOrderEmail } = require('../lib/email');
+const { sendOrderEmail, sendReviewerEmail, sendVendorNewReviewEmail } = require('../lib/email');
 
 exports.handler = async (event, context) => {
   const user = currentUser(context);
@@ -46,7 +46,7 @@ exports.handler = async (event, context) => {
         const rows = rowsOf(await db.sql`
           SELECT id, vendor_name, vendor_category, vendor_id, reviewer_name, reviewer_email, rating,
                  review_text, event_type, vendor_reply, status, COALESCE(review_type, 'vendor') AS review_type, created_at,
-                 dispute_reason, disputed_at, dispute_resolved_at
+                 dispute_reason, disputed_at, dispute_resolved_at, info_requested_at, info_note
           FROM reviews
           WHERE (${status} = 'disputed' AND status = 'approved' AND disputed_at IS NOT NULL AND dispute_resolved_at IS NULL) OR (${status} <> 'disputed' AND status = ${status})
           ORDER BY created_at DESC LIMIT 300
@@ -126,6 +126,32 @@ exports.handler = async (event, context) => {
       if (reviewId && (data.action === 'approve' || data.action === 'reject')) {
         const status = data.action === 'approve' ? 'approved' : 'rejected';
         await db.sql`UPDATE reviews SET status = ${status}, moderated_at = NOW() WHERE id = ${reviewId}`;
+        let emailed = false;
+        if (status === 'approved') {
+          // Tell the reviewer (and the vendor) once, the first time it goes live.
+          const r = rowsOf(await db.sql`
+            UPDATE reviews SET published_email_at = NOW() WHERE id = ${reviewId} AND published_email_at IS NULL RETURNING *
+          `)[0];
+          if (r) {
+            const out = await sendReviewerEmail('published', r).catch(() => ({ ok: false }));
+            emailed = !!(out && out.ok);
+            if (!out || !out.ok) await db.sql`UPDATE reviews SET published_email_at = NULL WHERE id = ${reviewId}`;
+            if (r.review_type !== 'platform' && r.vendor_id) {
+              const l = rowsOf(await db.sql`SELECT vendor_email FROM listings WHERE id = ${r.vendor_id}`)[0];
+              if (l) await sendVendorNewReviewEmail(l.vendor_email, r).catch(() => {});
+            }
+          }
+        }
+        return json(200, { ok: true, emailed });
+      }
+      if (reviewId && data.action === 'ask-info') {
+        const note = String(data.note || '').trim().slice(0, 1500);
+        if (note.length < 5) return json(400, { error: 'Write the question you want to ask the reviewer.' });
+        const r = rowsOf(await db.sql`SELECT * FROM reviews WHERE id = ${reviewId}`)[0];
+        if (!r) return json(404, { error: 'Review not found.' });
+        const out = await sendReviewerEmail('info', r, note);
+        if (!out.ok) return json(500, { error: 'The email could not be sent. Please try again.' });
+        await db.sql`UPDATE reviews SET info_requested_at = NOW(), info_note = ${note} WHERE id = ${reviewId}`;
         return json(200, { ok: true });
       }
       if (reviewId && data.action === 'delete') {

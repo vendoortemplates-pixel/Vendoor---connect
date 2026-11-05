@@ -3,6 +3,7 @@
 // Spam protection: hidden honeypot field, length limits, max 5 reviews per
 // visitor per day, and one review per email per vendor.
 const { getDb, rowsOf, json, parseBody, clean, ipHash, CATEGORIES } = require('../lib/common');
+const { notifyOwner, sendReviewerEmail } = require('../lib/email');
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -69,12 +70,23 @@ exports.handler = async (event) => {
       return json(409, { error: isPlatform ? 'You have already reviewed Vendoor Connect. Thank you!' : 'You have already reviewed this vendor. Thank you!' });
     }
 
-    await db.sql`
+    const saved = rowsOf(await db.sql`
       INSERT INTO reviews (vendor_name, vendor_category, vendor_id, reviewer_name, reviewer_email,
                            rating, review_text, event_type, ip_hash, status, review_type)
       VALUES (${vendorName}, ${vendorCategory}, ${vendorId}, ${reviewerName}, ${reviewerEmail},
               ${rating}, ${reviewText}, ${eventType}, ${ip}, 'pending', ${isPlatform ? 'platform' : 'vendor'})
-    `;
+      RETURNING *
+    `)[0];
+    // Emails never block the review from being saved.
+    await Promise.all([
+      sendReviewerEmail('received', saved).catch(e => console.error('review received email', e)),
+      notifyOwner('New review to approve: ' + vendorName + ' (' + rating + ' stars)', [
+        reviewerName + ' (' + reviewerEmail + ') reviewed ' + vendorName + (isPlatform ? ' (our platform)' : '') + '.',
+        'Rating: ' + rating + ' out of 5' + (eventType ? ', ' + eventType : ''),
+        'Review: ' + reviewText,
+        'Approve it, reject it, or ask for more details on the admin page (Waiting for approval).'
+      ], reviewerEmail).catch(e => console.error('owner review email', e))
+    ]);
     return json(200, { ok: true, status: 'pending', matched: !!vendorId });
   } catch (err) {
     console.error('submit-review error:', err);

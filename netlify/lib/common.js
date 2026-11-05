@@ -64,7 +64,10 @@ async function ensureSchema(base) {
     () => base.sql`CREATE TABLE IF NOT EXISTS site_views (day DATE NOT NULL DEFAULT CURRENT_DATE, path TEXT NOT NULL, source TEXT NOT NULL,
         country TEXT NOT NULL, count INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (day, path, source, country))`,
     () => base.sql`CREATE TABLE IF NOT EXISTS site_visitors (day DATE NOT NULL DEFAULT CURRENT_DATE, vhash TEXT NOT NULL, PRIMARY KEY (day, vhash))`,
-    () => base.sql`CREATE TABLE IF NOT EXISTS vendor_welcomes (email TEXT PRIMARY KEY, sent_at TIMESTAMP NOT NULL DEFAULT NOW())`
+    () => base.sql`CREATE TABLE IF NOT EXISTS vendor_welcomes (email TEXT PRIMARY KEY, sent_at TIMESTAMP NOT NULL DEFAULT NOW())`,
+    () => base.sql`ALTER TABLE reviews ADD COLUMN IF NOT EXISTS published_email_at TIMESTAMP`,
+    () => base.sql`ALTER TABLE reviews ADD COLUMN IF NOT EXISTS info_requested_at TIMESTAMP`,
+    () => base.sql`ALTER TABLE reviews ADD COLUMN IF NOT EXISTS info_note TEXT`
   ];
   const probe = await base.sql`
     SELECT
@@ -78,12 +81,13 @@ async function ensureSchema(base) {
       (SELECT COUNT(*)::int FROM information_schema.tables WHERE table_name IN ('listing_stats','membership_inquiries','liaison_requests')) AS s,
       (SELECT COUNT(*)::int FROM information_schema.columns WHERE table_name = 'listings' AND column_name IN ('featured_package','featured_reminded','membership_reminded')) AS fp,
       (SELECT COUNT(*)::int FROM information_schema.tables WHERE table_name IN ('package_orders','messages','site_views','site_visitors','vendor_welcomes')) AS po,
-      (SELECT COUNT(*)::int FROM information_schema.columns WHERE table_name = 'orders' AND column_name IN ('items','resent_at')) AS oi
+      (SELECT COUNT(*)::int FROM information_schema.columns WHERE table_name = 'orders' AND column_name IN ('items','resent_at')) AS oi,
+      (SELECT COUNT(*)::int FROM information_schema.columns WHERE table_name = 'reviews' AND column_name IN ('published_email_at','info_requested_at','info_note')) AS rn
   `;
   const p = rowsOf(probe)[0] || {};
   if (Number(p.r) === 7 && Number(p.l) === 3 && Number(p.o) === 1 && Number(p.e) === 2 && Number(p.t) === 1
       && Number(p.m) === 3 && Number(p.d) === 3 && Number(p.s) === 3
-      && Number(p.fp) === 3 && Number(p.po) === 5 && Number(p.oi) === 2) return;
+      && Number(p.fp) === 3 && Number(p.po) === 5 && Number(p.oi) === 2 && Number(p.rn) === 3) return;
   for (const step of steps) {
     try { await step(); } catch (e) { console.error('ensureSchema step failed:', e && e.message); }
   }
