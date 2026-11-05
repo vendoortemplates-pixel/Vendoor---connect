@@ -215,4 +215,52 @@ async function sendPackageEmail(stage, info) {
   } catch (e) { return { ok: false, error: e && e.message }; }
 }
 
-module.exports = { sendOrderEmail, buildEmail, notifyOwner, sendPackageEmail, buildPackageEmail };
+// ----- Vendor welcome (sent once, after a vendor confirms their account) -----
+function buildWelcomeEmail() {
+  const P = 'margin:0 0 14px;font-size:15px;line-height:1.7;color:#5B4636';
+  const html = `<!doctype html><html><body style="margin:0;background:#F8F5EF;font-family:Arial,Helvetica,sans-serif">
+  <div style="max-width:560px;margin:0 auto;padding:32px 20px">
+    <p style="text-align:center;margin:0 0 6px"><img src="${SITE}/icon-192.png" width="56" height="56" alt="" style="display:inline-block;border:0"></p>
+    <p style="text-align:center;font-family:Georgia,serif;font-size:18px;letter-spacing:3px;color:#B08A4F;margin:0 0 24px">VENDOOR CONNECT</p>
+    <div style="background:#fff;border:1px solid #ECE3D8;padding:34px 30px">
+      <h1 style="font-family:Georgia,serif;font-weight:normal;font-size:26px;line-height:1.25;color:#5B4636;margin:0 0 14px">Welcome to Vendoor Connect</h1>
+      <p style="${P}">Your vendor account is confirmed. Thank you for joining a growing community of event businesses that clients can find, trust and book with confidence.</p>
+      <p style="${P}"><strong>Three steps to get seen:</strong></p>
+      <p style="${P}">1. <strong>Create your free listing.</strong> Add your best photo, your city, your starting price and your WhatsApp number so clients can reach you in one tap.</p>
+      <p style="${P}">2. <strong>Ask your past clients for reviews.</strong> Your dashboard gives you a link to share. Every review is checked by our team before it goes live, so honest feedback really counts.</p>
+      <p style="${P}">3. <strong>Reply to your reviews.</strong> A thoughtful reply shows the next client exactly how you treat people.</p>
+      <p style="margin:24px 0 24px"><a href="${SITE}/vendor-portal.html" style="display:inline-block;background:#C97A5A;color:#fff;text-decoration:none;font-weight:bold;font-size:15px;padding:14px 30px;border-radius:2px">Go to my dashboard</a></p>
+      <p style="${P}">Want to stand out from day one? Our first 50 businesses can become <a href="${SITE}/vendor-memberships.html" style="color:#C97A5A">Founding Vendors</a>, with a badge and priority placement in the directory.</p>
+      <p style="margin:18px 0 0;font-size:14px;line-height:1.6;color:#8A7C6F">Questions? Reply to this email or message us on WhatsApp at 0813 918 9496. We're always happy to help.</p>
+      <p style="margin:18px 0 0;font-size:15px;color:#5B4636">Ganiat Asuni<br><span style="color:#8A7C6F;font-size:13px">Founder, Vendoor Connect</span></p>
+    </div>
+    <p style="text-align:center;font-size:12px;color:#8A7C6F;margin:20px 0 0">Vendoor Connect &middot; <a href="${SITE}" style="color:#8A7C6F">vendoorconnect.com</a></p>
+  </div></body></html>`;
+  const text = 'Welcome to Vendoor Connect\n\nYour vendor account is confirmed.\n\n1. Create your free listing: ' + SITE + '/vendor-portal.html\n2. Ask your past clients for reviews using the link in your dashboard.\n3. Reply to your reviews.\n\nOur first 50 businesses can become Founding Vendors: ' + SITE + '/vendor-memberships.html\n\nQuestions? Reply to this email or WhatsApp 0813 918 9496.\n\nGaniat Asuni, Founder';
+  return { subject: 'Welcome to Vendoor Connect', html, text };
+}
+
+// Sends the welcome once per email address. Safe to call more than once.
+async function sendVendorWelcome(email) {
+  const to = String(email || '').toLowerCase().trim();
+  if (!to || !process.env.RESEND_API_KEY) return { ok: false };
+  const db = getDb();
+  const claimed = rowsOf(await db.sql`INSERT INTO vendor_welcomes (email) VALUES (${to}) ON CONFLICT DO NOTHING RETURNING email`);
+  if (!claimed.length) return { ok: true, skipped: true };
+  const msg = buildWelcomeEmail();
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + process.env.RESEND_API_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ from: FROM, to: [to], reply_to: OWNER, subject: msg.subject, html: msg.html, text: msg.text })
+    });
+    if (!res.ok) throw new Error('Resend ' + res.status);
+    return { ok: true };
+  } catch (e) {
+    console.error('welcome email failed', e && e.message);
+    await db.sql`DELETE FROM vendor_welcomes WHERE email = ${to}`; // let a later login retry
+    return { ok: false };
+  }
+}
+
+module.exports = { sendVendorWelcome, buildWelcomeEmail, sendOrderEmail, buildEmail, notifyOwner, sendPackageEmail, buildPackageEmail };

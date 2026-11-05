@@ -564,7 +564,7 @@
     function authFail(err) {
         var msg = (err && (err.json && (err.json.error_description || err.json.msg))) || (err && err.message) || 'Something went wrong. Please try again.';
         if (/invalid_grant|No user found|Invalid Password/i.test(msg)) msg = 'That email and password don\'t match. Check them and try again, or reset your password.';
-        if (/not confirmed/i.test(msg)) msg = 'Please confirm your email first. Check your inbox (and spam folder) for the link we sent.';
+        if (/not confirmed/i.test(msg)) msg = 'Please confirm your email first. Look for "Confirm your signup" from no-reply@netlify.com in your inbox or spam folder.';
         $('authError').textContent = msg;
         $('authError').classList.add('show');
     }
@@ -584,7 +584,7 @@
             if (authMode === 'signup') {
                 $('authForm').reset();
                 setAuthMode('login');
-                $('authSuccess').textContent = 'Almost there! We sent a confirmation link to ' + email + '. Click it, then log in here.';
+                $('authSuccess').textContent = 'Almost there! We have sent a confirmation link to ' + email + '. It comes from no-reply@netlify.com with the subject "Confirm your signup", so check your spam or promotions folder if you don\'t see it in a few minutes. Click the link, then log in here.';
                 $('authSuccess').classList.add('show');
             } else {
                 showDashboard();
