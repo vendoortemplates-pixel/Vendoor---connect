@@ -607,6 +607,15 @@
     var params = new URLSearchParams(location.search);
     $('resetForm').addEventListener('submit', function (e) {
         e.preventDefault();
+        var invite = params.get('invite');
+        if (invite) {
+            identity.acceptInvite(invite, $('resetPassword').value, true).then(function () {
+                history.replaceState(null, '', location.pathname);
+                $('resetView').style.display = 'none';
+                showDashboard();
+            }).catch(function () { $('resetError').textContent = 'This invitation has expired or was already used. Log in, or ask us for a new invitation.'; $('resetError').classList.add('show'); });
+            return;
+        }
         var user = identity.currentUser();
         if (!user) { $('resetError').textContent = 'This reset link has expired. Request a new one.'; $('resetError').classList.add('show'); return; }
         user.update({ password: $('resetPassword').value }).then(function () {
@@ -984,7 +993,11 @@
     }
 
     // ----- INIT -----
-    if (params.get('reset') && identity.currentUser()) {
+    if (params.get('invite')) {
+        $('loginView').style.display = 'none';
+        $('resetView').style.display = 'block';
+        var h = document.querySelector('#resetView h2'); if (h) h.textContent = 'Welcome. Choose your password';
+    } else if (params.get('reset') && identity.currentUser()) {
         $('loginView').style.display = 'none';
         $('resetView').style.display = 'block';
     } else if (identity.currentUser()) {

@@ -181,3 +181,15 @@ window.VCCart = (function () {
         });
     });
 })();
+
+// ===== VISITOR COUNT (no cookies; see netlify/functions/hit.js) =====
+(function () {
+    try {
+        if (/admin\.html$/.test(location.pathname) || navigator.webdriver) return;
+        if (location.hostname !== 'vendoorconnect.com' && location.hostname !== 'www.vendoorconnect.com' && !window.__VC_COUNT_LOCAL__) return;
+        var q = new URLSearchParams(location.search);
+        var body = JSON.stringify({ path: location.pathname, ref: document.referrer || '', utm: q.get('utm_source') || '' });
+        if (navigator.sendBeacon) navigator.sendBeacon('/.netlify/functions/hit', new Blob([body], { type: 'application/json' }));
+        else fetch('/.netlify/functions/hit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body, keepalive: true });
+    } catch (e) {}
+})();

@@ -84,6 +84,23 @@ exports.handler = async (event, context) => {
         `);
         return json(200, { inquiries: rows });
       }
+      if (view === 'visitors') {
+        const days = [7, 30, 90].indexOf(parseInt(p.days, 10)) !== -1 ? parseInt(p.days, 10) : 30;
+        const since = String(days - 1);
+        const daily = rowsOf(await db.sql`
+          SELECT d.day::text AS day,
+                 COALESCE((SELECT SUM(count) FROM site_views v WHERE v.day = d.day), 0)::int AS views,
+                 COALESCE((SELECT COUNT(*) FROM site_visitors s WHERE s.day = d.day), 0)::int AS visitors
+          FROM generate_series(CURRENT_DATE - (${since})::int, CURRENT_DATE, interval '1 day') AS d(day)
+          ORDER BY d.day
+        `);
+        const top = async (col) => rowsOf(await db.sql`
+          SELECT CASE WHEN ${col} = 'path' THEN path WHEN ${col} = 'source' THEN source ELSE country END AS name, SUM(count)::int AS views
+          FROM site_views WHERE day >= CURRENT_DATE - (${since})::int
+          GROUP BY 1 ORDER BY 2 DESC LIMIT 12
+        `);
+        return json(200, { days, daily, pages: await top('path'), sources: await top('source'), countries: await top('country') });
+      }
       if (view === 'messages') {
         const rows = rowsOf(await db.sql`
           SELECT id, kind, name, email, phone, subject, details, message, status, created_at FROM messages

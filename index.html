@@ -378,6 +378,9 @@
     <script>
     (function () {
         var hash = window.location.hash;
+        // Invitations: the vendor chooses a password on the vendor page.
+        var inv = new URLSearchParams(hash.substring(1)).get('invite_token');
+        if (inv) { window.location.replace('vendor-portal.html?invite=' + encodeURIComponent(inv)); return; }
         var kind = hash.indexOf('confirmation_token=') !== -1 ? 'confirm' : (hash.indexOf('recovery_token=') !== -1 ? 'recover' : null);
         if (!kind) return;
         var params = new URLSearchParams(hash.substring(1));

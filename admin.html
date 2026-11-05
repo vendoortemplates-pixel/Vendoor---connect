@@ -67,6 +67,23 @@
 .admin-help { font-size: 14px; color: var(--text-muted); margin: 0 0 16px; line-height: 1.55; }
 .admin-subhead { font-family: var(--font-heading, Georgia, serif); font-size: 20px; color: var(--cocoa, #5B4636); margin: 28px 0 10px; }
 .admin-subhead:first-child { margin-top: 0; }
+.vis-range { display: flex; gap: 8px; margin: 0 0 18px; }
+.vis-range button { background: var(--white); border: 1px solid var(--border-light); padding: 8px 14px; font: inherit; font-size: 13px; color: var(--cocoa); cursor: pointer; border-radius: 2px; }
+.vis-range button[aria-pressed="true"] { background: var(--cocoa); color: var(--ivory); border-color: var(--cocoa); }
+.vis-summary { margin-bottom: 22px; }
+.vis-chart { display: flex; align-items: flex-end; gap: 3px; height: 140px; padding: 10px 0 0; border-bottom: 1px solid var(--border-light); }
+.vis-chart span { flex: 1; height: 100%; display: flex; align-items: flex-end; }
+.vis-chart i { display: block; width: 100%; min-height: 2px; background: var(--terracotta); border-radius: 2px 2px 0 0; opacity: .85; }
+.vis-chart span:hover i { opacity: 1; background: var(--cocoa); }
+.vis-axis { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin: 6px 0 28px; }
+.vis-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; }
+.vis-bars { list-style: none; padding: 0; margin: 0; }
+.vis-bars li { display: grid; grid-template-columns: 1fr 90px 44px; align-items: center; gap: 10px; padding: 7px 0; font-size: 14px; color: var(--cocoa); border-bottom: 1px solid var(--border-light); }
+.vis-bar { height: 6px; background: var(--ivory); border-radius: 3px; overflow: hidden; }
+.vis-bar i { display: block; height: 100%; background: var(--gold); }
+.vis-bars b { text-align: right; font-weight: 600; }
+.vis-grid .admin-help { margin-top: 12px; }
+@media (max-width: 900px) { .vis-grid { grid-template-columns: 1fr; } }
 .dispute-note { background: #fbf1ec; border-left: 3px solid var(--terracotta); padding: 10px 14px; font-size: 14px; color: var(--cocoa); margin: 10px 0; }
 .mod-actions-col { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
 .admin-table small { color: var(--text-muted); font-size: 12px; }
@@ -194,6 +211,7 @@
             <button role="tab" data-view="inquiries" aria-selected="false">Membership enquiries</button>
             <button role="tab" data-view="liaison" aria-selected="false">Liaison consultations</button>
             <button role="tab" data-view="messages" aria-selected="false">Messages</button>
+            <button role="tab" data-view="visitors" aria-selected="false">Visitors</button>
         </div>
         <p class="error-msg" id="appError" role="alert"></p>
         <div id="panel"></div>
@@ -268,6 +286,7 @@
         if (view === 'orders') return api('admin?view=orders').then(renderOrders).catch(function (e) { showError(e.message); });
         if (view === 'listings') return api('admin?view=listings').then(renderListings).catch(function (e) { showError(e.message); });
         if (view === 'inquiries') return api('admin?view=inquiries').then(renderInquiries).catch(function (e) { showError(e.message); });
+        if (view === 'visitors') return api('admin?view=visitors&days=' + visitorDays).then(renderVisitors).catch(function (e) { showError(e.message); });
         if (view === 'messages') return api('admin?view=messages').then(renderMessages).catch(function (e) { showError(e.message); });
         if (view === 'liaison') return api('admin?view=liaison').then(renderLiaison).catch(function (e) { showError(e.message); });
         api('admin?view=reviews&status=' + view).then(renderReviews).catch(function (e) { showError(e.message); });
@@ -439,6 +458,41 @@
         });
     }
 
+    var visitorDays = 30;
+    var PAGE_NAMES = { '/': 'Home', '/index.html': 'Home', '/templates.html': 'Templates', '/single-template.html': 'A planner page', '/custom-template.html': 'Custom planner', '/find-vendors.html': 'Find vendors', '/vendor-profile.html': 'A vendor profile', '/reviews.html': 'Reviews', '/event-liaison.html': 'Event liaison', '/vendor-memberships.html': 'Vendor memberships', '/vendor-portal.html': 'Vendor login and dashboard', '/about.html': 'About', '/contact.html': 'Contact', '/cart.html': 'Cart', '/thank-you.html': 'Order confirmed', '/terms.html': 'Terms', '/refund-policy.html': 'Refund policy', '/delivery-policy.html': 'Delivery policy', '/privacy-policy.html': 'Privacy policy', '/404.html': 'Page not found' };
+    function countryName(code) {
+        if (!code || code === '??') return 'Unknown';
+        try { return new Intl.DisplayNames(['en'], { type: 'region' }).of(code) || code; } catch (e) { return code; }
+    }
+    function barList(rows, label) {
+        if (!rows.length) return '<p class="admin-help">No visits yet.</p>';
+        var max = Math.max.apply(null, rows.map(function (r) { return r.views; }));
+        return '<ul class="vis-bars">' + rows.map(function (r) {
+            return '<li><span class="vis-name">' + esc(label(r.name)) + '</span><span class="vis-bar"><i style="width:' + Math.max(2, Math.round(r.views / max * 100)) + '%"></i></span><b>' + r.views + '</b></li>';
+        }).join('') + '</ul>';
+    }
+    function renderVisitors(d) {
+        var daily = d.daily || [];
+        var views = daily.reduce(function (n, x) { return n + x.views; }, 0);
+        var visitors = daily.reduce(function (n, x) { return n + x.visitors; }, 0);
+        var today = daily[daily.length - 1] || { views: 0, visitors: 0 };
+        var maxV = Math.max(1, Math.max.apply(null, daily.map(function (x) { return x.views; })));
+        var chart = '<div class="vis-chart" role="img" aria-label="Page views per day">' + daily.map(function (x) {
+            return '<span title="' + esc(x.day) + ': ' + x.views + ' views, ' + x.visitors + ' visitors"><i style="height:' + Math.round(x.views / maxV * 100) + '%"></i></span>';
+        }).join('') + '</div><div class="vis-axis"><span>' + VC.date(daily[0] && daily[0].day) + '</span><span>Today</span></div>';
+        $('panel').innerHTML =
+            '<div class="vis-range">' + [7, 30, 90].map(function (n) { return '<button data-days="' + n + '"' + (n === d.days ? ' aria-pressed="true"' : '') + '>Last ' + n + ' days</button>'; }).join('') + '</div>' +
+            '<div class="summary vis-summary"><div><b>' + visitors + '</b><span>Visitors (last ' + d.days + ' days)</span></div><div><b>' + views + '</b><span>Page views</span></div><div><b>' + today.visitors + '</b><span>Visitors today</span></div><div><b>' + today.views + '</b><span>Page views today</span></div></div>' +
+            chart +
+            '<div class="vis-grid"><div><h3 class="admin-subhead">Where visitors come from</h3>' + barList(d.sources || [], function (n) { return n; }) +
+            '<p class="admin-help">WhatsApp links usually show as "Direct or WhatsApp". To track a campaign exactly, add <code>?utm_source=instagram</code> (or whatsapp, tiktok) to the link you share.</p></div>' +
+            '<div><h3 class="admin-subhead">Countries</h3>' + barList(d.countries || [], countryName) + '</div>' +
+            '<div><h3 class="admin-subhead">Most viewed pages</h3>' + barList(d.pages || [], function (n) { return PAGE_NAMES[n] || n; }) + '</div></div>' +
+            '<p class="admin-help">Counted without cookies. Your own visits to this admin page are not included.</p>';
+        $('panel').querySelectorAll('.vis-range button').forEach(function (b) {
+            b.addEventListener('click', function () { visitorDays = parseInt(b.dataset.days, 10); load(); });
+        });
+    }
     var MSG_KINDS = { contact: 'Contact form', custom: 'Custom planner request', 'vendor-request': 'Looking for a vendor' };
     function renderMessages(d) {
         var rows = d.messages || [];

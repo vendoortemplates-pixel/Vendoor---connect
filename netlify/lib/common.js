@@ -60,7 +60,10 @@ async function ensureSchema(base) {
     () => base.sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS resent_at TIMESTAMP`,
     () => base.sql`CREATE TABLE IF NOT EXISTS messages (
         id SERIAL PRIMARY KEY, kind TEXT NOT NULL, name TEXT NOT NULL, email TEXT NOT NULL, phone TEXT, subject TEXT,
-        details TEXT, message TEXT, status TEXT NOT NULL DEFAULT 'new', ip_hash TEXT, created_at TIMESTAMP NOT NULL DEFAULT NOW())`
+        details TEXT, message TEXT, status TEXT NOT NULL DEFAULT 'new', ip_hash TEXT, created_at TIMESTAMP NOT NULL DEFAULT NOW())`,
+    () => base.sql`CREATE TABLE IF NOT EXISTS site_views (day DATE NOT NULL DEFAULT CURRENT_DATE, path TEXT NOT NULL, source TEXT NOT NULL,
+        country TEXT NOT NULL, count INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (day, path, source, country))`,
+    () => base.sql`CREATE TABLE IF NOT EXISTS site_visitors (day DATE NOT NULL DEFAULT CURRENT_DATE, vhash TEXT NOT NULL, PRIMARY KEY (day, vhash))`
   ];
   const probe = await base.sql`
     SELECT
@@ -73,13 +76,13 @@ async function ensureSchema(base) {
       (SELECT COUNT(*)::int FROM information_schema.columns WHERE table_name = 'reviews' AND column_name IN ('dispute_reason','disputed_at','dispute_resolved_at')) AS d,
       (SELECT COUNT(*)::int FROM information_schema.tables WHERE table_name IN ('listing_stats','membership_inquiries','liaison_requests')) AS s,
       (SELECT COUNT(*)::int FROM information_schema.columns WHERE table_name = 'listings' AND column_name IN ('featured_package','featured_reminded','membership_reminded')) AS fp,
-      (SELECT COUNT(*)::int FROM information_schema.tables WHERE table_name IN ('package_orders','messages')) AS po,
+      (SELECT COUNT(*)::int FROM information_schema.tables WHERE table_name IN ('package_orders','messages','site_views','site_visitors')) AS po,
       (SELECT COUNT(*)::int FROM information_schema.columns WHERE table_name = 'orders' AND column_name IN ('items','resent_at')) AS oi
   `;
   const p = rowsOf(probe)[0] || {};
   if (Number(p.r) === 7 && Number(p.l) === 3 && Number(p.o) === 1 && Number(p.e) === 2 && Number(p.t) === 1
       && Number(p.m) === 3 && Number(p.d) === 3 && Number(p.s) === 3
-      && Number(p.fp) === 3 && Number(p.po) === 2 && Number(p.oi) === 2) return;
+      && Number(p.fp) === 3 && Number(p.po) === 4 && Number(p.oi) === 2) return;
   for (const step of steps) {
     try { await step(); } catch (e) { console.error('ensureSchema step failed:', e && e.message); }
   }
