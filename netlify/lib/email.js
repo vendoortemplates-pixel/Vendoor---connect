@@ -306,11 +306,13 @@ async function sendReviewerEmail(stage, r, note) {
   if (stage === 'received') {
     subject = 'Thank you for your review of ' + reviewAbout(r);
     html = reviewShell('Thank you' + (first ? ', ' + first : ''),
-      `<p style="${RP}">We've received your review of <strong>${about}</strong>. A real person on our team reads every review before it goes live, usually within 48 hours, and we'll email you as soon as it's published.</p>${quoteBox(r)}<p style="${RP}">Honest reviews like yours help the next family choose with confidence. Thank you for taking the time.</p>`);
+      `<p style="${RP}">We've received your review of <strong>${about}</strong>. A representative on our team reads every review before it goes live, usually within 48 hours, and we'll email you as soon as it's published.</p>${quoteBox(r)}<p style="${RP}">Honest reviews like yours help the next client choose with confidence. Thank you so much for taking the time.</p>`);
   } else if (stage === 'published') {
     subject = 'Your review of ' + reviewAbout(r) + ' is live';
     html = reviewShell('Your review is live',
-      `<p style="${RP}">Thank you${first ? ', ' + first : ''}. Your review of <strong>${about}</strong> is now published on Vendoor Connect.</p>${quoteBox(r)}`,
+      `<p style="${RP}">Thank you${first ? ', ' + first : ''}. ` + (r.review_type === 'platform'
+        ? `Your review of <strong>Vendoor Connect</strong> is now live on our site.`
+        : `Your review of <strong>${about}</strong> is now published on Vendoor Connect.`) + `</p>${quoteBox(r)}`,
       { text: 'See your review', url: reviewLink(r) });
   } else {
     subject = 'A quick question about your review of ' + reviewAbout(r);
