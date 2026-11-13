@@ -118,11 +118,7 @@
                 <div class="ed-hero-copy">
                     <h1>Every celebration, <em>beautifully planned.</em></h1>
                     <p>Find vendors other clients genuinely recommend, use planners made for our traditions, and have a dedicated event liaison in your corner.</p>
-                    <form class="ed-finder" action="find-vendors.html" method="get" role="search" id="homeFinder">
-                        <label class="sr-only" for="homeCategory">What do you need?</label>
-                        <select id="homeCategory" name="category"><option value="">All vendors</option><option value="planning">Event planners</option><option value="catering">Caterers &amp; food vendors</option><option value="decor">Decorators &amp; florists</option><option value="photography">Photographers &amp; videographers</option><option value="makeup">Makeup artists</option><option value="gele">Gele stylists</option><option value="hair">Hair stylists</option><option value="nails">Nails</option><option value="lashes">Lashes</option><option value="fashion">Aso-ebi</option><option value="tailors">Tailors</option><option value="cakes">Desserts</option><option value="venue">Event centres</option><option value="music">DJs &amp; live bands</option><option value="mc">MCs</option><option value="drinks">Drinks &amp; bartenders</option><option value="rentals">Rentals</option><option value="transport">Car hire</option><option value="assistant">Personal assistants</option><option value="ushers">Ushers &amp; event staff</option></select>
-                        <button type="submit" class="ed-btn">Find vendors</button>
-                    </form>
+                    <div class="ed-hero-cta"><a href="#find" class="ed-btn">Find a vendor</a></div>
                     <div class="ed-hero-links">
                         <a href="templates.html" class="ed-more">Browse planners</a>
                         <a href="event-liaison.html" class="ed-more">Book an event liaison</a>
@@ -141,23 +137,132 @@
 
     <div class="ed-weave" aria-hidden="true"></div>
 
-    <!-- CATEGORIES -->
-    <section class="ed-section ed-cats-section">
+    <!-- FIND YOUR VENDORS: a rail of patterned tiles, one per category -->
+    <section class="ed-find" id="find" aria-labelledby="findHeading">
         <div class="ed-wrap">
-            <div class="ed-head">
+            <div class="ed-find-head">
                 <div>
-                    <h2>Find your vendors</h2>
+                    <h2 id="findHeading">Find your vendors</h2>
                     <p>Browse by what you need. Every vendor shows their work, their prices and reviews from real clients.</p>
                 </div>
-                <a href="find-vendors.html#directory" class="ed-more">All vendors</a>
+                <div class="ed-rail-arrows">
+                    <button type="button" class="ed-rail-btn" data-dir="-1" aria-label="Previous categories"><svg viewBox="0 0 24 24"><path d="M20 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
+                    <button type="button" class="ed-rail-btn" data-dir="1" aria-label="More categories"><svg viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
+                </div>
             </div>
-            <div class="ed-popular" role="navigation" aria-label="Popular vendor categories"><a href="find-vendors.html?category=planning#directory">Event planners</a><a href="find-vendors.html?category=catering#directory">Caterers</a><a href="find-vendors.html?category=decor#directory">Decorators</a><a href="find-vendors.html?category=photography#directory">Photographers</a><a href="find-vendors.html?category=makeup#directory">Makeup artists</a><a href="find-vendors.html?category=fashion#directory">Aso-ebi</a></div>
-            <details class="ed-allcats">
-                <summary><span>See all 20 categories</span></summary>
-                <div class="ed-allcats-list"><a href="find-vendors.html?category=planning#directory">Event planners</a><a href="find-vendors.html?category=catering#directory">Caterers &amp; food vendors</a><a href="find-vendors.html?category=decor#directory">Decorators &amp; florists</a><a href="find-vendors.html?category=photography#directory">Photographers &amp; videographers</a><a href="find-vendors.html?category=makeup#directory">Makeup artists</a><a href="find-vendors.html?category=gele#directory">Gele stylists</a><a href="find-vendors.html?category=hair#directory">Hair stylists</a><a href="find-vendors.html?category=nails#directory">Nails</a><a href="find-vendors.html?category=lashes#directory">Lashes</a><a href="find-vendors.html?category=fashion#directory">Aso-ebi</a><a href="find-vendors.html?category=tailors#directory">Tailors</a><a href="find-vendors.html?category=cakes#directory">Desserts</a><a href="find-vendors.html?category=venue#directory">Event centres</a><a href="find-vendors.html?category=music#directory">DJs &amp; live bands</a><a href="find-vendors.html?category=mc#directory">MCs</a><a href="find-vendors.html?category=drinks#directory">Drinks &amp; bartenders</a><a href="find-vendors.html?category=rentals#directory">Rentals</a><a href="find-vendors.html?category=transport#directory">Car hire</a><a href="find-vendors.html?category=assistant#directory">Personal assistants</a><a href="find-vendors.html?category=ushers#directory">Ushers &amp; event staff</a></div>
-            </details>
+        </div>
+        <div class="ed-rail" id="vendorRail" tabindex="0" aria-label="Vendor categories">
+            <div class="ed-rail-track">
+                <a class="ed-tile" href="find-vendors.html?category=planning#directory">
+                    <span class="ed-tile-art" style="background-color:#5B4636;background-image:repeating-linear-gradient(90deg,#5B4636 0 14px,#C8A96A 14px 18px,#C97A5A 18px 26px,#F3E7DA 26px 28px)"><span class="ed-tile-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="1"/><path d="M9 4V3h6v1M8.5 10l1.5 1.5L13 8.5M8.5 15.5l1.5 1.5L13 14"/></svg></span></span>
+                    <span class="ed-tile-name">Event planners</span>
+                    <span class="ed-tile-go">Browse</span>
+                </a>
+                <a class="ed-tile" href="find-vendors.html?category=catering#directory">
+                    <span class="ed-tile-art" style="background-color:#B4643F;background-image:radial-gradient(#E9A27F 22%,transparent 24%),radial-gradient(#8E4A2C 22%,transparent 24%);background-size:26px 26px;background-position:0 0,13px 13px"><span class="ed-tile-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17h18M5 17a7 7 0 0 1 14 0M12 8V6M10 6h4"/></svg></span></span>
+                    <span class="ed-tile-name">Caterers &amp; food vendors</span>
+                    <span class="ed-tile-go">Browse</span>
+                </a>
+                <a class="ed-tile" href="find-vendors.html?category=decor#directory">
+                    <span class="ed-tile-art" style="background-color:#E7C9C0;background-image:radial-gradient(ellipse 6px 12px at 50% 50%,#C97A5A 60%,transparent 62%),radial-gradient(ellipse 5px 10px at 50% 50%,#C8A96A 60%,transparent 62%);background-size:34px 34px;background-position:0 0,17px 17px"><span class="ed-tile-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="2"/><path d="M12 7c0-3 3-3 3 0M12 7c0-3-3-3-3 0M14 9c3 0 3 3 0 3M10 9c-3 0-3 3 0 3M12 11v10M12 17c2-2 4-2 5-1"/></svg></span></span>
+                    <span class="ed-tile-name">Decorators &amp; florists</span>
+                    <span class="ed-tile-go">Browse</span>
+                </a>
+                <a class="ed-tile" href="find-vendors.html?category=photography#directory">
+                    <span class="ed-tile-art" style="background-color:#2F2620;background-image:repeating-linear-gradient(45deg,transparent 0 12px,rgba(200,169,106,.35) 12px 13px),repeating-linear-gradient(-45deg,transparent 0 12px,rgba(200,169,106,.35) 12px 13px)"><span class="ed-tile-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="1.5"/><circle cx="12" cy="13.5" r="3.5"/><path d="M8 7l1.5-2.5h5L16 7"/></svg></span></span>
+                    <span class="ed-tile-name">Photographers &amp; videographers</span>
+                    <span class="ed-tile-go">Browse</span>
+                </a>
+                <a class="ed-tile" href="find-vendors.html?category=makeup#directory">
+                    <span class="ed-tile-art" style="background-color:#F1DCD3;background-image:radial-gradient(circle,#C97A5A 3px,transparent 4px);background-size:18px 18px"><span class="ed-tile-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21V11h6v10zM10 11V7l4-3v7"/></svg></span></span>
+                    <span class="ed-tile-name">Makeup artists</span>
+                    <span class="ed-tile-go">Browse</span>
+                </a>
+                <a class="ed-tile" href="find-vendors.html?category=gele#directory">
+                    <span class="ed-tile-art" style="background-color:#C97A5A;background-image:repeating-radial-gradient(circle at 0 100%,transparent 0 14px,rgba(243,231,218,.55) 14px 16px);background-size:44px 44px"><span class="ed-tile-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 14c0-5 3.5-9 7-9s7 4 7 9M5 14c2 2 4 2.5 7 2.5s5-.5 7-2.5M8 9c1.5 1 2.5 3 2.5 6M16 9c-1.5 1-2.5 3-2.5 6M19 14c1.5 0 2-2 1-3"/></svg></span></span>
+                    <span class="ed-tile-name">Gele stylists</span>
+                    <span class="ed-tile-go">Browse</span>
+                </a>
+                <a class="ed-tile" href="find-vendors.html?category=hair#directory">
+                    <span class="ed-tile-art" style="background-color:#46362A;background-image:repeating-linear-gradient(60deg,transparent 0 8px,rgba(200,169,106,.45) 8px 10px),repeating-linear-gradient(120deg,transparent 0 8px,rgba(201,122,90,.35) 8px 10px)"><span class="ed-tile-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h16v3H4zM6 12v7M9 12v7M12 12v7M15 12v7M18 12v7"/></svg></span></span>
+                    <span class="ed-tile-name">Hair stylists</span>
+                    <span class="ed-tile-go">Browse</span>
+                </a>
+                <a class="ed-tile" href="find-vendors.html?category=nails#directory">
+                    <span class="ed-tile-art" style="background-color:#F6E3DC;background-image:radial-gradient(ellipse 5px 8px,#D98B6E 70%,transparent 72%);background-size:22px 30px"><span class="ed-tile-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 9h6v11a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1zM10.5 9V6h3v3M12 6V3"/></svg></span></span>
+                    <span class="ed-tile-name">Nails</span>
+                    <span class="ed-tile-go">Browse</span>
+                </a>
+                <a class="ed-tile" href="find-vendors.html?category=lashes#directory">
+                    <span class="ed-tile-art" style="background-color:#EFE5D8;background-image:repeating-linear-gradient(100deg,transparent 0 9px,rgba(70,54,42,.35) 9px 10px)"><span class="ed-tile-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12c3-4 15-4 18 0c-3 4-15 4-18 0z"/><circle cx="12" cy="12" r="2.5"/><path d="M6 9L4.5 6.5M9 8l-1-3M12 7.5V4.5M15 8l1-3M18 9l1.5-2.5"/></svg></span></span>
+                    <span class="ed-tile-name">Lashes</span>
+                    <span class="ed-tile-go">Browse</span>
+                </a>
+                <a class="ed-tile" href="find-vendors.html?category=fashion#directory">
+                    <span class="ed-tile-art" style="background-color:#C8A96A;background-image:repeating-linear-gradient(0deg,transparent 0 10px,rgba(91,70,54,.55) 10px 12px),repeating-linear-gradient(90deg,transparent 0 10px,rgba(201,122,90,.55) 10px 12px)"><span class="ed-tile-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6a2 2 0 1 1 2 2l-2 1.5M12 9.5L3 16h18z"/></svg></span></span>
+                    <span class="ed-tile-name">Aso-ebi</span>
+                    <span class="ed-tile-go">Browse</span>
+                </a>
+                <a class="ed-tile" href="find-vendors.html?category=tailors#directory">
+                    <span class="ed-tile-art" style="background-color:#F3E7DA;background-image:repeating-linear-gradient(90deg,transparent 0 11px,rgba(176,138,79,.6) 11px 12px,transparent 12px 14px,rgba(176,138,79,.6) 14px 15px)"><span class="ed-tile-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M8.5 15L19 4M15.5 15L5 4"/></svg></span></span>
+                    <span class="ed-tile-name">Tailors</span>
+                    <span class="ed-tile-go">Browse</span>
+                </a>
+                <a class="ed-tile" href="find-vendors.html?category=cakes#directory">
+                    <span class="ed-tile-art" style="background-color:#F6EEE4;background-image:repeating-linear-gradient(135deg,#F6EEE4 0 10px,#EBD9C6 10px 20px)"><span class="ed-tile-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21h16M5 21v-6h14v6M7 15v-4h10v4M12 11V8M12 8c-1 0-1-2 0-3c1 1 1 3 0 3"/></svg></span></span>
+                    <span class="ed-tile-name">Desserts</span>
+                    <span class="ed-tile-go">Browse</span>
+                </a>
+                <a class="ed-tile" href="find-vendors.html?category=venue#directory">
+                    <span class="ed-tile-art" style="background-color:#5B4636;background-image:linear-gradient(45deg,rgba(200,169,106,.35) 25%,transparent 25%,transparent 75%,rgba(200,169,106,.35) 75%),linear-gradient(45deg,rgba(200,169,106,.35) 25%,transparent 25%,transparent 75%,rgba(200,169,106,.35) 75%);background-size:28px 28px;background-position:0 0,14px 14px"><span class="ed-tile-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M4 21V10l8-5 8 5v11M9 21v-6a3 3 0 0 1 6 0v6"/></svg></span></span>
+                    <span class="ed-tile-name">Event centres</span>
+                    <span class="ed-tile-go">Browse</span>
+                </a>
+                <a class="ed-tile" href="find-vendors.html?category=music#directory">
+                    <span class="ed-tile-art" style="background-color:#46362A;background-image:repeating-radial-gradient(circle at 50% 120%,transparent 0 10px,rgba(200,169,106,.5) 10px 11px)"><span class="ed-tile-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l10-2v12"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="16" r="2"/></svg></span></span>
+                    <span class="ed-tile-name">DJs &amp; live bands</span>
+                    <span class="ed-tile-go">Browse</span>
+                </a>
+                <a class="ed-tile" href="find-vendors.html?category=mc#directory">
+                    <span class="ed-tile-art" style="background-color:#B4643F;background-image:repeating-linear-gradient(0deg,transparent 0 6px,rgba(243,231,218,.35) 6px 7px)"><span class="ed-tile-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4M9 21h6"/></svg></span></span>
+                    <span class="ed-tile-name">MCs</span>
+                    <span class="ed-tile-go">Browse</span>
+                </a>
+                <a class="ed-tile" href="find-vendors.html?category=drinks#directory">
+                    <span class="ed-tile-art" style="background-color:#E8D3BC;background-image:radial-gradient(circle,rgba(201,122,90,.55) 6px,transparent 7px),radial-gradient(circle,rgba(176,138,79,.45) 3px,transparent 4px);background-size:40px 40px,20px 20px;background-position:0 0,10px 10px"><span class="ed-tile-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10l-1 7a4 4 0 0 1-8 0zM12 14v7M8 21h8"/></svg></span></span>
+                    <span class="ed-tile-name">Drinks &amp; bartenders</span>
+                    <span class="ed-tile-go">Browse</span>
+                </a>
+                <a class="ed-tile" href="find-vendors.html?category=rentals#directory">
+                    <span class="ed-tile-art" style="background-color:#C8A96A;background-image:linear-gradient(90deg,rgba(91,70,54,.4) 2px,transparent 2px),linear-gradient(0deg,rgba(91,70,54,.4) 2px,transparent 2px);background-size:24px 24px"><span class="ed-tile-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3v18M7 12h10v9M17 12V3M7 8h10"/></svg></span></span>
+                    <span class="ed-tile-name">Rentals</span>
+                    <span class="ed-tile-go">Browse</span>
+                </a>
+                <a class="ed-tile" href="find-vendors.html?category=transport#directory">
+                    <span class="ed-tile-art" style="background-color:#2F2620;background-image:repeating-linear-gradient(90deg,transparent 0 22px,rgba(200,169,106,.55) 22px 34px,transparent 34px 46px)"><span class="ed-tile-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 16v-3l2-5h14l2 5v3zM3 16v3M21 16v3"/><circle cx="7.5" cy="16" r="1.5"/><circle cx="16.5" cy="16" r="1.5"/></svg></span></span>
+                    <span class="ed-tile-name">Car hire</span>
+                    <span class="ed-tile-go">Browse</span>
+                </a>
+                <a class="ed-tile" href="find-vendors.html?category=assistant#directory">
+                    <span class="ed-tile-art" style="background-color:#F1DCD3;background-image:repeating-linear-gradient(45deg,transparent 0 14px,rgba(201,122,90,.4) 14px 16px)"><span class="ed-tile-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="16" rx="1"/><path d="M4 10h16M9 3v4M15 3v4M9 15l2 2 4-4"/></svg></span></span>
+                    <span class="ed-tile-name">Personal assistants</span>
+                    <span class="ed-tile-go">Browse</span>
+                </a>
+                <a class="ed-tile" href="find-vendors.html?category=ushers#directory">
+                    <span class="ed-tile-art" style="background-color:#E7D6C2;background-image:radial-gradient(circle at 50% 50%,transparent 6px,rgba(91,70,54,.45) 7px,transparent 8px);background-size:24px 24px"><span class="ed-tile-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12L4 8v8zM12 12l8-4v8z"/><circle cx="12" cy="12" r="1.6"/></svg></span></span>
+                    <span class="ed-tile-name">Ushers &amp; event staff</span>
+                    <span class="ed-tile-go">Browse</span>
+                </a>
+                <a class="ed-tile ed-tile-all" href="find-vendors.html#directory">
+                    <span class="ed-tile-art"><em>20</em><small>categories</small></span>
+                    <span class="ed-tile-name">See them all</span>
+                    <span class="ed-tile-go">Browse</span>
+                </a>
+            </div>
         </div>
     </section>
+
+
 
     <!-- FEATURED VENDORS: paid placements only, hidden until there is one -->
     <section class="ed-section ed-section-tight ed-picks" id="homeVendorsWrap" hidden>
@@ -286,6 +391,24 @@
 
     <script src="main.js"></script>
 
+    <script>
+    // Category rail: arrows slide one screen of tiles; swipe works on phones.
+    (function () {
+        var rail = document.getElementById('vendorRail');
+        if (!rail) return;
+        var btns = document.querySelectorAll('.ed-rail-btn');
+        function update() {
+            btns[0].disabled = rail.scrollLeft < 8;
+            btns[1].disabled = rail.scrollLeft + rail.clientWidth > rail.scrollWidth - 8;
+        }
+        btns.forEach(function (b) {
+            b.addEventListener('click', function () {
+                rail.scrollBy({ left: Number(b.dataset.dir) * Math.max(260, rail.clientWidth * 0.8), behavior: 'smooth' });
+            });
+        });
+        rail.addEventListener('scroll', update, { passive: true }); window.addEventListener('resize', update); update();
+    })();
+    </script>
     <script src="vc.js"></script>
     <script>
     // ----- HOMEPAGE: featured vendors + latest approved reviews -----

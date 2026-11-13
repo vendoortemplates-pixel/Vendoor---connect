@@ -600,3 +600,107 @@ a.ed-btn-light, .ed-btn-light { background: #fff; color: var(--ink); border-colo
     .ed-popular a:nth-child(n+3) { border-top: 1px solid var(--hair); }
     .ed-allcats-list { grid-template-columns: 1fr 1fr; padding: 18px 20px; gap: 0 18px; }
 }
+
+/* =====================================================================
+   FIND YOUR VENDORS AS A SENTENCE
+   ===================================================================== */
+.ed-hero-cta { margin: 0 0 26px; }
+.ed-find { background: var(--sand); padding: 96px 0 88px; text-align: center; }
+.ed-sentence { display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 10px 16px;
+    font-family: var(--font-heading); font-size: 46px; line-height: 1.3; color: var(--ink); max-width: 1000px; margin: 0 auto; }
+.ed-pick, .ed-pick-probe { font-family: var(--font-heading); font-size: 46px; }
+.ed-pick { position: relative; display: inline-block; }
+.ed-pick select { appearance: none; -webkit-appearance: none; border: 0; border-radius: 0; background: transparent; cursor: pointer;
+    font: inherit; font-style: italic; color: var(--terracotta); padding: 0 30px 2px 0; border-bottom: 2px solid var(--terracotta); max-width: 92vw; }
+.ed-pick select:focus { outline: none; border-bottom-color: var(--ink); }
+.ed-pick select:focus-visible { outline: 2px solid var(--terracotta); outline-offset: 4px; }
+.ed-pick::after { content: ''; position: absolute; right: 6px; top: 50%; width: 10px; height: 10px; border-right: 2px solid var(--terracotta); border-bottom: 2px solid var(--terracotta);
+    transform: translateY(-70%) rotate(45deg); pointer-events: none; }
+.ed-pick select option { font-family: var(--font-body); font-style: normal; font-size: 16px; color: var(--ink); }
+.ed-pick-probe { position: absolute; visibility: hidden; white-space: nowrap; font-style: italic; left: -9999px; top: 0; }
+.ed-sentence-go { flex-basis: 100%; margin: 34px auto 0; display: inline-flex; align-items: center; justify-content: center; gap: 12px; max-width: max-content;
+    background: var(--brand-dark); color: #fff; border: 0; cursor: pointer; padding: 17px 30px;
+    font-family: var(--font-body); font-size: 13px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; transition: background .2s; }
+.ed-sentence-go svg { width: 18px; height: 18px; transition: transform .2s; }
+.ed-sentence-go:hover { background: var(--terracotta); }
+.ed-sentence-go:hover svg { transform: translateX(4px); }
+.ed-shortcuts { margin: 30px auto 0; max-width: 760px; font-size: 16px; line-height: 1.9; color: var(--text-muted); }
+.ed-shortcuts a { color: var(--ink); text-decoration: none; border-bottom: 1px solid #CDBFAE; }
+.ed-shortcuts a:hover { color: var(--terracotta); border-color: var(--terracotta); }
+.ed-shortcuts a.ed-shortcuts-all { color: var(--terracotta); border-color: var(--terracotta); }
+@media (max-width: 960px) {
+    .ed-find { padding: 60px 0 56px; }
+    .ed-sentence, .ed-pick, .ed-pick-probe { font-size: 30px; }
+    .ed-sentence { gap: 6px 10px; }
+    .ed-pick::after { width: 8px; height: 8px; }
+    .ed-sentence-go { margin-top: 26px; }
+    .ed-shortcuts { font-size: 15px; }
+}
+.ed-sentence > span { font-family: var(--font-heading); }
+
+/* The sentence, framed like an invitation card */
+.ed-find { background-color: var(--sand);
+    background-image: radial-gradient(rgba(176,138,79,.28) 1.2px, transparent 1.4px);
+    background-size: 26px 26px; padding: 88px 0; }
+.ed-invite { position: relative; max-width: 1000px; margin: 0 auto; background: #fff; padding: 66px 56px 52px;
+    border: 1px solid #D9C3A0; box-shadow: 0 30px 60px -30px rgba(70,54,42,.25); }
+.ed-invite::before { content: ''; position: absolute; inset: 10px; border: 1px solid #E8D9C2; pointer-events: none; }
+.ed-ornament { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 0 auto 30px; }
+.ed-ornament i { display: block; width: 70px; height: 1px; background: #C8A96A; }
+.ed-ornament b { display: block; width: 9px; height: 9px; background: var(--gold); transform: rotate(45deg); }
+.ed-city { font-style: italic; color: var(--terracotta); border-bottom: 2px solid var(--terracotta); padding-bottom: 2px; }
+.ed-soon { margin: 22px 0 0; font-size: 12.5px; letter-spacing: .16em; text-transform: uppercase; color: #B08A4F; }
+@media (max-width: 960px) {
+    .ed-find { padding: 48px 0; background-size: 20px 20px; }
+    .ed-invite { padding: 44px 22px 36px; }
+    .ed-invite::before { inset: 7px; }
+    .ed-ornament { margin-bottom: 22px; }
+    .ed-ornament i { width: 46px; }
+}
+.ed-sentence .ed-break { flex-basis: 100%; height: 0; }
+.ed-sentence-go { flex-basis: auto; margin-top: 24px; }
+@media (min-width: 961px) { .ed-sentence, .ed-pick, .ed-pick-probe { font-size: 42px; } }
+@media (max-width: 960px) { .ed-sentence-go { margin-top: 18px; } }
+
+/* =====================================================================
+   FIND YOUR VENDORS: patterned category rail (no photos)
+   ===================================================================== */
+.ed-find { background: var(--sand); background-image: none; padding: 84px 0 76px; text-align: left; }
+.ed-find-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 30px; margin-bottom: 34px; }
+.ed-find-head h2 { font-size: 40px; line-height: 1.1; margin: 0 0 10px; }
+.ed-find-head p { margin: 0; font-size: 16.5px; line-height: 1.7; color: var(--text-muted); max-width: 56ch; }
+.ed-rail-arrows { display: flex; gap: 10px; flex: none; }
+.ed-rail-btn { width: 50px; height: 50px; display: inline-flex; align-items: center; justify-content: center; background: #fff; color: var(--ink);
+    border: 1px solid var(--ink); cursor: pointer; transition: background .2s, color .2s, opacity .2s; }
+.ed-rail-btn svg { width: 20px; height: 20px; }
+.ed-rail-btn:hover:not(:disabled) { background: var(--brand-dark); color: #fff; border-color: var(--brand-dark); }
+.ed-rail-btn:disabled { opacity: .3; cursor: default; }
+.ed-rail { overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+    scroll-padding-left: max(32px, calc((100vw - 1240px) / 2 + 32px)); }
+.ed-rail::-webkit-scrollbar { display: none; }
+.ed-rail:focus-visible { outline: 2px solid var(--terracotta); outline-offset: -2px; }
+.ed-rail-track { display: flex; gap: 22px; padding: 0 max(32px, calc((100vw - 1240px) / 2 + 32px)); width: max-content; }
+.ed-tile { flex: 0 0 232px; scroll-snap-align: start; text-decoration: none; color: var(--ink); }
+.ed-tile-art { position: relative; display: flex; align-items: center; justify-content: center; height: 280px; margin-bottom: 16px; overflow: hidden; }
+.ed-tile-art::after { content: ''; position: absolute; inset: 0; box-shadow: inset 0 0 0 1px rgba(30,26,23,.06); }
+.ed-tile-icon { width: 78px; height: 78px; border-radius: 50%; background: #FBF7F1; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 10px 24px rgba(30,26,23,.18); transition: transform .35s ease; }
+.ed-tile-icon svg { width: 34px; height: 34px; fill: none; stroke: #8A6A3E; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
+.ed-tile:hover .ed-tile-icon { transform: scale(1.08); }
+.ed-tile-name { display: block; font-family: var(--font-heading); font-size: 21px; line-height: 1.25; min-height: 52px; }
+.ed-tile-go { display: inline-block; margin-top: 4px; font-size: 12px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; border-bottom: 1px solid var(--ink); padding-bottom: 2px; }
+.ed-tile:hover .ed-tile-name, .ed-tile:hover .ed-tile-go { color: var(--terracotta); border-color: var(--terracotta); }
+.ed-tile-all .ed-tile-art { background: #fff; border: 1px solid #D9C3A0; flex-direction: column; }
+.ed-tile-all em { font-family: var(--font-heading); font-size: 76px; font-style: italic; color: var(--terracotta); line-height: 1; }
+.ed-tile-all small { font-size: 12px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: #B08A4F; margin-top: 6px; }
+@media (max-width: 960px) {
+    .ed-find { padding: 56px 0 52px; }
+    .ed-find-head h2 { font-size: 31px; }
+    .ed-rail-arrows { display: none; }
+    .ed-rail-track { gap: 14px; padding: 0 20px; }
+    .ed-rail { scroll-padding-left: 20px; }
+    .ed-tile { flex-basis: 168px; }
+    .ed-tile-art { height: 206px; }
+    .ed-tile-icon { width: 64px; height: 64px; } .ed-tile-icon svg { width: 28px; height: 28px; }
+    .ed-tile-name { font-size: 18px; min-height: 46px; }
+}
