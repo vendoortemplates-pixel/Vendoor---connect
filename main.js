@@ -193,3 +193,16 @@ window.VCCart = (function () {
         else fetch('/.netlify/functions/hit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body, keepalive: true });
     } catch (e) {}
 })();
+
+// ===== MASTHEAD: compact on scroll, mark the current section =====
+(function () {
+    var h = document.querySelector('.ed-header');
+    if (!h) return;
+    var on = false;
+    function tick() { var c = window.scrollY > 80; if (c !== on) { on = c; h.classList.toggle('is-compact', c); } }
+    window.addEventListener('scroll', tick, { passive: true }); tick();
+    var page = (location.pathname.split('/').pop() || 'index.html').replace('.html', '');
+    var map = { 'single-template': 'templates', 'custom-template': 'templates', 'cart': 'templates', 'vendor-profile': 'find-vendors', 'vendor-memberships': 'vendor-portal' };
+    var key = (map[page] || page) + '.html';
+    h.querySelectorAll('nav > ul > li > a').forEach(function (a) { if (a.getAttribute('href') === key) { a.classList.add('active'); a.setAttribute('aria-current', 'page'); } });
+})();

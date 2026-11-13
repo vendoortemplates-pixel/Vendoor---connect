@@ -14,6 +14,7 @@
     hair: 'Hair Stylists',
     nails: 'Nails & Lashes',
     fashion: 'Aso-ebi & Fashion',
+    tailors: 'Tailors',
     transport: 'Car Hire & Transport',
     assistant: 'Personal Assistants',
     ushers: 'Ushers & Event Staff',

@@ -22,36 +22,41 @@
     <meta name="theme-color" content="#F3E7DA">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="editorial.css">
 </head>
 <body>
 
     <!-- SITE HEADER -->
-    <header class="site-header">
-        <div class="brand-bar">
-            <a href="index.html" class="logo">
-                <img src="logo-horizontal.png" alt="Vendoor Connect" width="437" height="75">
-            </a>
-        </div>
-        <nav>
-            <button class="menu-toggle" id="menuToggle" aria-label="Open menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
+    <header class="site-header ed-header">
+        <div class="ed-topbar"><div class="ed-wrap">
+            <span class="ed-topbar-note">Event vendors, planners and on-the-day support for celebrations in Nigeria</span>
+            <span class="ed-topbar-links"><a href="vendor-portal.html?signup=1">List your business</a><a href="https://wa.me/2348139189496" target="_blank" rel="noopener">WhatsApp 0813 918 9496</a></span>
+        </div></div>
+        <div class="ed-masthead"><div class="ed-wrap">
+            <div class="ed-masthead-side">
+                <button class="menu-toggle" id="menuToggle" aria-label="Open menu"><span></span><span></span><span></span></button>
+                <a class="ed-icon-link ed-desktop" href="reviews.html#write">Write a review</a>
+            </div>
+            <a href="index.html" class="logo"><img src="logo-horizontal.png" alt="Vendoor Connect" width="437" height="75"></a>
+            <div class="ed-masthead-side right">
+                <a class="ed-icon-link" href="find-vendors.html#directory" aria-label="Search vendors"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg><span>Search</span></a>
+            </div>
+        </div></div>
+        <nav aria-label="Main">
             <ul>
+                <li><a href="find-vendors.html">Find vendors</a></li>
+                <li><a href="event-liaison.html">Event liaison</a></li>
                 <li class="has-dropdown">
-                    <a href="templates.html">Templates</a>
+                    <a href="templates.html">Planners</a>
                     <div class="dropdown-menu">
                         <a href="single-template.html?product=yoruba-wedding" class="dropdown-item">Yoruba Wedding Planner</a>
                         <a href="single-template.html?product=igbo-wedding" class="dropdown-item">Igbo Wedding Planner</a>
                         <a href="single-template.html?product=welcome-party" class="dropdown-item">Welcome Party Planner</a>
-                        <a href="custom-template.html" class="dropdown-item dropdown-item-custom">Customize Your Own Planner</a>
+                        <a href="custom-template.html" class="dropdown-item dropdown-item-custom">Customize your own planner</a>
                     </div>
                 </li>
-                <li><a href="find-vendors.html">Find vendors</a></li>
-                <li><a href="event-liaison.html">Event liaison</a></li>
                 <li><a href="reviews.html">Reviews</a></li>
                 <li class="has-dropdown">
                     <a href="vendor-portal.html">For vendors</a>
@@ -74,11 +79,11 @@
             <li><a href="index.html">Home</a></li>
             <li class="drawer-has-submenu">
                 <button class="drawer-submenu-toggle" type="button">
-                    Templates
+                    Planners
                     <span class="drawer-caret">&#9662;</span>
                 </button>
                 <ul class="drawer-submenu">
-                    <li><a href="templates.html">All templates</a></li>
+                    <li><a href="templates.html">All planners</a></li>
                     <li><a href="single-template.html?product=yoruba-wedding">Yoruba Wedding Planner</a></li>
                     <li><a href="single-template.html?product=igbo-wedding">Igbo Wedding Planner</a></li>
                     <li><a href="single-template.html?product=welcome-party">Welcome Party Planner</a></li>
@@ -105,195 +110,185 @@
     </div>
     <div class="drawer-overlay" id="drawerOverlay"></div>
 
+<main id="main">
     <!-- HERO -->
-    <section class="v3-hero">
-        <div class="v2-wrap v3-hero-grid">
-            <h1 class="v3-hero-title"><span>Every celebration,</span> <span class="v3-indent">beautifully planned.</span></h1>
-            <div class="v3-hero-copy">
-                <p>Find vendors other clients genuinely recommend, use planners made for our traditions, and have a dedicated event liaison in your corner.</p>
-                <div class="v3-hero-actions lx-hero-actions">
-                    <a href="templates.html" class="btn">Browse planners</a>
-                    <a href="find-vendors.html" class="lx-link">Find vendors</a>
-                    <a href="event-liaison.html" class="lx-link">Event liaison</a>
+    <section class="ed-hero">
+        <div class="ed-wrap">
+            <div class="ed-hero-grid">
+                <div class="ed-hero-copy">
+                    <h1>Every celebration, <em>beautifully planned.</em></h1>
+                    <p>Find vendors other clients genuinely recommend, use planners made for our traditions, and have a dedicated event liaison in your corner.</p>
+                    <form class="ed-finder" action="find-vendors.html" method="get" role="search" id="homeFinder">
+                        <label class="sr-only" for="homeCategory">What do you need?</label>
+                        <select id="homeCategory" name="category"><option value="">All vendors</option><option value="photography">Photographers &amp; videographers</option><option value="catering">Caterers &amp; small chops</option><option value="drinks">Drinks &amp; bartenders</option><option value="cakes">Cakes &amp; confectionery</option><option value="decor">Decorators &amp; florists</option><option value="venue">Venues &amp; event centres</option><option value="rentals">Rentals, tents &amp; chairs</option><option value="mc">MCs &amp; entertainers</option><option value="music">DJs &amp; live bands</option><option value="makeup">Makeup &amp; gele</option><option value="hair">Hair stylists</option><option value="nails">Nails &amp; lashes</option><option value="fashion">Aso-ebi &amp; fashion</option><option value="tailors">Tailors</option><option value="transport">Car hire &amp; transport</option><option value="assistant">Personal assistants</option><option value="ushers">Ushers &amp; event staff</option><option value="planning">Event planners</option></select>
+                        <button type="submit" class="ed-btn">Find vendors</button>
+                    </form>
+                    <div class="ed-hero-links">
+                        <a href="templates.html" class="ed-more">Browse planners</a>
+                        <a href="event-liaison.html" class="ed-more">Book an event liaison</a>
+                    </div>
+                </div>
+                <div class="ed-hero-art">
+                    <a href="single-template.html?product=yoruba-wedding"><img src="images/covers/yoruba-wedding.svg" alt="Yoruba Wedding planner cover"><span class="ed-art-name">Yoruba Wedding</span><span class="ed-art-price">&#8358;5,000</span></a>
+                    <a href="single-template.html?product=igbo-wedding"><img src="images/covers/igbo-wedding.svg" alt="Igbo Wedding planner cover"><span class="ed-art-name">Igbo Wedding</span><span class="ed-art-price">&#8358;5,000</span></a>
+                    <a href="single-template.html?product=welcome-party"><img src="images/covers/welcome-party.svg" alt="Welcome Party planner cover"><span class="ed-art-name">Welcome Party</span><span class="ed-art-price">&#8358;5,000</span></a>
+                    <a href="custom-template.html"><img src="images/covers/custom-planner.svg" alt="Made for you planner cover"><span class="ed-art-name">Made for you</span><span class="ed-art-price">On request</span></a>
+                    <a href="templates.html" class="ed-art-all">Shop all planners</a>
                 </div>
             </div>
-            <div class="hero-stack v3-hero-stack" aria-hidden="true">
-                <img src="images/covers/custom-planner.svg" alt="" class="stack-back">
-                <img src="images/covers/igbo-wedding.svg" alt="" class="stack-mid">
-                <img src="images/covers/yoruba-wedding.svg" alt="" class="stack-front">
-            </div>
-        </div>
-    </section>
-    <div class="v2-weave" aria-hidden="true"></div>
-
-    <!-- A NOTE FROM THE FOUNDER -->
-    <section class="v2-note">
-        <figure class="v2-note-photo">
-            <img src="founder.jpg" alt="Ganiat Asuni, founder of Vendoor Connect" loading="lazy" width="900" height="1352">
-        </figure>
-        <div class="v2-note-copy">
-            <h2>Hi, I'm Ganiat Asuni.</h2>
-            <p>For years I was the person friends and family called when they were planning a wedding, a birthday or a bridal shower in Nigeria. Who's a good caterer? Can you trust this decorator? Is that price fair?</p>
-            <p>Too often the honest answers lived in WhatsApp chats and word of mouth. So I built Vendoor Connect: a place to find vendors other clients actually recommend, planners made for our traditions, and, when you need it, someone in your corner to handle the vendors for you.</p>
-            <p class="v2-sign">Ganiat Asuni, founder</p>
-            <a href="about.html" class="hm-link">Read our story</a>
         </div>
     </section>
 
-    <!-- PLANNERS: shown like objects in a boutique window -->
-    <section class="lx-planners">
-        <div class="v2-wrap">
-            <div class="lx-row-head">
-                <h2>The planners</h2>
-                <p>Made for our traditions, from the list to the last dance.</p>
-                <a href="templates.html" class="lx-link">Shop all planners</a>
+    <!-- CATEGORIES -->
+    <section class="ed-section">
+        <div class="ed-wrap">
+            <div class="ed-head">
+                <div>
+                    <h2>Find your vendors</h2>
+                    <p>Browse by what you need. Every vendor shows their work, their prices and reviews from real clients.</p>
+                </div>
+                <a href="find-vendors.html#directory" class="ed-more">All vendors</a>
             </div>
-            <div class="lx-shelf">
-                <a class="lx-item" href="single-template.html?product=yoruba-wedding">
-                    <span class="lx-item-img"><img src="images/covers/yoruba-wedding.svg" alt="Yoruba Wedding Planner cover" loading="lazy"></span>
-                    <span class="lx-item-name">Yoruba Wedding</span><span class="lx-item-price">&#8358;5,000</span>
-                </a>
-                <a class="lx-item" href="single-template.html?product=igbo-wedding">
-                    <span class="lx-item-img"><img src="images/covers/igbo-wedding.svg" alt="Igbo Wedding Planner cover" loading="lazy"></span>
-                    <span class="lx-item-name">Igbo Wedding</span><span class="lx-item-price">&#8358;5,000</span>
-                </a>
-                <a class="lx-item" href="single-template.html?product=welcome-party">
-                    <span class="lx-item-img"><img src="images/covers/welcome-party.svg" alt="Welcome Party Planner cover" loading="lazy"></span>
-                    <span class="lx-item-name">Welcome Party</span><span class="lx-item-price">&#8358;5,000</span>
-                </a>
-                <a class="lx-item" href="custom-template.html">
-                    <span class="lx-item-img"><img src="images/covers/custom-planner.svg" alt="Custom planner cover" loading="lazy"></span>
-                    <span class="lx-item-name">Made for you</span><span class="lx-item-price">By request</span>
-                </a>
+            <div class="ed-index" role="navigation" aria-label="Vendor categories">
+                <a href="find-vendors.html?category=photography#directory"><span>Photographers &amp; videographers</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a>
+                <a href="find-vendors.html?category=catering#directory"><span>Caterers &amp; small chops</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a>
+                <a href="find-vendors.html?category=decor#directory"><span>Decorators &amp; florists</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a>
+                <a href="find-vendors.html?category=makeup#directory"><span>Makeup &amp; gele</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a>
+                <a href="find-vendors.html?category=hair#directory"><span>Hair stylists</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a>
+                <a href="find-vendors.html?category=nails#directory"><span>Nails &amp; lashes</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a>
+                <a href="find-vendors.html?category=fashion#directory"><span>Aso-ebi &amp; fashion</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a>
+                <a href="find-vendors.html?category=tailors#directory"><span>Tailors</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a>
+                <a href="find-vendors.html?category=cakes#directory"><span>Cakes &amp; confectionery</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a>
+                <a href="find-vendors.html?category=venue#directory"><span>Venues &amp; event centres</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a>
+                <a href="find-vendors.html?category=music#directory"><span>DJs &amp; live bands</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a>
+                <a href="find-vendors.html?category=mc#directory"><span>MCs &amp; entertainers</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a>
+                <a href="find-vendors.html?category=drinks#directory"><span>Drinks &amp; bartenders</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a>
+                <a href="find-vendors.html?category=rentals#directory"><span>Rentals, tents &amp; chairs</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a>
+                <a href="find-vendors.html?category=transport#directory"><span>Car hire</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a>
+                <a href="find-vendors.html?category=assistant#directory"><span>Personal assistants</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a>
+                <a href="find-vendors.html?category=ushers#directory"><span>Ushers &amp; event staff</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a>
+                <a href="find-vendors.html?category=planning#directory"><span>Event planners</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a>
             </div>
         </div>
     </section>
 
-    <!-- EVENT LIAISON: one statement -->
-    <section class="lx-liaison">
-        <div class="v2-weave v2-weave-top" aria-hidden="true"></div>
-        <div class="lx-liaison-inner">
-            <h2>Someone in your corner, from the first call to the last dance.</h2>
-            <p>Your event liaison books the appointments, negotiates the prices and keeps every vendor on track, then stays by your side on the day so you can simply enjoy it.</p>
-            <div class="lx-liaison-paths">
-                <a href="event-liaison.html#services">Before the event</a>
-                <span aria-hidden="true">&middot;</span>
-                <a href="event-liaison.html#services">On the event day</a>
-            </div>
-            <a href="event-liaison.html#consultation" class="btn lx-btn-light">Book a consultation</a>
-        </div>
-    </section>
-
-    <!-- VENDORS: asymmetric, typographic -->
-    <section class="lx-vendors">
-        <div class="v2-wrap lx-vendors-grid">
-            <div class="lx-vendors-intro">
-                <h2>Find vendors other clients trust.</h2>
-                <p>Photos show you the style. Reviews tell you what it&rsquo;s really like to work with someone. Every review is read by our team before it goes live.</p>
-                <form class="lx-search" action="find-vendors.html" method="get" role="search">
-                    <label class="sr-only" for="homeSearch">Search vendors</label>
-                    <input id="homeSearch" name="q" type="search" placeholder="Search a service">
-                    <button type="submit" aria-label="Search">Search</button>
-                </form>
-            </div>
-            <div class="lx-cats" role="navigation" aria-label="Browse vendors by category">
-                <a href="find-vendors.html?category=photography#directory">Photographers</a>
-                <a href="find-vendors.html?category=catering#directory">Caterers</a>
-                <a href="find-vendors.html?category=decor#directory">Decor &amp; florals</a>
-                <a href="find-vendors.html?category=makeup#directory">Makeup &amp; gele</a>
-                <a href="find-vendors.html?category=hair#directory">Hair</a>
-                <a href="find-vendors.html?category=nails#directory">Nails &amp; lashes</a>
-                <a href="find-vendors.html?category=fashion#directory">Aso-ebi</a>
-                <a href="find-vendors.html?category=venue#directory">Venues</a>
-                <a href="find-vendors.html?category=music#directory">DJs &amp; bands</a>
-                <a href="find-vendors.html?category=transport#directory">Car hire</a>
-                <a href="find-vendors.html?category=assistant#directory">Personal assistants</a>
-                <a href="find-vendors.html?category=cakes#directory">Cakes</a>
-                <a href="find-vendors.html#directory" class="lx-cats-all">All categories</a>
-            </div>
-        </div>
-        <div class="v2-wrap lx-picks" id="homeVendorsWrap" hidden>
-            <div class="lx-row-head lx-row-head-sm"><h3>Featured vendors</h3><a href="find-vendors.html" class="lx-link">See all vendors</a></div>
+    <!-- FEATURED VENDORS: paid placements only, hidden until there is one -->
+    <section class="ed-section ed-section-tight ed-picks" id="homeVendorsWrap" hidden>
+        <div class="ed-wrap">
+            <div class="ed-head"><h2>Featured vendors</h2><a href="find-vendors.html" class="ed-more">See all vendors</a></div>
             <div class="listings-grid hm-vendor-grid" id="homeVendors"></div>
         </div>
     </section>
 
+    <!-- EVENT LIAISON -->
+    <section class="ed-feature" aria-labelledby="liaisonHeading">
+        <div class="ed-wrap">
+            <div class="ed-feature-card">
+                <h2 id="liaisonHeading">Someone in your corner, from the first call to the last dance.</h2>
+                <p>Your event liaison books the appointments, negotiates the prices and keeps every vendor on track, then stays by your side on the day so you can simply enjoy it.</p>
+                <div class="ed-feature-paths">
+                    <a href="event-liaison.html#services"><strong>Before the event</strong><span>Vendors found, booked and managed</span></a>
+                    <a href="event-liaison.html#services"><strong>On the event day</strong><span>Every vendor coordinated for you</span></a>
+                </div>
+                <a href="event-liaison.html#consultation" class="ed-btn ed-btn-light">Book a consultation</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOUNDER NOTE -->
+    <section class="ed-section ed-section-sand">
+        <div class="ed-wrap ed-note">
+            <figure><img src="founder.jpg" alt="Ganiat Asuni, founder of Vendoor Connect" loading="lazy" width="900" height="1352"></figure>
+            <div>
+                <h2>Hi, I&rsquo;m Ganiat Asuni.</h2>
+                <p>For years I was the person friends and family called when they were planning a wedding, a birthday or a bridal shower in Nigeria. Who&rsquo;s a good caterer? Can you trust this decorator? Is that price fair?</p>
+                <p>Too often the honest answers lived in WhatsApp chats and word of mouth. So I built Vendoor Connect, a place to find vendors other clients actually recommend, planners made for our traditions and, when you need it, someone in your corner to handle the vendors for you.</p>
+                <p class="ed-sign">Ganiat Asuni, founder</p>
+                <a href="about.html" class="ed-more">Read our story</a>
+            </div>
+        </div>
+    </section>
+
     <!-- REVIEWS: only real, approved reviews ever appear here. -->
-    <section class="v2-reviews" id="homeReviewsSection">
-        <div class="v2-wrap">
-            <div class="v2-reviews-head">
+    <section class="ed-section" id="homeReviewsSection">
+        <div class="ed-wrap ed-reviews-grid">
+            <div>
                 <h2 id="homeReviewsHeading">What customers say about Vendoor Connect</h2>
+                <p class="home-reviews-summary" id="homeReviewsSummary" hidden></p>
+                <p class="home-reviews-empty" id="homeReviewsEmpty">Every review on Vendoor Connect comes from a real customer and is checked before it goes live. Used one of our planners or found a vendor here? We&rsquo;d love to hear how it went.</p>
+                <div class="ed-reviews-actions">
+                    <a href="reviews.html?about=vendoorconnect#write" class="ed-btn">Review Vendoor Connect</a>
+                    <a href="reviews.html#write" class="ed-more">Review a vendor</a>
+                </div>
+            </div>
+            <div class="ed-reviews-list"><div class="home-reviews" id="homeReviews"></div></div>
+        </div>
+    </section>
+
+    <!-- FOR VENDORS -->
+    <section class="ed-section ed-section-tight">
+        <div class="ed-wrap">
+            <div class="ed-split ed-split-text">
                 <div>
-                    <p class="home-reviews-summary" id="homeReviewsSummary" hidden></p>
-                    <p class="home-reviews-empty" id="homeReviewsEmpty">Every review on Vendoor Connect comes from a real customer and is checked before it goes live. Used one of our templates or found a vendor here? We'd love to hear how it went.</p>
-                    <div class="home-reviews-actions">
-                        <a href="reviews.html?about=vendoorconnect#write" class="btn">Review Vendoor Connect</a>
-                        <a href="reviews.html#write" class="btn-outline">Review a vendor</a>
+                    <h2>Run an events, beauty or hospitality business?</h2>
+                    <p>List it free and let clients find you beyond social media.</p>
+                </div>
+                <div>
+                    <ul class="ed-ticks">
+                        <li>Show your work, your prices and where you are</li>
+                        <li>Receive reviews from the clients you&rsquo;ve served</li>
+                        <li>Get messages straight to your WhatsApp</li>
+                    </ul>
+                    <div class="ed-split-actions">
+                        <a href="vendor-portal.html?signup=1" class="ed-btn">List your business</a>
+                        <a href="vendor-memberships.html" class="ed-more">Promotion options</a>
                     </div>
                 </div>
             </div>
-            <div class="home-reviews" id="homeReviews"></div>
         </div>
     </section>
+    </main>
 
-    <!-- FOR VENDORS: one quiet line -->
-    <section class="lx-forvendors">
-        <div class="v2-wrap lx-fv-row">
-            <h2>Run an events, beauty or hospitality business?</h2>
-            <p>List it free. Let clients see your work, read your reviews and message you on WhatsApp.</p>
-            <a href="vendor-portal.html?signup=1" class="lx-link lx-link-strong">List your business</a>
-        </div>
-    </section>
-    <div class="v2-weave" aria-hidden="true"></div>
-
-    <!-- FOOTER -->
-    <footer>
-        <div class="footer-grid">
-
-            <div class="footer-brand">
-                <img src="logo-horizontal.png" alt="Vendoor Connect" class="footer-logo" width="437" height="75">
-                <p>Discover • Review • Connect</p>
+    <footer class="ed-footer"><div class="ed-wrap">
+        <div class="ed-footer-top">
+            <div class="ed-footer-brand">
+                <img src="logo-horizontal.png" alt="Vendoor Connect" width="437" height="75" loading="lazy">
+                <p>Find event vendors other clients recommend, planners made for our traditions, and someone in your corner on the day.</p>
             </div>
-
-            <div class="footer-col">
-                <h4>Shop</h4>
+            <div>
+                <h4>Plan</h4>
                 <ul>
-                    <li><a href="templates.html">All templates</a></li>
-                    <li><a href="single-template.html?product=yoruba-wedding">Yoruba Wedding Planner</a></li>
-                    <li><a href="single-template.html?product=igbo-wedding">Igbo Wedding Planner</a></li>
-                    <li><a href="single-template.html?product=welcome-party">Welcome Party Planner</a></li>
-                    <li><a href="custom-template.html">Custom planner</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-col">
-                <h4>Company</h4>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
                     <li><a href="find-vendors.html">Find vendors</a></li>
                     <li><a href="event-liaison.html">Event liaison</a></li>
+                    <li><a href="templates.html">Planners</a></li>
+                    <li><a href="custom-template.html">Custom planner</a></li>
                     <li><a href="reviews.html">Reviews</a></li>
-                    <li><a href="vendor-portal.html">Vendor login</a></li>
-                    <li><a href="vendor-memberships.html">Vendor memberships</a></li>
-                    <li><a href="about.html">About</a></li>
-                    <li><a href="contact.html">Contact</a></li>
                 </ul>
             </div>
-
-            <div class="footer-col">
-                <h4>Connect with us</h4>
+            <div>
+                <h4>For vendors</h4>
                 <ul>
-                    <li><a href="https://www.instagram.com/vendoortemplates" target="_blank" rel="noopener" class="social-link"><svg class="icon-instagram" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>Instagram</a></li>
-                    <li><a href="https://wa.me/2348139189496" target="_blank" rel="noopener" class="social-link">WhatsApp 0813 918 9496</a></li>
-                    <li><a href="mailto:vendoor.templates@gmail.com" class="social-link">vendoor.templates@gmail.com</a></li>
+                    <li><a href="vendor-portal.html?signup=1">List your business free</a></li>
+                    <li><a href="vendor-portal.html">Vendor dashboard</a></li>
+                    <li><a href="vendor-memberships.html">Memberships &amp; promotion</a></li>
                 </ul>
             </div>
-
+            <div>
+                <h4>Vendoor Connect</h4>
+                <ul>
+                    <li><a href="about.html">Our story</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="https://www.instagram.com/vendoortemplates" target="_blank" rel="noopener">Instagram</a></li>
+                    <li><a href="https://wa.me/2348139189496" target="_blank" rel="noopener">WhatsApp 0813 918 9496</a></li>
+                    <li><a href="mailto:vendoor.templates@gmail.com">vendoor.templates@gmail.com</a></li>
+                </ul>
+            </div>
         </div>
-
-        <p class="footer-legal"><a href="terms.html">Terms of sale</a><a href="refund-policy.html">Refund policy</a><a href="delivery-policy.html">Delivery policy</a><a href="privacy-policy.html">Privacy policy</a></p>
-        <p class="footer-bottom">&copy; 2026 Vendoor Connect. All rights reserved.</p>
-    </footer>
+        <div class="ed-footer-bottom">
+            <span>&copy; 2026 Vendoor Connect. All rights reserved.</span>
+            <nav aria-label="Policies"><a href="terms.html">Terms of sale</a><a href="refund-policy.html">Refund policy</a><a href="delivery-policy.html">Delivery policy</a><a href="privacy-policy.html">Privacy policy</a></nav>
+        </div>
+    </div></footer>
 
     <script src="main.js"></script>
 
