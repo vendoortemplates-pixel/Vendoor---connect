@@ -573,3 +573,30 @@ a.ed-btn-light, .ed-btn-light { background: #fff; color: var(--ink); border-colo
 .ed-liaison .ed-more-light:hover { color: var(--terracotta); border-color: var(--terracotta); }
 /* founder note follows on white so the blush and sand don't run together */
 .ed-section-sand.ed-note-section, .ed-liaison + .ed-section-sand { background: #fff; }
+
+/* Find your vendors: six popular picks + an expandable list of every category */
+.ed-cats-section { padding: 72px 0 64px; }
+.ed-cats-section .ed-head { margin-bottom: 28px; }
+.ed-popular { display: grid; grid-template-columns: repeat(6, 1fr); background: #fff; border: 1px solid var(--hair); }
+.ed-popular a { display: flex; align-items: center; justify-content: center; text-align: center; min-height: 96px; padding: 18px 12px;
+    font-family: var(--font-heading); font-size: 20px; color: var(--ink); text-decoration: none; transition: background .2s, color .2s; }
+.ed-popular a + a { border-left: 1px solid var(--hair); }
+.ed-popular a:hover { background: var(--brand-dark); color: #fff; }
+.ed-allcats { margin-top: 22px; }
+.ed-allcats summary { list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 12px;
+    font-size: 13px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--ink); border-bottom: 1px solid var(--ink); padding-bottom: 3px; }
+.ed-allcats summary::-webkit-details-marker { display: none; }
+.ed-allcats summary::after { content: ''; width: 8px; height: 8px; border-right: 1.4px solid currentColor; border-bottom: 1.4px solid currentColor; transform: translateY(-3px) rotate(45deg); transition: transform .2s; }
+.ed-allcats[open] summary::after { transform: translateY(2px) rotate(-135deg); }
+.ed-allcats summary:hover { color: var(--terracotta); border-color: var(--terracotta); }
+.ed-allcats-list { margin-top: 22px; background: #fff; border: 1px solid var(--hair); padding: 26px 30px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px 30px; }
+.ed-allcats-list a { padding: 9px 0; font-size: 15.5px; color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid transparent; }
+.ed-allcats-list a:hover { color: var(--terracotta); }
+@media (max-width: 960px) {
+    .ed-cats-section { padding: 52px 0 48px; }
+    .ed-popular { grid-template-columns: repeat(2, 1fr); }
+    .ed-popular a { min-height: 70px; font-size: 18px; }
+    .ed-popular a:nth-child(odd) { border-left: 0; }
+    .ed-popular a:nth-child(n+3) { border-top: 1px solid var(--hair); }
+    .ed-allcats-list { grid-template-columns: 1fr 1fr; padding: 18px 20px; gap: 0 18px; }
+}
