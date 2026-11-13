@@ -139,8 +139,10 @@
         </div>
     </section>
 
+    <div class="ed-weave" aria-hidden="true"></div>
+
     <!-- CATEGORIES -->
-    <section class="ed-section">
+    <section class="ed-section ed-cats-section">
         <div class="ed-wrap">
             <div class="ed-head">
                 <div>
@@ -208,7 +210,7 @@
                 <h2 id="liaisonHeading">Someone in your corner, from the first call to the last dance.</h2>
                 <div>
                     <p>Your event liaison books the appointments, negotiates the prices and keeps every vendor on track, then stays by your side on the day so you can simply enjoy it.</p>
-                    <p class="ed-liaison-abroad">Planning from London, Houston or Toronto? We&rsquo;re your eyes and ears on the ground in Nigeria.</p>
+                    <p class="ed-liaison-abroad"><strong>Planning from the diaspora?</strong> London, Houston, Toronto or Dubai, wherever you are, we&rsquo;re your eyes and ears on the ground in Nigeria.</p>
                 </div>
             </div>
             <ol class="ed-timeline">
@@ -233,7 +235,7 @@
                 <h2>Hi, I&rsquo;m Ganiat Asuni.</h2>
                 <p>For years I was the person friends and family called when they were planning a wedding, a birthday or a bridal shower in Nigeria. Who&rsquo;s a good caterer? Can you trust this decorator? Is that price fair?</p>
                 <p>Too often the honest answers lived in WhatsApp chats and word of mouth. So I built Vendoor Connect, a place to find vendors other clients actually recommend, planners made for our traditions and, when you need it, someone in your corner to handle the vendors for you.</p>
-                <p class="ed-sign">Ganiat Asuni, founder</p>
+                <p class="ed-sign">Ganiat Asuni, Founder</p>
                 <a href="about.html" class="ed-more">Read our story</a>
             </div>
         </div>
@@ -251,7 +253,7 @@
             <div class="ed-rv-actions">
                 <a href="reviews.html?about=vendoorconnect#write" class="ed-btn">Review Vendoor Connect</a>
                 <a href="reviews.html#write" class="ed-btn ed-btn-line">Review a vendor</a>
-                <a href="reviews.html" class="ed-more">Read all reviews</a>
+                <a href="reviews.html" class="ed-more" id="homeReviewsAll">Read all reviews</a>
             </div>
         </div>
     </section>
@@ -341,6 +343,7 @@
                 var sumEl = document.getElementById('homeReviewsSummary');
                 sumEl.innerHTML = VC.stars(summary.average, 'lg') + ' <strong>' + summary.average.toFixed(1) + '</strong> from ' + summary.count + (summary.count === 1 ? ' review' : ' reviews');
                 sumEl.hidden = false;
+                if (summary.count > 3) document.getElementById('homeReviewsAll').textContent = 'Read all ' + summary.count + ' reviews';
             }
             document.getElementById('homeReviews').innerHTML = reviews.slice(0, 3).map(function (r) {
                 var who = platform ? esc(r.reviewer_name) + (r.event_type ? ', ' + esc(r.event_type) : '')

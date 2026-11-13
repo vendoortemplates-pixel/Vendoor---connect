@@ -516,3 +516,41 @@ html { scroll-padding-top: 150px; }
 .ed-btn:hover, a.ed-btn:hover { background: var(--terracotta); border-color: var(--terracotta); }
 a.ed-btn-line, .ed-btn-line { background: transparent; color: var(--ink); border-color: var(--ink); }
 a.ed-btn-light, .ed-btn-light { background: #fff; color: var(--ink); border-color: #fff; }
+
+/* =====================================================================
+   ROUND 4: bigger top bar, woven strip, one type system everywhere
+   ===================================================================== */
+/* Top bar: easier to see */
+.ed-topbar { font-size: 14.5px; letter-spacing: .02em; }
+.ed-topbar .ed-wrap { min-height: 46px; }
+.ed-topbar-note { color: #F3EADF; }
+.ed-topbar-note a { color: var(--gold); font-weight: 500; }
+.ed-topbar-links { gap: 26px; }
+.ed-topbar-links a { font-weight: 500; display: inline-flex; align-items: center; gap: 8px; }
+.ed-topbar-links a + a::before { content: ''; width: 1px; height: 14px; background: rgba(255,255,255,.3); margin-right: 18px; }
+@media (max-width: 960px) { .ed-topbar { font-size: 13.5px; } .ed-topbar .ed-wrap { min-height: 40px; } .ed-topbar-links { gap: 14px; } .ed-topbar-links a + a::before { margin-right: 10px; } }
+
+/* Woven strip: the stripe from our planner covers, as a quiet divider */
+.ed-weave { height: 12px; background:
+    repeating-linear-gradient(90deg,
+      #5B4636 0 18px, #C8A96A 18px 24px, #C97A5A 24px 34px, #F3E7DA 34px 37px,
+      #5B4636 37px 50px, #C97A5A 50px 56px, #C8A96A 56px 70px, #F3E7DA 70px 73px); }
+.ed-hero-grid { border-bottom: 0; }
+.ed-cats-section { background: var(--sand); }
+.ed-cats-section .ed-index a { border-bottom-color: #E2D8CB; }
+
+/* One type system:
+   Bodoni for headings and the founder's signature only.
+   Jost for everything else, including every small capitalised label. */
+.site-header.ed-header nav > ul > li > a,
+.ed-footer h4 { font-family: var(--font-body); font-weight: 500; letter-spacing: .16em; font-size: 12.5px; }
+.ed-footer h4 { color: var(--gold); }
+.ed-liaison-top .ed-liaison-abroad { font-family: var(--font-body); font-style: normal; font-size: 16.5px; line-height: 1.75; color: #EADCC9;
+    border-left: 2px solid var(--gold); padding-left: 18px; }
+.ed-liaison-top .ed-liaison-abroad strong { color: var(--gold); font-weight: 500; display: block; }
+.ed-timeline h3 { font-size: 22px; }
+.ed-timeline p { font-family: var(--font-body); }
+.listing-category, .page-header .page-header-quote, .mem-hero .mem-hero-line, .el-hero .el-hero-line { font-family: var(--font-body) !important; font-style: normal !important; }
+.listing-category { font-size: 12.5px; letter-spacing: .12em; text-transform: uppercase; }
+.page-header .page-header-quote, .mem-hero .mem-hero-line, .el-hero .el-hero-line { font-size: 19px; color: var(--ink); font-weight: 400; }
+.feed-more { display: flex; margin: 26px auto 0; }

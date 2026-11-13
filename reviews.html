@@ -455,7 +455,11 @@
         function render() {
             var cat = catSelect.value;
             var rows = allReviews.filter(function (r) { return !cat || r.vendor_category === cat; });
-            list.innerHTML = rows.map(reviewHtml).join('');
+            var shown = rows.slice(0, feedShown);
+            list.innerHTML = shown.map(reviewHtml).join('') + (rows.length > shown.length
+                ? '<button type="button" class="ed-btn ed-btn-line feed-more" id="feedMore">Show more reviews (' + (rows.length - shown.length) + ' more)</button>' : '');
+            var more = document.getElementById('feedMore');
+            if (more) more.addEventListener('click', function () { feedShown += 8; render(); });
             empty.hidden = rows.length > 0;
             document.getElementById('feedHeading').textContent = rows.length ? (rows.length + (rows.length === 1 ? ' review' : ' reviews')) : (feedType === 'platform' ? 'Reviews of Vendoor Connect' : 'Latest reviews');
             if (!rows.length) {
@@ -465,12 +469,14 @@
                     : 'Hired a vendor for a wedding, introduction or party? Your review helps the next person choose well.';
             }
         }
-        catSelect.addEventListener('change', render);
+        var feedShown = 8;
+        catSelect.addEventListener('change', function () { feedShown = 8; render(); });
 
         function loadFeed() {
             status.hidden = false;
             status.textContent = 'Loading reviews...';
             list.innerHTML = '';
+            feedShown = 8;
             empty.hidden = true;
             var platform = feedType === 'platform';
             catSelect.hidden = platform;
