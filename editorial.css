@@ -431,3 +431,88 @@ html { scroll-padding-top: 150px; }
     font-size: 13px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; }
 .ed-hero-art a.ed-art-all:hover { transform: none; color: var(--terracotta); border-color: var(--terracotta); }
 @media (max-width: 960px) { .ed-art-name { font-size: 15px; margin-top: 8px; } .ed-art-price { font-size: 12.5px; } }
+
+/* =====================================================================
+   ROUND 3: vendor band, liaison timeline, reviews
+   ===================================================================== */
+.ed-topbar-note a { color: var(--gold); border-bottom: 1px solid rgba(200,169,106,.5); }
+
+/* For vendors: an open band with three promises */
+.ed-vendors-band { background: var(--sand); padding: 84px 0; border-top: 1px solid var(--hair); border-bottom: 1px solid var(--hair); }
+.ed-vendors-band .ed-wrap { display: grid; grid-template-columns: 5fr 7fr; gap: 72px; align-items: center; }
+.ed-vb-intro h2 { font-size: 40px; line-height: 1.1; margin: 0 0 16px; }
+.ed-vb-intro p { font-size: 17px; line-height: 1.75; margin: 0 0 28px; max-width: 42ch; }
+.ed-vb-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 22px; }
+.ed-vb-points { display: grid; grid-template-columns: repeat(3, 1fr); background: #fff; border: 1px solid var(--hair); }
+.ed-vb-points > div { padding: 34px 28px 36px; }
+.ed-vb-points > div + div { border-left: 1px solid var(--hair); }
+.ed-vb-points h3 { font-size: 24px; margin: 0 0 12px; color: var(--ink); }
+.ed-vb-points h3::after { content: ''; display: block; width: 28px; height: 2px; background: var(--terracotta); margin-top: 14px; }
+.ed-vb-points p { font-size: 15.5px; line-height: 1.7; margin: 0; color: var(--ink-soft); }
+@media (max-width: 960px) {
+    .ed-vendors-band { padding: 60px 0; }
+    .ed-vendors-band .ed-wrap { grid-template-columns: 1fr; gap: 36px; }
+    .ed-vb-intro h2 { font-size: 31px; }
+    .ed-vb-points { grid-template-columns: 1fr; }
+    .ed-vb-points > div + div { border-left: 0; border-top: 1px solid var(--hair); }
+    .ed-vb-points > div { padding: 26px 22px; }
+}
+
+/* Event liaison: brand brown, a timeline from the first call to the last dance */
+.ed-liaison { background: #4A3729; color: #E7DACB; padding: 100px 0 92px; }
+.ed-liaison-top { display: grid; grid-template-columns: 6fr 5fr; gap: 72px; align-items: end; padding-bottom: 56px; }
+.ed-liaison h2 { color: #FBF5EC; font-size: 46px; line-height: 1.08; margin: 0; }
+.ed-liaison-top p { font-size: 17px; line-height: 1.8; margin: 0 0 16px; font-weight: 300; }
+.ed-liaison-top .ed-liaison-abroad { font-family: var(--font-heading); font-style: italic; font-size: 20px; line-height: 1.5; color: var(--gold); margin: 0; font-weight: 400; }
+.ed-timeline { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); position: relative; }
+.ed-timeline::before { content: ''; position: absolute; left: 0; right: 0; top: 7px; height: 1px; background: rgba(200,169,106,.55); }
+.ed-timeline li { position: relative; padding: 38px 28px 0 0; }
+.ed-timeline li::before { content: ''; position: absolute; left: 0; top: 0; width: 15px; height: 15px; border-radius: 50%; background: #4A3729; border: 1px solid var(--gold); box-sizing: border-box; }
+.ed-timeline li:first-child::before, .ed-timeline li:last-child::before { background: var(--gold); }
+.ed-timeline h3 { color: #FBF5EC; font-size: 23px; margin: 0 0 10px; }
+.ed-timeline p { font-size: 15.5px; line-height: 1.7; margin: 0; color: #D6C7B6; max-width: 26ch; }
+.ed-liaison-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 30px; margin-top: 56px; padding-top: 34px; border-top: 1px solid rgba(200,169,106,.3); }
+.ed-more-light { color: #FBF5EC; border-color: rgba(251,245,236,.6); }
+.ed-more-light:hover { color: var(--gold); border-color: var(--gold); }
+@media (max-width: 960px) {
+    .ed-liaison { padding: 64px 0; }
+    .ed-liaison-top { grid-template-columns: 1fr; gap: 22px; padding-bottom: 40px; }
+    .ed-liaison h2 { font-size: 34px; }
+    .ed-timeline { grid-template-columns: 1fr; }
+    .ed-timeline::before { left: 7px; right: auto; top: 0; bottom: 0; width: 1px; height: auto; }
+    .ed-timeline li { padding: 0 0 30px 40px; }
+    .ed-liaison-foot { gap: 22px; margin-top: 26px; }
+}
+
+/* Reviews: centred heading, three quiet columns */
+.ed-rv-head { text-align: center; max-width: 720px; margin: 0 auto 48px; }
+.ed-rv-head h2 { font-size: 40px; line-height: 1.1; margin: 0 0 16px; }
+.ed-rv-head .home-reviews-summary { display: inline-flex; align-items: center; gap: 8px; margin: 0; }
+.ed-rv-head .home-reviews-empty { font-size: 17px; line-height: 1.75; margin: 0; }
+.ed-reviews2 .home-reviews { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--hair); }
+.ed-reviews2 .home-reviews:empty { display: none; }
+.ed-reviews2 .home-review { margin: 0; padding: 40px 34px 36px; background: none; border: 0; border-radius: 0; box-shadow: none; display: flex; flex-direction: column; }
+.ed-reviews2 .home-review + .home-review { border-left: 1px solid var(--hair); }
+.ed-reviews2 .home-review::before { content: '\201C'; font-family: var(--font-heading); font-size: 64px; line-height: .6; color: var(--terracotta); display: block; height: 30px; }
+.ed-reviews2 .home-review blockquote { order: 1; font-family: var(--font-heading); font-style: normal; font-size: 21px; line-height: 1.5; color: var(--ink); margin: 0 0 22px; flex: 1; }
+.ed-reviews2 .home-review .stars { order: 2; margin-bottom: 8px; }
+.ed-reviews2 .home-review figcaption { order: 3; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--text-muted); }
+.ed-reviews2 .home-review figcaption a { color: var(--ink); }
+.ed-rv-actions { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 18px 24px; margin-top: 40px; }
+@media (max-width: 960px) {
+    .ed-rv-head h2 { font-size: 31px; }
+    .ed-reviews2 .home-reviews { grid-template-columns: 1fr; }
+    .ed-reviews2 .home-review + .home-review { border-left: 0; border-top: 1px solid var(--hair); }
+    .ed-reviews2 .home-review { padding: 30px 4px; }
+}
+.ed-reviews2 .home-reviews { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.ed-reviews2 .home-reviews:has(> .home-review:only-child) { max-width: 640px; margin: 0 auto; }
+.ed-reviews2 .home-reviews:has(> .home-review:nth-child(2):last-child) { max-width: 900px; margin: 0 auto; }
+.ed-rv-head h2 { max-width: 20ch; margin-left: auto; margin-right: auto; }
+/* Brand brown instead of near-black for the big dark surfaces */
+:root { --brand-dark: #46362A; }
+.ed-topbar, footer.ed-footer { background: var(--brand-dark); }
+.ed-btn, a.ed-btn, button.ed-btn { background: var(--brand-dark); border-color: var(--brand-dark); }
+.ed-btn:hover, a.ed-btn:hover { background: var(--terracotta); border-color: var(--terracotta); }
+a.ed-btn-line, .ed-btn-line { background: transparent; color: var(--ink); border-color: var(--ink); }
+a.ed-btn-light, .ed-btn-light { background: #fff; color: var(--ink); border-color: #fff; }
